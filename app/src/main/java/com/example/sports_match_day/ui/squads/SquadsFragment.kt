@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.slideshow
+package com.example.sports_match_day.ui.squads
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sports_match_day.R
 
-class SlideshowFragment : Fragment() {
+class SquadsFragment : Fragment() {
 
-    private lateinit var slideshowViewModel: SlideshowViewModel
+    private lateinit var squadsViewModel: SquadsViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        slideshowViewModel =
-                ViewModelProvider(this).get(SlideshowViewModel::class.java)
+        squadsViewModel =
+                ViewModelProvider(this).get(SquadsViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_slideshow, container, false)
         val textView: TextView = root.findViewById(R.id.text_slideshow)
-        slideshowViewModel.text.observe(viewLifecycleOwner, Observer {
+        squadsViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

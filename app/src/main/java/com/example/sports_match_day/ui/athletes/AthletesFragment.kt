@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.gallery
+package com.example.sports_match_day.ui.athletes
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,20 +10,20 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.sports_match_day.R
 
-class GalleryFragment : Fragment() {
+class AthletesFragment : Fragment() {
 
-    private lateinit var galleryViewModel: GalleryViewModel
+    private lateinit var athletesViewModel: AthletesViewModel
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        galleryViewModel =
-                ViewModelProvider(this).get(GalleryViewModel::class.java)
+        athletesViewModel =
+                ViewModelProvider(this).get(AthletesViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
-        galleryViewModel.text.observe(viewLifecycleOwner, Observer {
+        athletesViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
