@@ -7,23 +7,22 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import com.example.sports_match_day.R
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AthletesFragment : Fragment() {
 
-    private lateinit var athletesViewModel: AthletesViewModel
+    private val viewModel: AthletesViewModel by viewModel()
 
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-        athletesViewModel =
-                ViewModelProvider(this).get(AthletesViewModel::class.java)
         val root = inflater.inflate(R.layout.fragment_gallery, container, false)
         val textView: TextView = root.findViewById(R.id.text_gallery)
-        athletesViewModel.text.observe(viewLifecycleOwner, Observer {
+
+        viewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root
