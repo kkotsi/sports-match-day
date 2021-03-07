@@ -2,6 +2,7 @@ package com.example.sports_match_day.room
 
 import androidx.room.*
 import com.example.sports_match_day.room.model.Athlete
+import com.example.sports_match_day.room.model.Sport
 import com.example.sports_match_day.room.model.Squad
 
 /**
@@ -9,34 +10,19 @@ import com.example.sports_match_day.room.model.Squad
  */
 @Dao
 interface SportsDao {
-    @Query("SELECT * FROM athlete")
-    fun getAthletes(): List<Athlete>
 
-    @Query("SELECT * FROM athlete LIMIT :count OFFSET :_offset")
-    fun getAthletes(count: Int, _offset: Int ): List<Athlete>
+    @Query("SELECT * FROM sport")
+    fun getSports(): List<Sport>
 
-    @Insert
-    fun insertAthlete(athlete: Athlete)
-
-    @Delete
-    fun deleteAthlete(athlete: Athlete)
-
-    @Update
-    fun updateAthlete(athlete: Athlete)
-
-
-    @Query("SELECT * FROM squad")
-    fun getSquads(): List<Squad>
-
-    @Query("SELECT * FROM squad LIMIT :count OFFSET :_offset")
-    fun getSquads(count: Int, _offset: Int ): List<Athlete>
+    @Query("SELECT * FROM sport LIMIT :count OFFSET :_offset")
+    fun getSport(count: Int, _offset: Int ): List<Sport>
 
     @Insert
-    fun insertSquad(athlete: Squad)
+    fun insertSport(sport: Sport)
 
     @Delete
-    fun deleteSquad(athlete: Squad)
+    fun deleteSport(sport: Sport)
 
     @Update
-    fun updateSquad(athlete: Squad)
+    fun updateSport(sport: Sport)
 }
