@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sports_match_day.R
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * Created by Kristo on 05-Mar-21
+ */
 class SquadsFragment : Fragment() {
 
     private val viewModel: SquadsViewModel by viewModel()

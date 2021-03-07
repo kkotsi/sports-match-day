@@ -12,6 +12,9 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.athletes.AthletesViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * Created by Kristo on 05-Mar-21
+ */
 class HomeFragment : Fragment() {
 
     private val viewModel: HomeViewModel by viewModel()

@@ -5,6 +5,9 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
+/**
+ * Created by Kristo on 07-Mar-21
+ */
 class SportsApplication: Application() {
 
     override fun onCreate() {
