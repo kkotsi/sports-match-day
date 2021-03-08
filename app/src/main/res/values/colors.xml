@@ -6,6 +6,7 @@
 
     <color name="colorBlack">#FF000000</color>
     <color name="colorWhite">#FFFFFFFF</color>
+    <color name="colorGrey">#656565</color>
     <color name="colorBackgroundCard">#FAFAFA</color>
 
     <color name="teal_200">#FF03DAC5</color>

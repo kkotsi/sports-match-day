@@ -5,8 +5,8 @@
       "country": "gr",
       "sport_id": 1,
       "participants": [
-        {"id": 1,"score": 2},
-        {"id": 2, "score": 0}
+        {"id": 1,"score": 2.0},
+        {"id": 2, "score": 0.0}
       ]
     },
     {
@@ -15,8 +15,8 @@
       "country": "us",
       "sport_id": 2,
       "participants": [
-        {"id": 1,"score": 0},
-        {"id": 2, "score": 0}
+        {"id": 1,"score": 0.0},
+        {"id": 2, "score": 0.0}
       ]
     },
 
@@ -26,10 +26,10 @@
       "country": "gr",
       "sport_id": 1,
       "participants": [
-        {"id": 1,"score": 2},
-        {"id": 2, "score": 10},
-        {"id": 2, "score": 2},
-        {"id": 2, "score": 0}
+        {"id": 1,"score": 2.5},
+        {"id": 2, "score": 10.57},
+        {"id": 2, "score": 2.0},
+        {"id": 2, "score": 0.0}
       ]
     }
   ]

@@ -15,6 +15,7 @@ import com.example.sports_match_day.controllers.DecoupleAdapter
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.utils.RawManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.threeten.bp.LocalDateTime
 import java.util.*
 
 
@@ -35,6 +36,9 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
         viewModel.matches.observe(viewLifecycleOwner, {
+            it.forEach {
+                setUpEvent()
+            }
             recyclerSetup(it)
         })
         return root
@@ -63,9 +67,17 @@ class HomeFragment : Fragment() {
     }
 
     private fun setUpEvent(){
-        val calendar: Calendar = Calendar.getInstance()
         val events = mutableListOf<EventDay>()
-        events.add(EventDay(calendar, R.drawable.event))
+
+        viewModel.getEventDates().forEach { date ->
+            val calendar: Calendar = Calendar.getInstance()
+            calendar.set(Calendar.YEAR, date.year)
+            calendar.set(Calendar.MONTH, date.month.value - 1)
+            calendar.set(Calendar.DATE, date.dayOfMonth)
+
+            events.add(EventDay(calendar, R.drawable.event))
+        }
+
         calendarView.setEvents(events)
     }
 
@@ -74,7 +86,19 @@ class HomeFragment : Fragment() {
             recyclerMatches = it.findViewById(R.id.recycler_matches)
             recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
-            recyclerMatches.adapter = MatchAdapter(requireContext(), matches)
+            recyclerMatches.adapter = MatchAdapter(requireContext(), matches){ match ->
+                selectDate(match.date)
+            }
         }
+    }
+
+    private fun selectDate(date: LocalDateTime){
+        val calendar: Calendar = Calendar.getInstance()
+
+        calendar.set(Calendar.YEAR, date.year)
+        calendar.set(Calendar.MONTH, date.month.value - 1)
+        calendar.set(Calendar.DATE, date.dayOfMonth)
+
+        calendarView.setDate(calendar)
     }
 }

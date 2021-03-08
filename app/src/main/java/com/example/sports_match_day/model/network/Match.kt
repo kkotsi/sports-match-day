@@ -22,5 +22,5 @@ class Location(
 
 class Participant(
     var id: Int,
-    var score: Int
+    var score: Double
 )

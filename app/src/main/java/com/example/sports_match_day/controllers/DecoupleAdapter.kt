@@ -44,6 +44,6 @@ class DecoupleAdapter(var context: Context) {
     }
 
     private fun epochConverter(epoch: Long): LocalDateTime{
-        return LocalDateTime.ofInstant(Instant.ofEpochMilli(epoch),ZoneId.systemDefault() )
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch),ZoneId.systemDefault() )
     }
 }

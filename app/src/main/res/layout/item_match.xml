@@ -42,6 +42,7 @@
                 android:id="@+id/text_first_squad"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:ellipsize="marquee"
                 android:maxWidth="200dp"
@@ -97,20 +98,22 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="20dp"
                 android:gravity="center"
+                android:minWidth="80dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/text_first_score"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/extra"
+                app:layout_constraintTop_toBottomOf="@+id/image_sport_gender"
+                app:layout_constraintVertical_bias="0.615"
                 tools:text="Mon 15/2 \n 10:00" />
 
             <ImageView
                 android:id="@+id/image_sport_type"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="7dp"
+                app:layout_constraintBottom_toTopOf="@+id/text_date"
+                app:layout_constraintEnd_toEndOf="@+id/text_date"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_person" />
 
@@ -118,9 +121,35 @@
                 android:id="@+id/image_sport_gender"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                app:layout_constraintEnd_toStartOf="@+id/image_sport_type"
+                android:layout_marginStart="7dp"
+                app:layout_constraintBottom_toTopOf="@+id/text_date"
+                app:layout_constraintStart_toStartOf="@+id/text_date"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:src="@drawable/ic_female" />
+
+            <LinearLayout
+                android:id="@+id/extra"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/imageButton"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@null"
+                    android:src="@drawable/ic_forward"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </LinearLayout>
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/image_country"
