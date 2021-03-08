@@ -5,10 +5,10 @@ package com.example.sports_match_day.model
  * A class that represents a Sport
  */
 class Sport(
-  id: Int,
-  name: String,
-  type: SportType,
-  gender: Gender
+  var id: Int,
+  var name: String,
+  var type: SportType,
+  var gender: Gender
 )
 
 /**

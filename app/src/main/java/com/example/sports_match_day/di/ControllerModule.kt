@@ -1,10 +1,19 @@
 package com.example.sports_match_day.di
 
+import com.example.sports_match_day.controllers.CoreController
+import com.example.sports_match_day.controllers.CoreControllerImpl
+import com.example.sports_match_day.controllers.DecoupleAdapter
+import com.example.sports_match_day.controllers.MemoryRepository
+import com.example.sports_match_day.firebase.FirebaseRepository
+import com.example.sports_match_day.firebase.FirebaseRepositoryImpl
 import org.koin.dsl.module
 
 /**
  * Created by Kristo on 07-Mar-21
  */
 val controllerModule = module {
-    //single<MyController> { MyControllerImpl(get()) }
+    single<CoreController> { CoreControllerImpl(get(),get(),get(), get()) }
+    single<FirebaseRepository> { FirebaseRepositoryImpl() }
+    single { MemoryRepository() }
+    single { DecoupleAdapter(get()) }
 }

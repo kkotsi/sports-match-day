@@ -31,18 +31,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/image_country"
                 app:layout_constraintStart_toEndOf="@+id/image_country"
-                app:layout_constraintTop_toTopOf="@+id/image_country"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Football" />
 
             <TextView
                 android:id="@+id/text_first_squad"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:ellipsize="marquee"
                 android:maxWidth="200dp"
                 android:singleLine="true"
@@ -57,19 +57,32 @@
                 android:layout_marginBottom="5dp"
                 android:ellipsize="marquee"
                 android:singleLine="true"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/text_more"
                 app:layout_constraintStart_toStartOf="@+id/text_first_squad"
                 app:layout_constraintTop_toBottomOf="@+id/text_first_squad"
                 tools:text="Valencia" />
+
+            <TextView
+                android:id="@+id/text_more"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text="@string/more_options"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/text_first_squad"
+                app:layout_constraintTop_toBottomOf="@+id/text_sec_squad"
+                tools:text="..." />
 
             <TextView
                 android:id="@+id/text_first_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="20dp"
                 app:layout_constraintStart_toEndOf="@+id/text_first_squad"
-                app:layout_constraintTop_toBottomOf="@+id/image_country"
+                app:layout_constraintTop_toTopOf="@+id/text_first_squad"
                 tools:text="1" />
 
             <TextView
@@ -93,21 +106,36 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Mon 15/2 \n 10:00" />
 
+            <ImageView
+                android:id="@+id/image_sport_type"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_person" />
+
+            <ImageView
+                android:id="@+id/image_sport_gender"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:layout_constraintEnd_toStartOf="@+id/image_sport_type"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_female" />
+
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/image_country"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:minWidth="24dp"
                 android:minHeight="24dp"
                 android:scaleType="center"
                 android:src="@drawable/be"
+                app:layout_constraintBottom_toBottomOf="@+id/text_sport"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:riv_border_color="@color/colorWhite"
                 app:riv_border_width="5dip"
-                app:riv_corner_radius="5dp"
+                app:riv_corner_radius="4dp"
                 app:riv_mutate_background="true"
                 app:riv_tile_mode="repeat" />
         </androidx.constraintlayout.widget.ConstraintLayout>

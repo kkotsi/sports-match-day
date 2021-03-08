@@ -10,7 +10,7 @@ import org.koin.dsl.module
  * Created by Kristo on 07-Mar-21
  */
 val viewModelModule = module {
-    viewModel { HomeViewModel() }
+    viewModel { HomeViewModel(get()) }
     viewModel { AthletesViewModel() }
     viewModel { SquadsViewModel() }
 }

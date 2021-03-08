@@ -1,5 +1,6 @@
 package com.example.sports_match_day.ui.home
 
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
+import com.example.sports_match_day.controllers.DecoupleAdapter
+import com.example.sports_match_day.model.Match
+import com.example.sports_match_day.utils.RawManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.*
+
 
 /**
  * Created by Kristo on 05-Mar-21
@@ -29,16 +34,16 @@ class HomeFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        viewModel.text.observe(viewLifecycleOwner, {
-
+        viewModel.matches.observe(viewLifecycleOwner, {
+            recyclerSetup(it)
         })
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        recyclerSetup()
         calendarSetup()
+        viewModel.loadMatches()
     }
 
     private fun calendarSetup(){
@@ -47,7 +52,11 @@ class HomeFragment : Fragment() {
 
             //Set current date
             val calendar: Calendar = Calendar.getInstance()
-            calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DATE))
+            calendar.set(
+                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(
+                    Calendar.DATE
+                )
+            )
 
             calendarView.setDate(calendar)
         }
@@ -60,12 +69,12 @@ class HomeFragment : Fragment() {
         calendarView.setEvents(events)
     }
 
-    private fun recyclerSetup(){
+    private fun recyclerSetup(matches: List<Match>){
         view?.let {
             recyclerMatches = it.findViewById(R.id.recycler_matches)
             recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
-            val countries = listOf("be", "al", "ar", "au")
-            recyclerMatches.adapter = MatchAdapter(requireContext(), countries)
+
+            recyclerMatches.adapter = MatchAdapter(requireContext(), matches)
         }
     }
 }
