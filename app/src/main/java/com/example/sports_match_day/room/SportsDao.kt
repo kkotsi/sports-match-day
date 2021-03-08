@@ -14,8 +14,8 @@ interface SportsDao {
     @Query("SELECT * FROM sport")
     fun getSports(): List<Sport>
 
-    @Query("SELECT * FROM sport LIMIT :count OFFSET :_offset")
-    fun getSport(count: Int, _offset: Int ): List<Sport>
+    @Query("SELECT * FROM sport LIMIT :count OFFSET :mOffset")
+    fun getSport(count: Int, mOffset: Int ): List<Sport>
 
     @Insert
     fun insertSport(sport: Sport)

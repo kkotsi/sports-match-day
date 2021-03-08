@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_match"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        android:backgroundTint="@color/colorBackgroundCard"
+        app:cardForegroundColor="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bottom_line">
+
+            <TextView
+                android:id="@+id/text_sport"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/image_country"
+                app:layout_constraintStart_toEndOf="@+id/image_country"
+                app:layout_constraintTop_toTopOf="@+id/image_country"
+                tools:text="Football" />
+
+            <TextView
+                android:id="@+id/text_first_squad"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:ellipsize="marquee"
+                android:maxWidth="200dp"
+                android:singleLine="true"
+                app:layout_constraintStart_toStartOf="@+id/image_country"
+                app:layout_constraintTop_toBottomOf="@+id/image_country"
+                tools:text="Real Madrid" />
+
+            <TextView
+                android:id="@+id/text_sec_squad"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/text_first_squad"
+                app:layout_constraintTop_toBottomOf="@+id/text_first_squad"
+                tools:text="Valencia" />
+
+            <TextView
+                android:id="@+id/text_first_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toEndOf="@+id/text_first_squad"
+                app:layout_constraintTop_toBottomOf="@+id/image_country"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/text_sec_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@+id/text_first_score"
+                app:layout_constraintTop_toBottomOf="@+id/text_first_score"
+                tools:text="1" />
+
+            <TextView
+                android:id="@+id/text_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/text_first_score"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Mon 15/2 \n 10:00" />
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:minWidth="24dp"
+                android:minHeight="24dp"
+                android:scaleType="center"
+                android:src="@drawable/be"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:riv_border_color="@color/colorWhite"
+                app:riv_border_width="5dip"
+                app:riv_corner_radius="5dp"
+                app:riv_mutate_background="true"
+                app:riv_tile_mode="repeat" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

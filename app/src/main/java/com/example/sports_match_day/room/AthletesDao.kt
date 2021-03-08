@@ -12,8 +12,8 @@ interface AthletesDao {
     @Query("SELECT * FROM athlete")
     fun getAthletes(): List<Athlete>
 
-    @Query("SELECT * FROM athlete LIMIT :count OFFSET :_offset")
-    fun getAthletes(count: Int, _offset: Int ): List<Athlete>
+    @Query("SELECT * FROM athlete LIMIT :count OFFSET :mOffset")
+    fun getAthletes(count: Int, mOffset: Int ): List<Athlete>
 
     @Insert
     fun insertAthlete(athlete: Athlete)

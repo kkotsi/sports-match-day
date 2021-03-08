@@ -13,8 +13,8 @@ interface SquadsDao {
     @Query("SELECT * FROM squad")
     fun getSquads(): List<Squad>
 
-    @Query("SELECT * FROM squad LIMIT :count OFFSET :_offset")
-    fun getSquads(count: Int, _offset: Int ): List<Squad>
+    @Query("SELECT * FROM squad LIMIT :count OFFSET :mOffset")
+    fun getSquads(count: Int, mOffset: Int ): List<Squad>
 
     @Insert
     fun insertSquad(squad: Squad)
