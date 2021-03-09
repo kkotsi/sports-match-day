@@ -11,7 +11,8 @@ val roomModule = module() {
     single {
         Room.databaseBuilder(
             get(),
-            SportsDatabase::class.java, "cocktails-users"
+            SportsDatabase::class.java,
+            "cocktails-users"
         ).build()
     }
 }

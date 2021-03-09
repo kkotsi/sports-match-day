@@ -16,7 +16,31 @@ import java.io.*
 class RawManager {
     companion object{
         fun getMatchesRaw(context: Context): List<Match>{
-            val input: InputStream = context.resources.openRawResource(R.raw.matches)
+            val json = readFile(context, R.raw.matches)
+
+            val myType = object : TypeToken<List<Match>>() {}.type
+            return Gson().fromJson(json, myType)
+        }
+
+        fun getSquadsRaw(context: Context): List<com.example.sports_match_day.room.entities.Squad>{
+            val json = readFile(context, R.raw.squads)
+            val myType = object : TypeToken<List<com.example.sports_match_day.room.entities.Squad>>() {}.type
+            return Gson().fromJson(json, myType)
+        }
+
+        fun getSportsRaw(context: Context): List<com.example.sports_match_day.room.entities.Sport>{
+            val json = readFile(context, R.raw.sports)
+            val myType = object : TypeToken<List<com.example.sports_match_day.room.entities.Sport>>() {}.type
+            return Gson().fromJson(json, myType)
+        }
+
+        fun getAthletesRaw(context: Context): List<com.example.sports_match_day.room.entities.Athlete>{
+            val json = readFile(context, R.raw.athletes)
+            val myType = object : TypeToken<List<com.example.sports_match_day.room.entities.Athlete>>() {}.type
+            return Gson().fromJson(json, myType)
+        }
+        private fun readFile(context: Context, file: Int): String{
+            val input: InputStream = context.resources.openRawResource(file)
             val writer: Writer = StringWriter()
             val buffer = CharArray(1024)
 
@@ -28,10 +52,7 @@ class RawManager {
                 }
             }
 
-            val json = writer.toString()
-
-            val myType = object : TypeToken<List<Match>>() {}.type
-            return Gson().fromJson(json, myType)
+            return writer.toString()
         }
     }
 }

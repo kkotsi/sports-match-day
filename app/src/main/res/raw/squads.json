@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Real Madrid",
+    "stadium": "Santiago Bernabeu",
+    "city": "{\"latitude\": 40.629269, \"longitude\": 22.947412}",
+    "country": "es",
+    "sportΙd": 1,
+    "birthday": -2140383600
+  },
+  {
+    "id": 2,
+    "name": "Valencia",
+    "stadium": "Mestalla",
+    "city": "{\"latitude\": 40.416775, \"longitude\": -3.703790}",
+    "country": "es",
+    "sportΙd": 1,
+    "birthday": -1602889200
+  }
+]

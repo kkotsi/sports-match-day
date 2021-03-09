@@ -3,7 +3,7 @@
       "date": 1615192003,
       "city": {"latitude": 40.629269, "longitude": 22.947412},
       "country": "gr",
-      "sport_id": 1,
+      "sportId": 1,
       "participants": [
         {"id": 1,"score": 2.0},
         {"id": 2, "score": 0.0}
@@ -13,7 +13,7 @@
       "date": 1605012013,
       "city": {"latitude": 40.730610, "longitude": -73.935242},
       "country": "us",
-      "sport_id": 2,
+      "sportId": 2,
       "participants": [
         {"id": 1,"score": 0.0},
         {"id": 2, "score": 0.0}
@@ -24,7 +24,7 @@
       "date": 1615192003,
       "city": {"latitude": 40.629269, "longitude": 22.947412},
       "country": "gr",
-      "sport_id": 1,
+      "sportId": 1,
       "participants": [
         {"id": 1,"score": 2.5},
         {"id": 2, "score": 10.57},

@@ -81,9 +81,9 @@ class MatchAdapter(
             val country = match.country.toString()
             val url = FlagManager.getFlagURL(country)
 
-            textSport.text = match.sport.name
-            participantFirst.text = match.participants[0].id.toString()
-            participantSecond.text = match.participants[1].id.toString()
+            textSport.text = match.sport?.name ?: ""
+            participantFirst.text = match.participants[0].participant?.name ?: ""
+            participantSecond.text = match.participants[1].participant?.name ?: ""
 
             val format = DecimalFormat("0.#")
             scoreFirst.text = format.format(match.participants[0].score).toString()
@@ -95,21 +95,23 @@ class MatchAdapter(
             ) + " " + match.date.dayOfMonth + "/" + match.date.monthValue + "\n" + match.date.hour + ":" + match.date.minute
             date.text = dateString
 
-            if (match.sport.gender == Gender.MALE) {
-                genderImage.setImageResource(R.drawable.ic_male)
-            } else {
-                genderImage.setImageResource(R.drawable.ic_female)
-            }
+            match.sport?.let {
+                if (it.gender == Gender.MALE) {
+                    genderImage.setImageResource(R.drawable.ic_male)
+                } else {
+                    genderImage.setImageResource(R.drawable.ic_female)
+                }
 
-            if (match.sport.type == SportType.SOLO) {
-                typeImage.setImageResource(R.drawable.ic_person)
-            } else {
-                typeImage.setImageResource(R.drawable.ic_group)
+                if (it.type == SportType.SOLO) {
+                    typeImage.setImageResource(R.drawable.ic_person)
+                } else {
+                    typeImage.setImageResource(R.drawable.ic_group)
 
-                if (match.participants.size > 2)
-                    moreText.visibility = View.VISIBLE
-                else
-                    moreText.visibility = View.GONE
+                    if (match.participants.size > 2)
+                        moreText.visibility = View.VISIBLE
+                    else
+                        moreText.visibility = View.GONE
+                }
             }
 
             Picasso

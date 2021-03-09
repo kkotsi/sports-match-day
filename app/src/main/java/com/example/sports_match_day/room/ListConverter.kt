@@ -1,9 +1,9 @@
 package com.example.sports_match_day.room
 
 import androidx.room.TypeConverter
-import com.example.sports_match_day.room.model.Athlete
-import com.example.sports_match_day.room.model.Sport
-import com.example.sports_match_day.room.model.Squad
+import com.example.sports_match_day.room.entities.Athlete
+import com.example.sports_match_day.room.entities.Sport
+import com.example.sports_match_day.room.entities.Squad
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type

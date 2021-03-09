@@ -13,11 +13,11 @@ class Match (
     var date: LocalDateTime,
     var city: Address,
     var country: Locale,
-    var sport: Sport,
+    var sport: Sport?,
     var participants: List<Participant>
     )
 
 class Participant(
-    var id: Int,
+    var participant: MatchParticipant?,
     var score: Double
 )

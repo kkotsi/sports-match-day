@@ -1,7 +1,7 @@
 package com.example.sports_match_day.room
 
 import androidx.room.*
-import com.example.sports_match_day.room.model.Athlete
+import com.example.sports_match_day.room.entities.Athlete
 
 /**
  * Created by Kristo on 07-Mar-21
@@ -9,18 +9,21 @@ import com.example.sports_match_day.room.model.Athlete
 @Dao
 interface AthletesDao {
 
-    @Query("SELECT * FROM athlete")
-    fun getAthletes(): List<Athlete>
+    @Query("SELECT * FROM athletes")
+    suspend fun getAthletes(): List<Athlete>
 
-    @Query("SELECT * FROM athlete LIMIT :count OFFSET :mOffset")
-    fun getAthletes(count: Int, mOffset: Int ): List<Athlete>
+    @Query("SELECT * FROM athletes LIMIT :count OFFSET :mOffset")
+    suspend fun getAthletes(count: Int, mOffset: Int ): List<Athlete>
+
+    @Query("SELECT * FROM athletes WHERE athletes.id = :id")
+    suspend fun getAthlete(id: Int): Athlete
 
     @Insert
-    fun insertAthlete(athlete: Athlete)
+    suspend fun insertAthlete(athlete: Athlete)
 
     @Delete
-    fun deleteAthlete(athlete: Athlete)
+    suspend fun deleteAthlete(athlete: Athlete)
 
     @Update
-    fun updateAthlete(athlete: Athlete)
+    suspend fun updateAthlete(athlete: Athlete)
 }

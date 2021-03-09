@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         calendarSetup()
-        viewModel.loadMatches()
+        viewModel.loadData()
     }
 
     private fun calendarSetup(){

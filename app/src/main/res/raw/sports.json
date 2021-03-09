@@ -1,0 +1,14 @@
+[
+  {
+    "id" : 1,
+    "name": "Football",
+    "type": false,
+    "gender": true
+  },
+  {
+    "id" : 2,
+    "name": "Ping Pong",
+    "type": true,
+    "gender": true
+  }
+]
