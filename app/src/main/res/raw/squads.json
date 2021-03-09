@@ -16,5 +16,23 @@
     "country": "es",
     "sportΙd": 1,
     "birthday": -1602889200
+  },
+  {
+    "id": 3,
+    "name": "Arsenal",
+    "stadium": "Emirates",
+    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
+    "country": "en",
+    "sportΙd": 4,
+    "birthday": -2627118000
+  },
+  {
+    "id": 4,
+    "name": "Tottenham",
+    "stadium": "Tottenham Hotspur Stadium",
+    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
+    "country": "en",
+    "sportΙd": 4,
+    "birthday": -2755594800000
   }
 ]

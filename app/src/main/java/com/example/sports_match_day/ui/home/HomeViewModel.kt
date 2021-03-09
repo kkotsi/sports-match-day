@@ -22,10 +22,12 @@ class HomeViewModel(private var coreController: CoreController) : ScopedViewMode
 
     fun loadData(){
         launchWithLoad({
+            doneLoading.value = false
             coreController.loadSamples()
-            coreController.loadMatches(matches)})
+            doneLoading.value = coreController.loadMatches(matches)
+        })
         {
-            Timber.d("Couldn't load the matches: $it" )
+            Timber.e("Couldn't load the matches: $it" )
         }
     }
 

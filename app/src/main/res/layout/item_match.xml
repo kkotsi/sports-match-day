@@ -31,7 +31,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="2dp"
+                android:includeFontPadding="false"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/image_country"
@@ -39,16 +40,30 @@
                 tools:text="Football" />
 
             <TextView
+                android:id="@+id/text_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="2dp"
+                android:includeFontPadding="false"
+                android:visibility="gone"
+                android:textSize="10sp"
+                app:layout_constraintStart_toEndOf="@+id/text_sport"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Madrid, \nStadium: Mestalla" />
+
+            <TextView
                 android:id="@+id/text_first_squad"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 android:ellipsize="marquee"
                 android:maxWidth="200dp"
                 android:singleLine="true"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/image_country"
-                app:layout_constraintTop_toBottomOf="@+id/image_country"
+                app:layout_constraintTop_toBottomOf="@+id/text_sport"
                 tools:text="Real Madrid" />
 
             <TextView
@@ -57,6 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:ellipsize="marquee"
+                android:textSize="16sp"
                 android:singleLine="true"
                 app:layout_constraintBottom_toTopOf="@+id/text_more"
                 app:layout_constraintStart_toStartOf="@+id/text_first_squad"
@@ -82,6 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/text_first_squad"
                 app:layout_constraintTop_toTopOf="@+id/text_first_squad"
                 tools:text="1" />
@@ -90,6 +107,7 @@
                 android:id="@+id/text_sec_score"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="@+id/text_first_score"
                 app:layout_constraintTop_toBottomOf="@+id/text_first_score"
                 tools:text="1" />

@@ -19,17 +19,25 @@
         {"id": 2, "score": 0.0}
       ]
     },
-
     {
-      "date": 1615192003,
+      "date": 1615320543,
       "city": {"latitude": 40.629269, "longitude": 22.947412},
       "country": "gr",
-      "sportId": 1,
+      "sportId": 3,
       "participants": [
-        {"id": 1,"score": 2.5},
-        {"id": 2, "score": 10.57},
-        {"id": 2, "score": 2.0},
-        {"id": 2, "score": 0.0}
+        {"id": 3, "score": -1.0},
+        {"id": 4, "score": -1.0},
+        {"id": 5, "score": -1.0}
+      ]
+    },
+    {
+      "date": 1610222943,
+      "city": {"latitude": 48.864716, "longitude": 2.349014},
+      "country": "fr",
+      "sportId": 4,
+      "participants": [
+        {"id": 3, "score": 3.0},
+        {"id": 4, "score": 2.0}
       ]
     }
   ]

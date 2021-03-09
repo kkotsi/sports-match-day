@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,6 +28,7 @@ class HomeFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var recyclerMatches: RecyclerView
     private lateinit var calendarView: CalendarView
+    private lateinit var loader: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,19 +37,40 @@ class HomeFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_home, container, false)
 
-        viewModel.matches.observe(viewLifecycleOwner, {
-            it.forEach {
-                setUpEvent()
-            }
-            recyclerSetup(it)
-        })
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBarSetup()
+        setupObservers()
         calendarSetup()
         viewModel.loadData()
+    }
+
+    private fun setupObservers(){
+        viewModel.matches.observe(viewLifecycleOwner, {
+            repeat(it.size) {
+                setUpEvent()
+            }
+            recyclerSetup(it)
+        })
+
+        viewModel.doneLoading.observe(viewLifecycleOwner, { doneLoading ->
+            if(doneLoading){
+                loader.visibility = View.INVISIBLE
+            }else {
+                loader.visibility = View.VISIBLE
+                loader.animate()
+            }
+        })
+    }
+    private fun progressBarSetup(){
+
+        view?.let { v ->
+            loader = v.findViewById(R.id.progress_loading)
+        }
     }
 
     private fun calendarSetup(){

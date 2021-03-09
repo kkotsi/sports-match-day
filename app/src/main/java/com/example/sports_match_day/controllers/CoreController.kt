@@ -22,13 +22,15 @@ class CoreControllerImpl(
     private var localRepository: LocalRepository
 ) : CoreController {
 
-    override suspend fun loadMatches(matches: MutableLiveData<List<Match>>) {
+    override suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean {
         val netMatches: List<com.example.sports_match_day.model.network.Match> =
             RawManager.getMatchesRaw(context)
 
         val mMatches = decoupleAdapter.toMatches(netMatches)
         memoryRepository.matches = mMatches
         matches.value = mMatches
+
+        return true
     }
 
     override suspend fun loadSamples(): Boolean {
@@ -67,7 +69,7 @@ class CoreControllerImpl(
 }
 
 interface CoreController {
-    suspend fun loadMatches(matches: MutableLiveData<List<Match>>)
+    suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean
     suspend fun loadSamples(): Boolean
 
     suspend fun getAthlete(id: Int): Athlete?

@@ -8,6 +8,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
+    <string name="stadium">Stadium</string>
+
     <string name="menu_home">DashBoard</string>
     <string name="menu_athletes">Athletes</string>
     <string name="menu_squads">Squads</string>

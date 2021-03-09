@@ -10,5 +10,17 @@
     "name": "Ping Pong",
     "type": true,
     "gender": true
+  },
+  {
+    "id" : 3,
+    "name": "100m Dash",
+    "type": true,
+    "gender": true
+  },
+  {
+    "id" : 4,
+    "name": "Volley",
+    "type": false,
+    "gender": false
   }
 ]
