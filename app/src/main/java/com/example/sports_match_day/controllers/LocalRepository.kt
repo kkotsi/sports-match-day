@@ -1,5 +1,10 @@
 package com.example.sports_match_day.controllers
 
+import androidx.lifecycle.LiveData
+import androidx.paging.Config
+import androidx.paging.PagedList
+import androidx.paging.toLiveData
+import com.example.sports_match_day.controllers.paging.AthletesDataSource
 import com.example.sports_match_day.model.Athlete
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.Squad
@@ -10,12 +15,13 @@ import com.example.sports_match_day.room.SportsDatabase
  */
 class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
-    private var decoupleAdapter: DecoupleAdapter
+    private var decoupleAdapter: DecoupleAdapter,
+    private var athletesFactory : AthletesDataSource.Factory
 ) : LocalRepository {
 
-    override suspend fun getAthletes(): List<Athlete> {
-        val athletes = sportsDatabase.athletesDao().getAthletes()
-        return decoupleAdapter.toAthletes(athletes)
+    override fun getAthletes(): LiveData<PagedList<Athlete>> {
+        val config = Config(AthletesDataSource.PAGE_SIZE, AthletesDataSource.PAGE_SIZE - 2, false)
+        return athletesFactory.toLiveData(config)
     }
 
     override suspend fun getSports(): List<Sport> {
@@ -63,7 +69,7 @@ class LocalRepositoryImpl(
 }
 
 interface LocalRepository {
-    suspend fun getAthletes(): List<Athlete>
+    fun getAthletes():  LiveData<PagedList<Athlete>>
     suspend fun getSports(): List<Sport>
     suspend fun getSquads(): List<Squad>
 

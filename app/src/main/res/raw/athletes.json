@@ -26,7 +26,7 @@
   {
     "id" : 4,
     "name":"Nick",
-    "city": "{\"latitude\": -15.793889\n, \"longitude\": -47.882778}",
+    "city": "{\"latitude\": -15.793889, \"longitude\": -47.882778}",
     "country": "br",
     "sportΙd": 3,
     "birthday": 636978811
@@ -34,7 +34,49 @@
   {
     "id" : 5,
     "name":"John",
-    "city": "{\"latitude\": 51.509865\n\n, \"longitude\": -0.118092}",
+    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
+    "country": "en",
+    "sportΙd": 3,
+    "birthday": 636978811
+  },
+
+
+  {
+    "id" : 6,
+    "name": "Giannis",
+    "city": "{\"latitude\": 40.629269, \"longitude\": 22.947412}",
+    "country": "gr",
+    "sportΙd": 3,
+    "birthday": 636978811
+  },
+  {
+    "id" : 7,
+    "name": "Xristos",
+    "city": "{\"latitude\": 50.85045, \"longitude\": 4.34878}",
+    "country": "be",
+    "sportΙd": 3,
+    "birthday": 636978811
+  },
+  {
+    "id" : 8,
+    "name": "Karl",
+    "city": "{\"latitude\": 48.137154, \"longitude\": 11.576124}",
+    "country": "ge",
+    "sportΙd": 3,
+    "birthday": 636978811
+  },
+  {
+    "id" : 9,
+    "name":"Ana",
+    "city": "{\"latitude\": -15.793889, \"longitude\": -47.882778}",
+    "country": "br",
+    "sportΙd": 3,
+    "birthday": 636978811
+  },
+  {
+    "id" : 10,
+    "name":"Mario",
+    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
     "country": "en",
     "sportΙd": 3,
     "birthday": 636978811

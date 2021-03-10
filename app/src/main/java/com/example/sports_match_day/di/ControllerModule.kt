@@ -13,5 +13,5 @@ val controllerModule = module {
     single<FirebaseRepository> { FirebaseRepositoryImpl() }
     single { MemoryRepository() }
     single { DecoupleAdapter(get()) }
-    single<LocalRepository> { LocalRepositoryImpl(get(),get())}
+    single<LocalRepository> { LocalRepositoryImpl(get(),get(), get())}
 }

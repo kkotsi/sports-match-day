@@ -1,7 +1,9 @@
 package com.example.sports_match_day.controllers
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.PagedList
 import com.example.sports_match_day.firebase.FirebaseRepository
 import com.example.sports_match_day.model.Athlete
 import com.example.sports_match_day.model.Match
@@ -59,6 +61,10 @@ class CoreControllerImpl(
         return localRepository.getAthlete(id)
     }
 
+    override fun getAthletes(): LiveData<PagedList<Athlete>> {
+        return localRepository.getAthletes()
+    }
+
     override suspend fun getSquad(id: Int): Squad? {
         return localRepository.getSquad(id)
     }
@@ -73,6 +79,8 @@ interface CoreController {
     suspend fun loadSamples(): Boolean
 
     suspend fun getAthlete(id: Int): Athlete?
+    fun getAthletes(): LiveData<PagedList<Athlete>>
+
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
 }

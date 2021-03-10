@@ -1,8 +1,6 @@
 package com.example.sports_match_day.ui.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Squad
@@ -19,6 +17,7 @@ class HomeViewModel(private var coreController: CoreController) : ScopedViewMode
     val matches = MutableLiveData<List<Match>>()
     val squads = MutableLiveData<List<Squad>>()
     var doneLoading = LiveEvent<Boolean>()
+
 
     fun loadData(){
         launchWithLoad({

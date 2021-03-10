@@ -83,6 +83,11 @@ class MatchAdapter(
             val country = match.country.toString()
             val url = FlagManager.getFlagURL(country)
 
+            Picasso
+                .with(context)
+                .load(url)
+                .into(countryImage)
+
             val format = DecimalFormat("0.#")
 
             textSport.text = match.sport?.name ?: ""
@@ -133,11 +138,6 @@ class MatchAdapter(
                 moreText.visibility = View.GONE
 
             locationText.text = location
-
-            Picasso
-                .with(context)
-                .load(url)
-                .into(countryImage)
         }
     }
 }

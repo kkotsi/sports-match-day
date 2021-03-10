@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorAccent">#17a2e3</color>
+    <color name="colorAccent">#1194DD</color>
     <color name="colorPrimary">#FF6200EE</color>
     <color name="colorPrimaryDark">#4A02B1</color>
 
@@ -11,4 +11,9 @@
 
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
+    <color name="colorMale">#FF0099CC</color>
+    <color name="colorFemale">#FFAA66CC</color>
+
+    <color name="colorLink">#3F84D7</color>
 </resources>
