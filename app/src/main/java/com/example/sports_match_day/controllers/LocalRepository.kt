@@ -5,6 +5,7 @@ import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
+import com.example.sports_match_day.controllers.paging.SportsDataSource
 import com.example.sports_match_day.controllers.paging.SquadsDataSource
 import com.example.sports_match_day.model.Athlete
 import com.example.sports_match_day.model.Sport
@@ -18,7 +19,8 @@ class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
     private var athletesFactory : AthletesDataSource.Factory,
-    private var squadsFactory : SquadsDataSource.Factory
+    private var squadsFactory : SquadsDataSource.Factory,
+    private var sportsFactory : SportsDataSource.Factory
 ) : LocalRepository {
 
     override fun getAthletes(): LiveData<PagedList<Athlete>> {
@@ -26,9 +28,9 @@ class LocalRepositoryImpl(
         return athletesFactory.toLiveData(config)
     }
 
-    override suspend fun getSports(): List<Sport> {
-        val sports =  sportsDatabase.sportsDao().getSports()
-        return decoupleAdapter.toSports(sports)
+    override fun getSports(): LiveData<PagedList<Sport>> {
+        val config = Config(SquadsDataSource.PAGE_SIZE, SquadsDataSource.PAGE_SIZE - 2, false)
+        return sportsFactory.toLiveData(config)
     }
 
     override fun getSquads(): LiveData<PagedList<Squad>> {
@@ -76,11 +78,15 @@ class LocalRepositoryImpl(
     override suspend fun removeSquad(squad: Squad) {
         sportsDatabase.squadsDao().deleteSquad(squad.id)
     }
+
+    override suspend fun removeSport(sport: Sport) {
+        sportsDatabase.sportsDao().deleteSport(sport.id)
+    }
 }
 
 interface LocalRepository {
     fun getAthletes():  LiveData<PagedList<Athlete>>
-    suspend fun getSports(): List<Sport>
+    fun getSports(): LiveData<PagedList<Sport>>
     fun getSquads(): LiveData<PagedList<Squad>>
 
 
@@ -94,4 +100,5 @@ interface LocalRepository {
 
     suspend fun removeAthlete(athlete: Athlete)
     suspend fun removeSquad(squad: Squad)
+    suspend fun removeSport(sport: Sport)
 }

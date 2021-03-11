@@ -11,10 +11,16 @@
     <string name="stadium">Stadium</string>
     <string name="total_athletes">Currently showing %1$s athletes</string>
     <string name="total_squads">Currently showing %1$s squads</string>
+    <string name="total_sports">Currently showing %1$s sports</string>
 
     <string name="menu_home">DashBoard</string>
     <string name="menu_athletes">Athletes</string>
     <string name="menu_squads">Squads</string>
+    <string name="menu_sports">Sports</string>
+
     <string name="more_options">...</string>
     <string name="athletes">Athletes</string>
+    <string name="manage">Manage</string>
+    <string name="settings">Settings</string>
+    <string name="exit">Exit</string>
 </resources>

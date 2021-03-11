@@ -19,6 +19,7 @@ class SportsApplication: Application() {
         //LocalDateTime
         AndroidThreeTen.init(this)
 
+        //Dependency Injection
         startKoin {
             androidLogger()
             androidContext(this@SportsApplication)

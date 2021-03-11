@@ -8,13 +8,40 @@
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
             android:title="@string/menu_home" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_run"
-            android:title="@string/menu_athletes" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_squad_icon"
-            android:title="@string/menu_squads" />
     </group>
+
+    <item android:title="@string/manage">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_athletes"
+                    android:icon="@drawable/ic_run"
+                    android:title="@string/menu_athletes" />
+                <item
+                    android:id="@+id/nav_squads"
+                    android:icon="@drawable/ic_squad_icon"
+                    android:title="@string/menu_squads" />
+                <item
+                    android:id="@+id/nav_sports"
+                    android:icon="@drawable/ic_sports"
+                    android:title="@string/menu_sports" />
+
+            </group>
+        </menu>
+    </item>
+    <item android:title="@string/settings">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/nav_settings"
+                    android:icon="@drawable/ic_run"
+                    android:title="@string/settings" />
+                <item
+                    android:id="@+id/nav_exit"
+                    android:icon="@drawable/ic_run"
+                    android:title="@string/exit" />
+
+            </group>
+        </menu>
+    </item>
 </menu>

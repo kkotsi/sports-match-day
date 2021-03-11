@@ -24,6 +24,9 @@ interface SportsDao {
     @Delete
     suspend fun deleteSport(sport: Sport)
 
+    @Query("DELETE FROM sports WHERE id=:id")
+    suspend fun deleteSport(id: Int)
+
     @Update
     suspend fun updateSport(sport: Sport)
 }

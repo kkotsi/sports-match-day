@@ -69,6 +69,10 @@ class CoreControllerImpl(
         return localRepository.getSquads()
     }
 
+    override fun getSports(): LiveData<PagedList<Sport>> {
+        return localRepository.getSports()
+    }
+
     override suspend fun getSquad(id: Int): Squad? {
         return localRepository.getSquad(id)
     }
@@ -84,6 +88,10 @@ class CoreControllerImpl(
     override suspend fun removeSquad(squad: Squad) {
         return localRepository.removeSquad(squad)
     }
+
+    override suspend fun removeSport(sport: Sport) {
+        return localRepository.removeSport(sport)
+    }
 }
 
 interface CoreController {
@@ -93,10 +101,12 @@ interface CoreController {
     suspend fun getAthlete(id: Int): Athlete?
     fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSquads(): LiveData<PagedList<Squad>>
+    fun getSports(): LiveData<PagedList<Sport>>
 
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
 
     suspend fun removeAthlete(athlete: Athlete)
     suspend fun removeSquad(squad: Squad)
+    suspend fun removeSport(sport: Sport)
 }
