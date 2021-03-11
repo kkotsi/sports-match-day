@@ -1,16 +1,25 @@
 package com.example.sports_match_day.ui.squads
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
+import com.example.sports_match_day.controllers.CoreController
+import com.example.sports_match_day.model.Squad
+import com.example.sports_match_day.ui.base.ScopedViewModel
 
 /**
  * Created by Kristo on 05-Mar-21
  */
-class SquadsViewModel : ViewModel() {
+class SquadsViewModel(private var coreController: CoreController) : ScopedViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is slideshow Fragment"
+    var pagedSquads: LiveData<PagedList<Squad>> = coreController.getSquads()
+
+    fun removeSquad(squad: Squad?){
+        squad?.let {
+            launchWithLoad({
+                coreController.removeSquad(it)
+            }){
+
+            }
+        }
     }
-    val text: LiveData<String> = _text
 }

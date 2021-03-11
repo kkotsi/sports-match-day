@@ -15,9 +15,9 @@ import java.util.*
 /**
  * Created by Kristo on 08-Mar-21
  */
-class DecoupleAdapter(var context: Context): KoinComponent {
+class DecoupleAdapter(var context: Context) : KoinComponent {
 
-    suspend fun toMatches(matches: List<com.example.sports_match_day.model.network.Match>): MutableList<Match>{
+    suspend fun toMatches(matches: List<com.example.sports_match_day.model.network.Match>): MutableList<Match> {
         val newMatches = mutableListOf<Match>()
         matches.forEach {
             newMatches.add(toMatch(it))
@@ -25,7 +25,7 @@ class DecoupleAdapter(var context: Context): KoinComponent {
         return newMatches
     }
 
-    suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match{
+    suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match {
         val date = epochConverter(match.date)
         val city = locationConverter(match.city)
         val country = countryConverter(match.country)
@@ -50,42 +50,47 @@ class DecoupleAdapter(var context: Context): KoinComponent {
         return Match(date, city, country, sport, participants)
     }
 
-    fun toSports(sports: List<com.example.sports_match_day.room.entities.Sport>): List<Sport>{
+    fun toSports(sports: List<com.example.sports_match_day.room.entities.Sport>): List<Sport> {
         val newSports = mutableListOf<Sport>()
-        sports.forEach {
-            newSports.add(toSport(it))
+        sports.forEach { roomSport ->
+            val sport = toSport(roomSport)
+            sport?.let {
+                newSports.add(it)
+            }
         }
         return newSports
     }
 
-    fun toSport(sport: com.example.sports_match_day.room.entities.Sport): Sport{
+    fun toSport(sport: com.example.sports_match_day.room.entities.Sport?): Sport? {
+        sport?.let {
+            val type: SportType = if (sport.type) {
+                SportType.SOLO
+            } else {
+                SportType.TEAM
+            }
 
-        val type: SportType = if(sport.type){
-            SportType.SOLO
-        }else{
-            SportType.TEAM
+            val gender: Gender = if (sport.gender) {
+                Gender.MALE
+            } else {
+                Gender.FEMALE
+            }
+            return Sport(sport.id, sport.name, type, gender)
         }
-
-        val gender: Gender = if(sport.gender){
-            Gender.MALE
-        }else{
-            Gender.FEMALE
-        }
-        return Sport(sport.id, sport.name, type, gender)
+        return null
     }
 
-   suspend fun toAthletes(athletes: List<com.example.sports_match_day.room.entities.Athlete>): List<Athlete>{
+    suspend fun toAthletes(athletes: List<com.example.sports_match_day.room.entities.Athlete>): List<Athlete> {
         val newAthletes = mutableListOf<Athlete>()
         athletes.forEach { roomAthlete ->
             val nAthlete = toAthlete(roomAthlete)
-            nAthlete?.let{
+            nAthlete?.let {
                 newAthletes.add(it)
             }
         }
         return newAthletes
     }
 
-    suspend fun toAthlete(athlete: com.example.sports_match_day.room.entities.Athlete?): Athlete?{
+    suspend fun toAthlete(athlete: com.example.sports_match_day.room.entities.Athlete?): Athlete? {
         athlete?.let {
             val birthday = epochConverter(athlete.birthday)
             val city = locationConverter(athlete.city)
@@ -101,41 +106,60 @@ class DecoupleAdapter(var context: Context): KoinComponent {
         return null
     }
 
-    fun toSquads(squads: List<com.example.sports_match_day.room.entities.Squad>): List<Squad>{
+    suspend fun toSquads(squads: List<com.example.sports_match_day.room.entities.Squad>): List<Squad> {
         val newSquads = mutableListOf<Squad>()
-        squads.forEach {
-            newSquads.add(toSquad(it))
+        squads.forEach { roomSquad ->
+            val squad = toSquad(roomSquad)
+            squad?.let {
+                newSquads.add(it)
+            }
         }
         return newSquads
     }
 
-    fun toSquad(squad: com.example.sports_match_day.room.entities.Squad): Squad{
+    suspend fun toSquad(squad: com.example.sports_match_day.room.entities.Squad?): Squad? {
+        squad?.let {
+            val birthday = epochConverter(squad.birthday)
+            val city = locationConverter(squad.city)
+            val country = countryConverter(squad.country)
 
-        val birthday = epochConverter(squad.birthday)
-        val city = locationConverter(squad.city)
-        val country = countryConverter(squad.country)
+            val localRepository = get<LocalRepository>()
+            val sport = localRepository.getSport(squad.sportId) ?: return null
 
-        return Squad(squad.id, squad.name, squad.stadium, city, country, squad.sportId, birthday)
+            return Squad(
+                squad.id,
+                squad.name,
+                squad.stadium,
+                city,
+                country,
+                sport,
+                birthday
+            )
+        }
+        return null
     }
 
-    private fun participantsConverter(participant: com.example.sports_match_day.model.network.Participant, matchParticipant: MatchParticipant?): Participant{
+    private fun participantsConverter(
+        participant: com.example.sports_match_day.model.network.Participant,
+        matchParticipant: MatchParticipant?
+    ): Participant {
         return Participant(matchParticipant, participant.score)
     }
 
-    private fun countryConverter(code: String): Locale{
+    private fun countryConverter(code: String): Locale {
         return Locale(code)
     }
 
-    private fun locationConverter(location: String): Address?{
+    private fun locationConverter(location: String): Address? {
         val geoCoder = Geocoder(context, Locale.getDefault())
         val addresses = geoCoder.getFromLocationName(location, 1)
-        if(addresses.size > 0)
+        if (addresses.size > 0)
             return addresses[0]
 
         return null
     }
 
-    private fun epochConverter(epoch: Long): LocalDateTime{
-        return LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch),ZoneId.systemDefault() )
+    private fun epochConverter(epoch: Long): LocalDateTime {
+        return LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault())
     }
 }

@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Squad
-import com.example.sports_match_day.ui.base.LiveEvent
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
 import timber.log.Timber
@@ -16,20 +15,16 @@ class HomeViewModel(private var coreController: CoreController) : ScopedViewMode
 
     val matches = MutableLiveData<List<Match>>()
     val squads = MutableLiveData<List<Squad>>()
-    var doneLoading = LiveEvent<Boolean>()
-
 
     fun loadData(){
         launchWithLoad({
-            doneLoading.value = false
             coreController.loadSamples()
-            doneLoading.value = coreController.loadMatches(matches)
+            coreController.loadMatches(matches)
         })
         {
             Timber.e("Couldn't load the matches: $it" )
         }
     }
-
 
     fun getEventDates(): List<LocalDateTime>{
         val eventDates = mutableListOf<LocalDateTime>()

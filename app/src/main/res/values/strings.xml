@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sports-Match-Day</string>
+    <string name="app_name">Sports Match Day</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -10,6 +10,7 @@
 
     <string name="stadium">Stadium</string>
     <string name="total_athletes">Currently showing %1$s athletes</string>
+    <string name="total_squads">Currently showing %1$s squads</string>
 
     <string name="menu_home">DashBoard</string>
     <string name="menu_athletes">Athletes</string>

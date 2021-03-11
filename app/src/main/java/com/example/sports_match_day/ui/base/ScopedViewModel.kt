@@ -21,10 +21,10 @@ abstract class ScopedViewModel : ViewModel() {
         coroutineJob.cancel()
     }
 
-    protected val _isDataLoading = MutableLiveData<Boolean>()
+    private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
 
-    protected val _apiErrorMessage = MutableLiveData<Throwable>()
+    private val _apiErrorMessage = MutableLiveData<Throwable>()
     val apiErrorMessage: LiveData<Throwable> = _apiErrorMessage.toSingleEvent()
 
     fun clearError(){

@@ -24,6 +24,9 @@ interface SquadsDao {
     @Delete
     suspend fun deleteSquad(squad: Squad)
 
+    @Query("DELETE FROM squads WHERE id=:id")
+    suspend fun deleteSquad(id: Int)
+
     @Update
     suspend fun updateSquad(squad: Squad)
 }

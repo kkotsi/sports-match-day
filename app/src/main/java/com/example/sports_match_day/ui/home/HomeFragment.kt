@@ -1,6 +1,5 @@
 package com.example.sports_match_day.ui.home
 
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
-import com.example.sports_match_day.controllers.DecoupleAdapter
 import com.example.sports_match_day.model.Match
-import com.example.sports_match_day.utils.RawManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -43,9 +40,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        progressBarSetup()
+        setupLoader()
         setupObservers()
-        calendarSetup()
+        setupCalendar()
         viewModel.loadData()
     }
 
@@ -57,23 +54,23 @@ class HomeFragment : Fragment() {
             recyclerSetup(it)
         })
 
-        viewModel.doneLoading.observe(viewLifecycleOwner, { doneLoading ->
-            if(doneLoading){
-                loader.visibility = View.INVISIBLE
-            }else {
+        viewModel.isDataLoading.observe(viewLifecycleOwner, {
+            if(it){
                 loader.visibility = View.VISIBLE
                 loader.animate()
+            }else {
+                loader.visibility = View.INVISIBLE
             }
         })
     }
-    private fun progressBarSetup(){
 
+    private fun setupLoader(){
         view?.let { v ->
             loader = v.findViewById(R.id.progress_loading)
         }
     }
 
-    private fun calendarSetup(){
+    private fun setupCalendar(){
         view?.let { v ->
             calendarView = v.findViewById(R.id.calendarView)
 

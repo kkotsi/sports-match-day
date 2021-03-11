@@ -14,6 +14,6 @@ class Squad(
     var stadium: String,
     var city: Address?,
     var country: Locale,
-    var sportId: Int,
+    var sport: Sport?,
     var birthday: LocalDateTime
 ): MatchParticipant(name)

@@ -3,36 +3,36 @@
     "id": 1,
     "name": "Real Madrid",
     "stadium": "Santiago Bernabeu",
-    "city": "{\"latitude\": 40.629269, \"longitude\": 22.947412}",
+    "city": "Madrid",
     "country": "es",
-    "sportΙd": 1,
+    "sportId": 1,
     "birthday": -2140383600
   },
   {
     "id": 2,
     "name": "Valencia",
     "stadium": "Mestalla",
-    "city": "{\"latitude\": 40.416775, \"longitude\": -3.703790}",
+    "city": "Valencia",
     "country": "es",
-    "sportΙd": 1,
+    "sportId": 1,
     "birthday": -1602889200
   },
   {
     "id": 3,
     "name": "Arsenal",
     "stadium": "Emirates",
-    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
-    "country": "en",
-    "sportΙd": 4,
+    "city": "London",
+    "country": "gb",
+    "sportId": 4,
     "birthday": -2627118000
   },
   {
     "id": 4,
     "name": "Tottenham",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
-    "country": "en",
-    "sportΙd": 4,
-    "birthday": -2755594800000
+    "city": "London}",
+    "country": "gb",
+    "sportId": 4,
+    "birthday": -2755594800
   }
 ]

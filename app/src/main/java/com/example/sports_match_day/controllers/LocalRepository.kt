@@ -5,6 +5,7 @@ import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
+import com.example.sports_match_day.controllers.paging.SquadsDataSource
 import com.example.sports_match_day.model.Athlete
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.Squad
@@ -16,7 +17,8 @@ import com.example.sports_match_day.room.SportsDatabase
 class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
-    private var athletesFactory : AthletesDataSource.Factory
+    private var athletesFactory : AthletesDataSource.Factory,
+    private var squadsFactory : SquadsDataSource.Factory
 ) : LocalRepository {
 
     override fun getAthletes(): LiveData<PagedList<Athlete>> {
@@ -25,13 +27,13 @@ class LocalRepositoryImpl(
     }
 
     override suspend fun getSports(): List<Sport> {
-        val roomSports = sportsDatabase.sportsDao().getSports()
-        return decoupleAdapter.toSports(roomSports)
+        val sports =  sportsDatabase.sportsDao().getSports()
+        return decoupleAdapter.toSports(sports)
     }
 
-    override suspend fun getSquads(): List<Squad> {
-        val roomSquads = sportsDatabase.squadsDao().getSquads()
-        return decoupleAdapter.toSquads(roomSquads)
+    override fun getSquads(): LiveData<PagedList<Squad>> {
+        val config = Config(SquadsDataSource.PAGE_SIZE, SquadsDataSource.PAGE_SIZE - 2, false)
+        return squadsFactory.toLiveData(config)
     }
 
     override suspend fun getAthlete(id: Int): Athlete? {
@@ -70,12 +72,16 @@ class LocalRepositoryImpl(
     override suspend fun removeAthlete(athlete: Athlete) {
         sportsDatabase.athletesDao().deleteAthlete(athlete.id)
     }
+
+    override suspend fun removeSquad(squad: Squad) {
+        sportsDatabase.squadsDao().deleteSquad(squad.id)
+    }
 }
 
 interface LocalRepository {
     fun getAthletes():  LiveData<PagedList<Athlete>>
     suspend fun getSports(): List<Sport>
-    suspend fun getSquads(): List<Squad>
+    fun getSquads(): LiveData<PagedList<Squad>>
 
 
     suspend fun getAthlete(id: Int): Athlete?
@@ -87,4 +93,5 @@ interface LocalRepository {
     suspend fun setSquads(squads: List<com.example.sports_match_day.room.entities.Squad>)
 
     suspend fun removeAthlete(athlete: Athlete)
+    suspend fun removeSquad(squad: Squad)
 }
