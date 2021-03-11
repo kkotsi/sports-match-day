@@ -66,6 +66,10 @@ class LocalRepositoryImpl(
             sportsDatabase.squadsDao().insertSquad(it)
         }
     }
+
+    override suspend fun removeAthlete(athlete: Athlete) {
+        sportsDatabase.athletesDao().deleteAthlete(athlete.id)
+    }
 }
 
 interface LocalRepository {
@@ -81,4 +85,6 @@ interface LocalRepository {
     suspend fun setAthletes(athletes: List<com.example.sports_match_day.room.entities.Athlete>)
     suspend fun setSports(sports: List<com.example.sports_match_day.room.entities.Sport>)
     suspend fun setSquads(squads: List<com.example.sports_match_day.room.entities.Squad>)
+
+    suspend fun removeAthlete(athlete: Athlete)
 }

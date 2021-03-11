@@ -11,8 +11,9 @@ import java.util.*
 class Athlete(
     var id: Int,
     name: String,
-    var city: Address,
+    var city: Address?,
     var country: Locale,
-    var sportId: Int,
-    var birthday: LocalDateTime
+    var sport: Sport,
+    var birthday: LocalDateTime,
+    var gender: Gender
 ): MatchParticipant(name)

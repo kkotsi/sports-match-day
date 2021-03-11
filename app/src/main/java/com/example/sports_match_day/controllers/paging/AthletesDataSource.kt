@@ -26,10 +26,7 @@ class AthletesDataSource private constructor(
         GlobalScope.launch(Dispatchers.Default) {
 
             val roomAthletes = sportsDatabase.athletesDao().getAthletes(PAGE_SIZE, 0)
-            val athletes = mutableListOf<Athlete>()
-            roomAthletes.forEach {
-                athletes.add(decoupleAdapter.toAthlete(it))
-            }
+            val athletes = decoupleAdapter.toAthletes(roomAthletes)
             callback.onResult(athletes, null, PAGE_SIZE)
         }
     }
@@ -42,10 +39,7 @@ class AthletesDataSource private constructor(
         GlobalScope.launch(Dispatchers.Default) {
 
             val roomAthletes = sportsDatabase.athletesDao().getAthletes(5, params.key)
-            val athletes = mutableListOf<Athlete>()
-            roomAthletes.forEach {
-                athletes.add(decoupleAdapter.toAthlete(it))
-            }
+            val athletes = decoupleAdapter.toAthletes(roomAthletes)
             callback.onResult(athletes, params.key + PAGE_SIZE)
         }
     }

@@ -4,8 +4,6 @@ import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import com.example.sports_match_day.model.*
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.threeten.bp.Instant
@@ -76,23 +74,31 @@ class DecoupleAdapter(var context: Context): KoinComponent {
         return Sport(sport.id, sport.name, type, gender)
     }
 
-    fun toAthletes(athletes: List<com.example.sports_match_day.room.entities.Athlete>): List<Athlete>{
+   suspend fun toAthletes(athletes: List<com.example.sports_match_day.room.entities.Athlete>): List<Athlete>{
         val newAthletes = mutableListOf<Athlete>()
-        athletes.forEach {
-            newAthletes.add(toAthlete(it))
+        athletes.forEach { roomAthlete ->
+            val nAthlete = toAthlete(roomAthlete)
+            nAthlete?.let{
+                newAthletes.add(it)
+            }
         }
         return newAthletes
     }
 
-    fun toAthlete(athlete: com.example.sports_match_day.room.entities.Athlete): Athlete{
+    suspend fun toAthlete(athlete: com.example.sports_match_day.room.entities.Athlete?): Athlete?{
+        athlete?.let {
+            val birthday = epochConverter(athlete.birthday)
+            val city = locationConverter(athlete.city)
+            val country = countryConverter(athlete.country)
 
-        val cityType = object : TypeToken<Location>() {}.type
-        val cityLocation = Gson().fromJson<Location>(athlete.city, cityType)
-        val birthday = epochConverter(athlete.birthday)
-        val city = locationConverter(cityLocation)
-        val country = countryConverter(athlete.country)
+            val gender = if (athlete.gender) Gender.MALE else Gender.FEMALE
 
-        return Athlete(athlete.id, athlete.name, city, country, athlete.sportId, birthday)
+            val localRepository = get<LocalRepository>()
+            val sport = localRepository.getSport(athlete.sportId) ?: return null
+
+            return Athlete(athlete.id, athlete.name, city, country, sport, birthday, gender)
+        }
+        return null
     }
 
     fun toSquads(squads: List<com.example.sports_match_day.room.entities.Squad>): List<Squad>{
@@ -105,10 +111,8 @@ class DecoupleAdapter(var context: Context): KoinComponent {
 
     fun toSquad(squad: com.example.sports_match_day.room.entities.Squad): Squad{
 
-        val cityType = object : TypeToken<Location>() {}.type
-        val cityLocation = Gson().fromJson<Location>(squad.city, cityType)
         val birthday = epochConverter(squad.birthday)
-        val city = locationConverter(cityLocation)
+        val city = locationConverter(squad.city)
         val country = countryConverter(squad.country)
 
         return Squad(squad.id, squad.name, squad.stadium, city, country, squad.sportId, birthday)
@@ -122,9 +126,13 @@ class DecoupleAdapter(var context: Context): KoinComponent {
         return Locale(code)
     }
 
-    private fun locationConverter(location: Location): Address{
+    private fun locationConverter(location: String): Address?{
         val geoCoder = Geocoder(context, Locale.getDefault())
-        return geoCoder.getFromLocation(location.latitude, location.longitude, 1)[0]
+        val addresses = geoCoder.getFromLocationName(location, 1)
+        if(addresses.size > 0)
+            return addresses[0]
+
+        return null
     }
 
     private fun epochConverter(epoch: Long): LocalDateTime{

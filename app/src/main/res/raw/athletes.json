@@ -2,83 +2,93 @@
   {
     "id" : 1,
     "name": "George",
-    "city": "{\"latitude\": 40.629269, \"longitude\": 22.947412}",
+    "city": "Thessaloniki",
     "country": "gr",
-    "sportΙd": 2,
-    "birthday": 636978811
+    "sportId": 2,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 2,
     "name": "Panos",
-    "city": "{\"latitude\": 50.85045, \"longitude\": 4.34878}",
+    "city": "Brussels",
     "country": "be",
-    "sportΙd": 2,
-    "birthday": 636978811
+    "sportId": 2,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 3,
     "name": "Rad",
-    "city": "{\"latitude\": 48.137154, \"longitude\": 11.576124}",
-    "country": "ge",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "city": "Munich",
+    "country": "de",
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 4,
     "name":"Nick",
-    "city": "{\"latitude\": -15.793889, \"longitude\": -47.882778}",
+    "city": "Sao Paulo",
     "country": "br",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 5,
     "name":"John",
-    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
-    "country": "en",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "city": "London",
+    "country": "gb",
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   },
 
 
   {
     "id" : 6,
     "name": "Giannis",
-    "city": "{\"latitude\": 40.629269, \"longitude\": 22.947412}",
+    "city": "Athens",
     "country": "gr",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 7,
-    "name": "Xristos",
-    "city": "{\"latitude\": 50.85045, \"longitude\": 4.34878}",
+    "name": "Maria",
+    "city": "Brussels",
     "country": "be",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": false
   },
   {
     "id" : 8,
     "name": "Karl",
-    "city": "{\"latitude\": 48.137154, \"longitude\": 11.576124}",
-    "country": "ge",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "city": "Berlin",
+    "country": "de",
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   },
   {
     "id" : 9,
     "name":"Ana",
-    "city": "{\"latitude\": -15.793889, \"longitude\": -47.882778}",
-    "country": "br",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "city": "Buenos Aires",
+    "country": "ar",
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": false
   },
   {
     "id" : 10,
     "name":"Mario",
-    "city": "{\"latitude\": 51.509865, \"longitude\": -0.118092}",
-    "country": "en",
-    "sportΙd": 3,
-    "birthday": 636978811
+    "city": "Birmingham",
+    "country": "gb",
+    "sportId": 3,
+    "birthday": 636978811,
+    "gender": true
   }
 ]

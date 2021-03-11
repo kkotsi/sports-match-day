@@ -31,7 +31,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/colorFemale"
                 tools:src="@drawable/female" />
 
             <TextView
@@ -88,8 +87,7 @@
                 android:id="@+id/text_sport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintStart_toStartOf="@+id/text_city"
                 app:layout_constraintTop_toBottomOf="@+id/text_city"
                 tools:text="Football" />
@@ -98,8 +96,7 @@
                 android:id="@+id/text_birthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 app:layout_constraintStart_toStartOf="@+id/text_sport"
                 app:layout_constraintTop_toBottomOf="@+id/text_sport"
                 tools:text="15-5-1990" />

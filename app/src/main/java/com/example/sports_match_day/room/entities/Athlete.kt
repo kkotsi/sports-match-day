@@ -21,5 +21,7 @@ data class Athlete (
     @ColumnInfo
     var sportId: Int,
     @ColumnInfo
-    var birthday: Long
+    var birthday: Long,
+    @ColumnInfo
+    var gender: Boolean
 )

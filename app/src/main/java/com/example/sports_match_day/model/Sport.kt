@@ -12,15 +12,6 @@ class Sport(
 )
 
 /**
- * This enum is a responsible to separate the gender of a sport.
- * MALE: A sport that can only be played by males.
- * FEMALE: A sport that can only be played by females.
- */
-enum class Gender(){
-    MALE, FEMALE
-}
-
-/**
  * This enum is a responsible to separate the type of a sport.
  * SOLO: A sport that an individual can participate.
  * TEAM: A sport that a squad can participate.

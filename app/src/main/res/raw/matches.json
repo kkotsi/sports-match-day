@@ -1,7 +1,7 @@
   [
     {
       "date": 1615192003,
-      "city": {"latitude": 40.629269, "longitude": 22.947412},
+      "city": "Thessaloniki",
       "country": "gr",
       "sportId": 1,
       "participants": [
@@ -11,7 +11,7 @@
     },
     {
       "date": 1605012013,
-      "city": {"latitude": 40.730610, "longitude": -73.935242},
+      "city": "New York",
       "country": "us",
       "sportId": 2,
       "participants": [
@@ -21,7 +21,7 @@
     },
     {
       "date": 1615320543,
-      "city": {"latitude": 40.629269, "longitude": 22.947412},
+      "city": "Athens",
       "country": "gr",
       "sportId": 3,
       "participants": [
@@ -32,7 +32,7 @@
     },
     {
       "date": 1610222943,
-      "city": {"latitude": 48.864716, "longitude": 2.349014},
+      "city": "Paris",
       "country": "fr",
       "sportId": 4,
       "participants": [

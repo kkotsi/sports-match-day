@@ -15,4 +15,14 @@ class AthletesViewModel(private var coreController: CoreController) : ScopedView
     val squads = MutableLiveData<List<Squad>>()
 
     var pagedAthletes: LiveData<PagedList<Athlete>> = coreController.getAthletes()
+
+    fun removeAthlete(athlete: Athlete?){
+        athlete?.let {
+            launchWithLoad({
+                coreController.removeAthlete(it)
+            }){
+
+            }
+        }
+    }
 }

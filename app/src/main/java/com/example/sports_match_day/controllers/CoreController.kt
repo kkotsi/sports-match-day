@@ -40,17 +40,17 @@ class CoreControllerImpl(
            return true
         }
 
-        val sampleSquads =
-            RawManager.getSquadsRaw(context)
-
         val sampleSports =
             RawManager.getSportsRaw(context)
+
+        val sampleSquads =
+            RawManager.getSquadsRaw(context)
 
         val sampleAthletes =
             RawManager.getAthletesRaw(context)
 
-        localRepository.setAthletes(sampleAthletes)
         localRepository.setSports(sampleSports)
+        localRepository.setAthletes(sampleAthletes)
         localRepository.setSquads(sampleSquads)
 
         Prefs.putBoolean(PreferencesKeys.SETUP_SAMPLE_DATA, true)
@@ -72,6 +72,10 @@ class CoreControllerImpl(
     override suspend fun getSport(id: Int): Sport? {
         return localRepository.getSport(id)
     }
+
+    override suspend fun removeAthlete(athlete: Athlete) {
+        return localRepository.removeAthlete(athlete)
+    }
 }
 
 interface CoreController {
@@ -83,4 +87,6 @@ interface CoreController {
 
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
+
+    suspend fun removeAthlete(athlete: Athlete)
 }

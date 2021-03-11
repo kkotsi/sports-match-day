@@ -21,6 +21,9 @@ interface AthletesDao {
     @Insert
     suspend fun insertAthlete(athlete: Athlete)
 
+    @Query("DELETE FROM athletes WHERE id=:id")
+    suspend fun deleteAthlete(id: Int)
+
     @Delete
     suspend fun deleteAthlete(athlete: Athlete)
 

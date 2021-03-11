@@ -12,7 +12,7 @@ class Squad(
     var id: Int,
     name: String,
     var stadium: String,
-    var city: Address,
+    var city: Address?,
     var country: Locale,
     var sportId: Int,
     var birthday: LocalDateTime
