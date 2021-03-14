@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation.findNavController
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -22,8 +25,9 @@ class AthletesFragment : Fragment() {
     private val viewModel: AthletesViewModel by viewModel()
     private lateinit var recyclerAthletes: RecyclerView
     private lateinit var textTotal: TextView
+    private lateinit var buttonAdd: FloatingActionButton
     private lateinit var loader: ProgressBar
-    private var total = 0
+    private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -36,10 +40,33 @@ class AthletesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupObservers()
+        setupAddButton()
         setupLoader()
         setupTotalText()
         recyclerSetup()
-        setupObservers()
+        setupRefreshLayout()
+    }
+
+    private fun setupRefreshLayout() {
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let{
+            refreshLayout = it
+        }
+
+        refreshLayout.setOnRefreshListener {
+            viewModel.invalidatedData()
+        }
+    }
+
+    private fun setupAddButton(){
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+            buttonAdd = it
+            buttonAdd.setOnClickListener {
+
+                val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.action_nav_athletes_to_nav_athletes_add)
+            }
+        }
     }
 
     private fun setupLoader(){
@@ -67,17 +94,18 @@ class AthletesFragment : Fragment() {
         viewModel.pagedAthletes.observe(viewLifecycleOwner, {
             it.addWeakCallback(null, object: PagedList.Callback() {
                 override fun onChanged(position: Int, count: Int) {
-                    total = count
-                    textTotal.text =  String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
+                    refreshCount()
+                    refreshLayout.isRefreshing = false
                 }
                 override fun onInserted(position: Int, count: Int) {
-                    total += count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
+                    textTotal.post {
+                        refreshCount()
+                    }
                     loader.visibility = View.INVISIBLE
+                    refreshLayout.isRefreshing = false
                 }
                 override fun onRemoved(position: Int, count: Int) {
-                    total -= count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
+                    refreshCount()
                 }
             })
             (recyclerAthletes.adapter as AthletesAdapter).submitList(it)
@@ -105,5 +133,15 @@ class AthletesFragment : Fragment() {
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
             itemTouchHelper.attachToRecyclerView(recyclerAthletes)
         }
+    }
+
+    private fun refreshCount(){
+        val total = recyclerAthletes.adapter?.itemCount ?: 0
+        textTotal.text =  String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        refreshCount()
     }
 }

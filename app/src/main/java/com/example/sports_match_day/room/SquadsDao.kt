@@ -29,4 +29,7 @@ interface SquadsDao {
 
     @Update
     suspend fun updateSquad(squad: Squad)
+
+    @Query("SELECT COUNT(id) FROM squads")
+    suspend fun getCount(): Int
 }

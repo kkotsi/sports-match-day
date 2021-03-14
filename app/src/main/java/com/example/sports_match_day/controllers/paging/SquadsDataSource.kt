@@ -3,6 +3,7 @@ package com.example.sports_match_day.controllers.paging
 import androidx.paging.DataSource
 import androidx.paging.PageKeyedDataSource
 import com.example.sports_match_day.controllers.DecoupleAdapter
+import com.example.sports_match_day.controllers.MemoryRepository
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.room.SportsDatabase
 import kotlinx.coroutines.Dispatchers
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
  */
 class SquadsDataSource private constructor(
     private var decoupleAdapter: DecoupleAdapter,
-    private var sportsDatabase: SportsDatabase
+    private var sportsDatabase: SportsDatabase,
+    private var memoryRepository: MemoryRepository
 ) :
     PageKeyedDataSource<Int, Squad>() {
 
@@ -24,9 +26,10 @@ class SquadsDataSource private constructor(
     ) {
 
         GlobalScope.launch(Dispatchers.Default) {
-
+            memoryRepository.squads.clear()
             val roomSquads = sportsDatabase.squadsDao().getSquads(PAGE_SIZE, 0)
             val squads = decoupleAdapter.toSquads(roomSquads)
+            memoryRepository.squads.addAll(squads)
             callback.onResult(squads, null, PAGE_SIZE)
         }
     }
@@ -38,18 +41,20 @@ class SquadsDataSource private constructor(
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Squad>) {
         GlobalScope.launch(Dispatchers.Default) {
 
-            val roomSquads = sportsDatabase.squadsDao().getSquads(5, params.key)
+            val roomSquads = sportsDatabase.squadsDao().getSquads(PAGE_SIZE, params.key)
             val squads = decoupleAdapter.toSquads(roomSquads)
+            memoryRepository.squads.addAll(squads)
             callback.onResult(squads, params.key + PAGE_SIZE)
         }
     }
 
     class Factory(
         private var decoupleAdapter: DecoupleAdapter,
-        private var sportsDatabase: SportsDatabase
+        private var sportsDatabase: SportsDatabase,
+        private var memoryRepository: MemoryRepository
     ) : DataSource.Factory<Int, Squad>() {
         override fun create(): DataSource<Int, Squad> {
-            return SquadsDataSource(decoupleAdapter, sportsDatabase)
+            return SquadsDataSource(decoupleAdapter, sportsDatabase, memoryRepository)
         }
     }
 

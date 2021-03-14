@@ -18,9 +18,10 @@ import com.example.sports_match_day.room.SportsDatabase
 class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
-    private var athletesFactory : AthletesDataSource.Factory,
-    private var squadsFactory : SquadsDataSource.Factory,
-    private var sportsFactory : SportsDataSource.Factory
+    private var athletesFactory: AthletesDataSource.Factory,
+    private var squadsFactory: SquadsDataSource.Factory,
+    private var sportsFactory: SportsDataSource.Factory,
+    private var memoryRepository: MemoryRepository
 ) : LocalRepository {
 
     override fun getAthletes(): LiveData<PagedList<Athlete>> {
@@ -82,10 +83,81 @@ class LocalRepositoryImpl(
     override suspend fun removeSport(sport: Sport) {
         sportsDatabase.sportsDao().deleteSport(sport.id)
     }
+
+    override suspend fun getAllAthletes(): MutableList<Athlete> {
+        val count = sportsDatabase.athletesDao().getCount()
+        if (memoryRepository.athletes.size < count) {
+            memoryRepository.athletes.addAll(
+                decoupleAdapter.toAthletes(
+                    sportsDatabase.athletesDao().getAthletes(
+                        count - memoryRepository.athletes.size,
+                        memoryRepository.athletes.size
+                    )
+                )
+            )
+        }
+        return memoryRepository.athletes
+    }
+
+    override suspend fun getAllSquads(): MutableList<Squad> {
+        val count = sportsDatabase.squadsDao().getCount()
+        if (memoryRepository.squads.size < count) {
+            memoryRepository.squads.addAll(
+                decoupleAdapter.toSquads(
+                    sportsDatabase.squadsDao().getSquads(
+                        count - memoryRepository.squads.size,
+                        memoryRepository.squads.size
+                    )
+                )
+            )
+        }
+        return memoryRepository.squads
+    }
+
+    override suspend fun getAllSports(): MutableList<Sport> {
+        val count = sportsDatabase.sportsDao().getCount()
+        if (memoryRepository.sports.size < count) {
+            memoryRepository.sports.addAll(
+                decoupleAdapter.toSports(
+                    sportsDatabase.sportsDao().getSports(
+                        count - memoryRepository.sports.size,
+                        memoryRepository.sports.size
+                    )
+                )
+            )
+        }
+        return memoryRepository.sports
+    }
+
+    override suspend fun addAthlete(
+        name: String,
+        city: String,
+        country: String,
+        gender: Boolean,
+        birthday: Long
+    ): Boolean {
+        val athlete = com.example.sports_match_day.room.entities.Athlete(
+            0,
+            name,
+            city,
+            country,
+            2,
+            birthday,
+            gender
+        )
+        var v = sportsDatabase.athletesDao().getCount()
+        print("Test test $v")
+        sportsDatabase.athletesDao().insertAthlete(athlete)
+
+        sportsDatabase.athletesDao().getAthletes()?.forEach {
+            print("Qrp ${it.name}")
+        }
+        return true
+    }
 }
 
 interface LocalRepository {
-    fun getAthletes():  LiveData<PagedList<Athlete>>
+    fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSports(): LiveData<PagedList<Sport>>
     fun getSquads(): LiveData<PagedList<Squad>>
 
@@ -101,4 +173,16 @@ interface LocalRepository {
     suspend fun removeAthlete(athlete: Athlete)
     suspend fun removeSquad(squad: Squad)
     suspend fun removeSport(sport: Sport)
+
+    suspend fun getAllAthletes(): MutableList<Athlete>
+    suspend fun getAllSquads(): MutableList<Squad>
+    suspend fun getAllSports(): MutableList<Sport>
+
+    suspend fun addAthlete(
+        name: String,
+        city: String,
+        country: String,
+        gender: Boolean,
+        birthday: Long
+    ): Boolean
 }

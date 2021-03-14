@@ -72,7 +72,7 @@ class AthletesAdapter:
     }
 }
 
-fun diff() : DiffUtil.ItemCallback<Athlete>{
+private fun diff() : DiffUtil.ItemCallback<Athlete>{
     return object : DiffUtil.ItemCallback<Athlete>(){
         override fun areItemsTheSame(oldItem: Athlete, newItem: Athlete): Boolean {
             return true

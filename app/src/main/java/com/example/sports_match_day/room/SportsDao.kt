@@ -29,4 +29,7 @@ interface SportsDao {
 
     @Update
     suspend fun updateSport(sport: Sport)
+
+    @Query("SELECT COUNT(id) FROM sports")
+    suspend fun getCount(): Int
 }

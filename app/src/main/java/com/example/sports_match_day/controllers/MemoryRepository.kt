@@ -10,4 +10,7 @@ import com.example.sports_match_day.model.Squad
  */
 class MemoryRepository() {
     var matches = mutableListOf<Match>()
+    var sports = mutableListOf<Sport>()
+    var squads = mutableListOf<Squad>()
+    var athletes = mutableListOf<Athlete>()
 }

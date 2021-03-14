@@ -15,7 +15,19 @@
         android:id="@+id/nav_athletes"
         android:name="com.example.sports_match_day.ui.athletes.AthletesFragment"
         android:label="@string/menu_athletes"
-        tools:layout="@layout/fragment_athletes" />
+        tools:layout="@layout/fragment_athletes" >
+        <action
+            android:id="@+id/action_nav_athletes_to_nav_athletes_add"
+            app:destination="@id/nav_athletes_add"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@anim/fragment_fade_exit" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_athletes_add"
+        android:name="com.example.sports_match_day.ui.athletes.add.AthletesAddFragment"
+        android:label="@string/menu_add"
+        tools:layout="@layout/fragment_add_athlete" />
 
     <fragment
         android:id="@+id/nav_squads"

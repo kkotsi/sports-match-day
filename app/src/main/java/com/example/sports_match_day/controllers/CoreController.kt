@@ -12,6 +12,8 @@ import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.utils.RawManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.pixplicity.easyprefs.library.Prefs
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneId
 
 /**
  * Created by Kristo on 08-Mar-21
@@ -21,7 +23,7 @@ class CoreControllerImpl(
     private var firebaseRepository: FirebaseRepository,
     private var memoryRepository: MemoryRepository,
     private var decoupleAdapter: DecoupleAdapter,
-    private var localRepository: LocalRepository
+    private var localRepository: LocalRepository,
 ) : CoreController {
 
     override suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean {
@@ -73,6 +75,18 @@ class CoreControllerImpl(
         return localRepository.getSports()
     }
 
+    override suspend fun getAllAthletes(): MutableList<Athlete> {
+        return localRepository.getAllAthletes()
+    }
+
+    override suspend fun getAllSquads(): MutableList<Squad> {
+        return localRepository.getAllSquads()
+    }
+
+    override suspend fun getAllSports(): MutableList<Sport> {
+        return localRepository.getAllSports()
+    }
+
     override suspend fun getSquad(id: Int): Squad? {
         return localRepository.getSquad(id)
     }
@@ -92,6 +106,16 @@ class CoreControllerImpl(
     override suspend fun removeSport(sport: Sport) {
         return localRepository.removeSport(sport)
     }
+
+    override suspend fun addAthlete(
+        name: String,
+        city: String,
+        country: String,
+        gender: Boolean,
+        birthday: LocalDateTime
+    ): Boolean {
+        return localRepository.addAthlete(name, city, country, gender, birthday.atZone(ZoneId.systemDefault()).toEpochSecond())
+    }
 }
 
 interface CoreController {
@@ -99,9 +123,14 @@ interface CoreController {
     suspend fun loadSamples(): Boolean
 
     suspend fun getAthlete(id: Int): Athlete?
+
     fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSquads(): LiveData<PagedList<Squad>>
     fun getSports(): LiveData<PagedList<Sport>>
+
+    suspend fun getAllAthletes(): MutableList<Athlete>
+    suspend fun getAllSquads(): MutableList<Squad>
+    suspend fun getAllSports(): MutableList<Sport>
 
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
@@ -109,4 +138,6 @@ interface CoreController {
     suspend fun removeAthlete(athlete: Athlete)
     suspend fun removeSquad(squad: Squad)
     suspend fun removeSport(sport: Sport)
+
+    suspend fun addAthlete(name: String, city: String, country: String, gender: Boolean, birthday: LocalDateTime): Boolean
 }

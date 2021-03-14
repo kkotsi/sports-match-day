@@ -29,4 +29,7 @@ interface AthletesDao {
 
     @Update
     suspend fun updateAthlete(athlete: Athlete)
+
+    @Query("SELECT COUNT(id) FROM athletes")
+    suspend fun getCount(): Int
 }
