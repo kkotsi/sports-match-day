@@ -12,6 +12,7 @@ import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -26,6 +27,7 @@ class SquadsFragment : Fragment() {
     private lateinit var textTotal: TextView
     private lateinit var loader: ProgressBar
     private lateinit var buttonAdd: FloatingActionButton
+    private lateinit var refreshLayout: SwipeRefreshLayout
     private var total = 0
 
     override fun onCreateView(
@@ -43,6 +45,17 @@ class SquadsFragment : Fragment() {
         recyclerSetup()
         setupObservers()
         setupAddButton()
+        setupRefreshLayout()
+    }
+
+    private fun setupRefreshLayout() {
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let{
+            refreshLayout = it
+        }
+
+        refreshLayout.setOnRefreshListener {
+            viewModel.invalidatedData()
+        }
     }
 
     private fun setupAddButton(){
@@ -81,17 +94,16 @@ class SquadsFragment : Fragment() {
         viewModel.pagedSquads.observe(viewLifecycleOwner, {
             it.addWeakCallback(null, object: PagedList.Callback() {
                 override fun onChanged(position: Int, count: Int) {
-                    total = count
-                    textTotal.text =  String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+                    refreshCount()
+                    refreshLayout.isRefreshing = false
                 }
                 override fun onInserted(position: Int, count: Int) {
-                    total += count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+                    refreshCount()
                     loader.visibility = View.INVISIBLE
+                    refreshLayout.isRefreshing = false
                 }
                 override fun onRemoved(position: Int, count: Int) {
-                    total -= count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+                    refreshCount()
                 }
             })
             (recyclerSquads.adapter as SquadsAdapter).submitList(it)
@@ -119,5 +131,10 @@ class SquadsFragment : Fragment() {
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
             itemTouchHelper.attachToRecyclerView(recyclerSquads)
         }
+    }
+
+    private fun refreshCount(){
+        val total = recyclerSquads.adapter?.itemCount ?: 0
+        textTotal.text =  String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
 }

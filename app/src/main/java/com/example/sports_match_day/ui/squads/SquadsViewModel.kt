@@ -13,6 +13,10 @@ class SquadsViewModel(private var coreController: CoreController) : ScopedViewMo
 
     var pagedSquads: LiveData<PagedList<Squad>> = coreController.getSquads()
 
+    fun invalidatedData(){
+        pagedSquads.value?.dataSource?.invalidate()
+    }
+
     fun removeSquad(squad: Squad?){
         squad?.let {
             launchWithLoad({
