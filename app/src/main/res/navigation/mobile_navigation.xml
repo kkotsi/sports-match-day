@@ -49,5 +49,15 @@
         android:id="@+id/nav_sports"
         android:name="com.example.sports_match_day.ui.sports.SportsFragment"
         android:label="@string/menu_sports"
+        tools:layout="@layout/fragment_squads" >
+        <action
+            android:id="@+id/action_nav_sports_to_nav_sports_add"
+            app:destination="@id/nav_sports_add" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_sports_add"
+        android:name="com.example.sports_match_day.ui.sports.add.SportsAddFragment"
+        android:label="@string/menu_sports"
         tools:layout="@layout/fragment_squads" />
 </navigation>

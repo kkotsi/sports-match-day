@@ -35,4 +35,8 @@
     <string name="error_empty_city">Couldn\'t find this city!</string>
     <string name="stadium">Stadium</string>
     <string name="date_founded">Date Founded</string>
+    <string name="type">Type</string>
+    <string name="help_gender">Only people with the selected gender can participate to this sport.</string>
+    <string name="help_type">Group sports or individual sports.</string>
+    <string name="gender">Gender</string>
 </resources>

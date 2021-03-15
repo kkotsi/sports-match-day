@@ -47,13 +47,13 @@ class SquadsAddViewModel(private val coreController: CoreController) : ScopedVie
         return days
     }
 
-    fun addSquad(name: String, city: String, country: String, stadium: String, birthday: LocalDateTime){
+    fun addSquad(name: String, city: String, country: String, stadium: String, sportId: Int, birthday: LocalDateTime){
         launchWithLoad({
             val countryCode =
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addSquad(name, city, countryCode, stadium, birthday)
+                coreController.addSquad(name, city, countryCode, stadium, sportId, birthday)
         }) {
             print(it)
         }

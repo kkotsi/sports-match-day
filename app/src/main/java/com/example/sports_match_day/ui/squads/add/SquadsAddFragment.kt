@@ -75,11 +75,11 @@ class SquadsAddFragment: Fragment() {
         }
         nameEditTextView?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val country = citiesEditTextView?.editableText.toString()
+                val country = nameEditTextView?.editableText.toString()
                 if (country.isBlank()) {
-                    citiesEditTextView?.error =  getString(R.string.error_blank)
+                    nameEditTextView?.error =  getString(R.string.error_blank)
                 } else {
-                    citiesEditTextView?.error = null
+                    nameEditTextView?.error = null
                 }
             }
         }
@@ -100,9 +100,10 @@ class SquadsAddFragment: Fragment() {
             val country = countriesEditTextView?.text?.toString()?.trim() ?: ""
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
             val stadium = stadiumEditTextView?.text?.toString()?.trim() ?: ""
+            val sportId = sportsSpinner?.selectedItem as Int
 
             if(validateData())
-                viewModel.addSquad(name, city, country, stadium, birthday)
+                viewModel.addSquad(name, city, country, stadium, sportId, birthday)
         }
     }
 

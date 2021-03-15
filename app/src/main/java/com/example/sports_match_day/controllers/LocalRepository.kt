@@ -134,6 +134,7 @@ class LocalRepositoryImpl(
         city: String,
         country: String,
         gender: Boolean,
+        sportId: Int,
         birthday: Long
     ): Boolean {
         val athlete = com.example.sports_match_day.room.entities.Athlete(
@@ -141,7 +142,7 @@ class LocalRepositoryImpl(
             name,
             city,
             country,
-            2,
+            sportId,
             birthday,
             gender
         )
@@ -154,6 +155,7 @@ class LocalRepositoryImpl(
         city: String,
         country: String,
         stadium: String,
+        sportId: Int,
         birthday: Long
     ): Boolean {
         val squad = com.example.sports_match_day.room.entities.Squad(
@@ -162,10 +164,22 @@ class LocalRepositoryImpl(
             stadium,
             city,
             country,
-            2,
+            sportId,
             birthday
         )
         sportsDatabase.squadsDao().insertSquad(squad)
+        return true
+    }
+
+    override suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean {
+
+        val sport = com.example.sports_match_day.room.entities.Sport(
+            0,
+            name,
+            type,
+            gender
+        )
+        sportsDatabase.sportsDao().insertSport(sport)
         return true
     }
 }
@@ -197,8 +211,18 @@ interface LocalRepository {
         city: String,
         country: String,
         gender: Boolean,
+        sportId: Int,
         birthday: Long
     ): Boolean
 
-    suspend fun addSquad(name: String, city: String, country: String, stadium: String, birthday: Long): Boolean
+    suspend fun addSquad(
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        birthday: Long
+    ): Boolean
+
+    suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean
 }

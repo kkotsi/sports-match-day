@@ -98,9 +98,7 @@ class AthletesFragment : Fragment() {
                     refreshLayout.isRefreshing = false
                 }
                 override fun onInserted(position: Int, count: Int) {
-                    textTotal.post {
-                        refreshCount()
-                    }
+                    refreshCount()
                     loader.visibility = View.INVISIBLE
                     refreshLayout.isRefreshing = false
                 }

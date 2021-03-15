@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -23,6 +26,7 @@ class SportsFragment : Fragment() {
     private lateinit var recyclerSports: RecyclerView
     private lateinit var textTotal: TextView
     private lateinit var loader: ProgressBar
+    private lateinit var refreshLayout: SwipeRefreshLayout
     private var total = 0
 
     override fun onCreateView(
@@ -40,6 +44,29 @@ class SportsFragment : Fragment() {
         setupTotalText()
         recyclerSetup()
         setupObservers()
+        setupAddButton()
+        setupRefreshLayout()
+    }
+
+    private fun setupRefreshLayout() {
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let{
+            refreshLayout = it
+        }
+
+        refreshLayout.setOnRefreshListener {
+            viewModel.invalidatedData()
+        }
+    }
+
+    private fun setupAddButton(){
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+            it.setOnClickListener {
+
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.action_nav_sports_to_nav_sports_add)
+            }
+        }
     }
 
     private fun setupLoader(){
@@ -67,17 +94,16 @@ class SportsFragment : Fragment() {
         viewModel.pagedSports.observe(viewLifecycleOwner, {
             it.addWeakCallback(null, object: PagedList.Callback() {
                 override fun onChanged(position: Int, count: Int) {
-                    total = count
-                    textTotal.text =  String.format(requireContext().resources.getString(R.string.total_sports), "$total")
+                    refreshCount()
+                    refreshLayout.isRefreshing = false
                 }
                 override fun onInserted(position: Int, count: Int) {
-                    total += count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_sports), "$total")
+                    refreshCount()
+                    refreshLayout.isRefreshing = false
                     loader.visibility = View.INVISIBLE
                 }
                 override fun onRemoved(position: Int, count: Int) {
-                    total -= count
-                    textTotal.text = String.format(requireContext().resources.getString(R.string.total_sports), "$total")
+                    refreshCount()
                 }
             })
             (recyclerSports.adapter as SportsAdapter).submitList(it)
@@ -105,5 +131,10 @@ class SportsFragment : Fragment() {
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
             itemTouchHelper.attachToRecyclerView(recyclerSports)
         }
+    }
+
+    private fun refreshCount(){
+        val total = recyclerSports.adapter?.itemCount ?: 0
+        textTotal.text =  String.format(requireContext().resources.getString(R.string.total_sports), "$total")
     }
 }

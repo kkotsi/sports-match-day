@@ -2,6 +2,7 @@ package com.example.sports_match_day.ui
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
     private lateinit var appBarConfiguration: AppBarConfiguration
+
+    var onTouchListener: OnTouchListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,4 +55,13 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
+
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        onTouchListener?.onTouch()
+        return super.dispatchTouchEvent(ev)
+    }
+}
+interface OnTouchListener{
+    fun onTouch()
 }

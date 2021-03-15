@@ -12,6 +12,10 @@ import com.example.sports_match_day.ui.base.ScopedViewModel
 class SportsViewModel(private val coreController: CoreController) : ScopedViewModel() {
     var pagedSports: LiveData<PagedList<Sport>> = coreController.getSports()
 
+    fun invalidatedData(){
+        pagedSports.value?.dataSource?.invalidate()
+    }
+
     fun removeSport(sport: Sport?) {
         sport?.let {
             launchWithLoad({

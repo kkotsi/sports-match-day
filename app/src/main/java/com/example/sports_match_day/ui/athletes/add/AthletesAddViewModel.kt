@@ -52,6 +52,7 @@ class AthletesAddViewModel(private val coreController: CoreController) : ScopedV
         city: String,
         country: String,
         gender: Boolean,
+        sportId: Int,
         birthday: LocalDateTime
     ) {
         launchWithLoad({
@@ -59,9 +60,7 @@ class AthletesAddViewModel(private val coreController: CoreController) : ScopedV
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addAthlete(name, city, countryCode, gender, birthday)
-        }) {
-            print(it)
-        }
+                coreController.addAthlete(name, city, countryCode, gender, sportId, birthday)
+        }) {}
     }
 }

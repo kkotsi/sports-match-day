@@ -55,11 +55,11 @@ class AthletesAddFragment : Fragment() {
         nameEditTextView = view?.findViewById(R.id.editText_name)
         nameEditTextView?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val country = citiesEditTextView?.editableText.toString()
+                val country = nameEditTextView?.editableText.toString()
                 if (country.isBlank()) {
-                    citiesEditTextView?.error =  getString(R.string.error_blank)
+                    nameEditTextView?.error =  getString(R.string.error_blank)
                 } else {
-                    citiesEditTextView?.error = null
+                    nameEditTextView?.error = null
                 }
             }
         }
@@ -80,9 +80,10 @@ class AthletesAddFragment : Fragment() {
             val city = citiesEditTextView?.text?.toString()?.trim() ?: ""
             val country = countriesEditTextView?.text?.toString()?.trim() ?: ""
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
+            val sportId = sportsSpinner?.selectedItem as Int
 
             if(validateData())
-                viewModel.addAthlete(name, city, country, gender, birthday)
+                viewModel.addAthlete(name, city, country, gender, sportId, birthday)
         }
     }
 
