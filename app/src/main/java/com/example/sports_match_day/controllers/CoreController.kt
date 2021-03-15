@@ -116,6 +116,16 @@ class CoreControllerImpl(
     ): Boolean {
         return localRepository.addAthlete(name, city, country, gender, birthday.atZone(ZoneId.systemDefault()).toEpochSecond())
     }
+
+    override suspend fun addSquad(
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        birthday: LocalDateTime
+    ): Boolean {
+        return localRepository.addSquad(name, city, country, stadium, birthday.atZone(ZoneId.systemDefault()).toEpochSecond())
+    }
 }
 
 interface CoreController {
@@ -140,4 +150,6 @@ interface CoreController {
     suspend fun removeSport(sport: Sport)
 
     suspend fun addAthlete(name: String, city: String, country: String, gender: Boolean, birthday: LocalDateTime): Boolean
+    suspend fun addSquad(name: String, city: String, country: String, stadium: String, birthday: LocalDateTime): Boolean
+
 }

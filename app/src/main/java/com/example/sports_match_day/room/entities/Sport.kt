@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "sports")
 data class Sport (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     @ColumnInfo
     var name: String,

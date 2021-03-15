@@ -145,13 +145,27 @@ class LocalRepositoryImpl(
             birthday,
             gender
         )
-        var v = sportsDatabase.athletesDao().getCount()
-        print("Test test $v")
         sportsDatabase.athletesDao().insertAthlete(athlete)
+        return true
+    }
 
-        sportsDatabase.athletesDao().getAthletes()?.forEach {
-            print("Qrp ${it.name}")
-        }
+    override suspend fun addSquad(
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        birthday: Long
+    ): Boolean {
+        val squad = com.example.sports_match_day.room.entities.Squad(
+            0,
+            name,
+            stadium,
+            city,
+            country,
+            2,
+            birthday
+        )
+        sportsDatabase.squadsDao().insertSquad(squad)
         return true
     }
 }
@@ -185,4 +199,6 @@ interface LocalRepository {
         gender: Boolean,
         birthday: Long
     ): Boolean
+
+    suspend fun addSquad(name: String, city: String, country: String, stadium: String, birthday: Long): Boolean
 }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
-        android:id="@+id/image_person"
+        android:id="@+id/image_squad"
         android:layout_width="126dp"
         android:layout_height="122dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/female"
+        android:layout_marginTop="50dp"
+        android:src="@drawable/team_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/editText_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <AutoCompleteTextView
@@ -21,12 +21,11 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:layout_marginTop="50dp"
         android:hint="@string/name"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_person" />
+        app:layout_constraintTop_toTopOf="@+id/image_squad" />
 
     <AutoCompleteTextView
         android:id="@+id/editText_city"
@@ -46,6 +45,7 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:autofillHints="Greece,Spain,France"
         android:hint="@string/country"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingStart="10dp"
@@ -53,23 +53,25 @@
         app:layout_constraintStart_toStartOf="@+id/editText_city"
         app:layout_constraintTop_toBottomOf="@+id/editText_city" />
 
-    <ToggleButton
-        android:id="@+id/toggle_gender"
-        android:layout_width="101dp"
-        android:layout_height="36dp"
-        android:layout_marginEnd="5dp"
-        android:background="@drawable/bg_toggle_gender"
-        android:checked="false"
-        android:textOff=""
-        android:textOn=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/editText_name" />
+    <AutoCompleteTextView
+        android:id="@+id/editText_stadium"
+        style="@style/RoundedEditText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:autofillHints="Greece,Spain,France"
+        android:hint="@string/stadium"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        app:layout_constraintStart_toStartOf="@+id/editText_city"
+        app:layout_constraintTop_toBottomOf="@+id/editText_country" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:text="@string/birthday"
+        android:text="@string/date_founded"
         app:layout_constraintBottom_toTopOf="@+id/container_spinner_day"
         app:layout_constraintStart_toStartOf="@+id/container_spinner_day" />
 
@@ -77,42 +79,15 @@
         android:id="@+id/container_spinner_day"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/border_rounded"
         app:layout_constraintEnd_toStartOf="@+id/container_spinner_month"
-        app:layout_constraintStart_toStartOf="@+id/editText_country"
-        app:layout_constraintTop_toBottomOf="@+id/editText_country">
+        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintTop_toBottomOf="@+id/editText_stadium">
 
         <Spinner
             android:id="@+id/spinner_day"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toStartOf="@+id/spinner_month"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editText_country"
-            tools:listitem="@layout/item_spinner" />
-    </FrameLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:text="@string/sport"
-        app:layout_constraintBottom_toTopOf="@+id/container_spinner_sport"
-        app:layout_constraintStart_toStartOf="@+id/container_spinner_sport" />
-
-    <FrameLayout
-        android:id="@+id/container_spinner_sport"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/border_rounded"
-        app:layout_constraintStart_toStartOf="@+id/editText_country"
-        app:layout_constraintTop_toBottomOf="@+id/container_spinner_day">
-
-        <Spinner
-            android:id="@+id/spinner_sport"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintEnd_toStartOf="@+id/spinner_month"
@@ -155,6 +130,33 @@
             tools:listitem="@layout/item_spinner" />
     </FrameLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:text="@string/sport"
+        app:layout_constraintBottom_toTopOf="@+id/container_spinner_sport"
+        app:layout_constraintStart_toStartOf="@+id/container_spinner_sport" />
+
+    <FrameLayout
+        android:id="@+id/container_spinner_sport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/border_rounded"
+        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintTop_toBottomOf="@+id/container_spinner_day">
+
+        <Spinner
+            android:id="@+id/spinner_sport"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@+id/spinner_month"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_country"
+            tools:listitem="@layout/item_spinner" />
+    </FrameLayout>
+
     <ProgressBar
         android:id="@id/progress_loading"
         android:layout_width="wrap_content"
@@ -178,4 +180,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/container_spinner_sport" />
+
+    <TextView
+        android:id="@+id/text_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="0dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/image_squad"
+        app:layout_constraintStart_toStartOf="@+id/image_squad"
+        app:layout_constraintTop_toBottomOf="@+id/image_squad"
+        tools:text="Name" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

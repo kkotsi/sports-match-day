@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "squads")
 data class Squad (
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     var id: Int,
     @ColumnInfo
     var name: String,

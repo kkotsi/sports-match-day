@@ -7,11 +7,13 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -23,6 +25,7 @@ class SquadsFragment : Fragment() {
     private lateinit var recyclerSquads: RecyclerView
     private lateinit var textTotal: TextView
     private lateinit var loader: ProgressBar
+    private lateinit var buttonAdd: FloatingActionButton
     private var total = 0
 
     override fun onCreateView(
@@ -39,6 +42,19 @@ class SquadsFragment : Fragment() {
         setupTotalText()
         recyclerSetup()
         setupObservers()
+        setupAddButton()
+    }
+
+    private fun setupAddButton(){
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+            buttonAdd = it
+            buttonAdd.setOnClickListener {
+
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.action_nav_squads_to_nav_squads_add)
+            }
+        }
     }
 
     private fun setupLoader(){

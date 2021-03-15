@@ -6,6 +6,7 @@ import com.example.sports_match_day.ui.athletes.add.AthletesAddViewModel
 import com.example.sports_match_day.ui.home.HomeViewModel
 import com.example.sports_match_day.ui.sports.SportsViewModel
 import com.example.sports_match_day.ui.squads.SquadsViewModel
+import com.example.sports_match_day.ui.squads.add.SquadsAddViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -19,4 +20,5 @@ val viewModelModule = module {
     viewModel { SquadsViewModel(get()) }
     viewModel { MainActivityViewModel() }
     viewModel { SportsViewModel(get()) }
+    viewModel { SquadsAddViewModel(get()) }
 }

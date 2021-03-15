@@ -33,7 +33,17 @@
         android:id="@+id/nav_squads"
         android:name="com.example.sports_match_day.ui.squads.SquadsFragment"
         android:label="@string/menu_squads"
-        tools:layout="@layout/fragment_squads" />
+        tools:layout="@layout/fragment_squads" >
+        <action
+            android:id="@+id/action_nav_squads_to_nav_squads_add"
+            app:destination="@id/nav_squads_add" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_squads_add"
+        android:name="com.example.sports_match_day.ui.squads.add.SquadsAddFragment"
+        android:label="@string/menu_add"
+        tools:layout="@layout/fragment_add_squad" />
 
     <fragment
         android:id="@+id/nav_sports"
