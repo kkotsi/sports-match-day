@@ -45,10 +45,12 @@ class HomeFragment : BaseFragment() {
 
     private fun setupObservers(){
         viewModel.matches.observe(viewLifecycleOwner, {
-            repeat(it.size) {
-                setUpEvent()
+            it?.let {
+                repeat(it.size) {
+                    setUpEvent()
+                }
+                recyclerSetup(it)
             }
-            recyclerSetup(it)
         })
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {

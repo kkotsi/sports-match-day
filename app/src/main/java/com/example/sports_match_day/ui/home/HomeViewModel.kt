@@ -2,7 +2,6 @@ package com.example.sports_match_day.ui.home
 
 import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
-import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
@@ -12,13 +11,13 @@ import org.threeten.bp.LocalDateTime
  */
 class HomeViewModel(private var coreController: CoreController) : ScopedViewModel() {
 
-    val matches = MutableLiveData<List<Match>>()
+    val matches = coreController.getMatches()
     val squads = MutableLiveData<List<Squad>>()
 
     fun loadData(){
         launchWithLoad({
             coreController.loadSamples()
-            coreController.loadMatches(matches)
+            //matches.value = coreController.getMatches().value
         }) {}
     }
 

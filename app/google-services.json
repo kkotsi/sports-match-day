@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "622449623644",
+    "project_id": "sports-match-day",
+    "storage_bucket": "sports-match-day.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622449623644:android:e5f5040ab21146503c1c99",
+        "android_client_info": {
+          "package_name": "com.example.sports_match_day"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622449623644-krqkcg40g6obg360e45dipcj4v3k4reg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCT16_S3_RDwgHHRyM1j3D0u0eVakfY0NU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622449623644-krqkcg40g6obg360e45dipcj4v3k4reg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

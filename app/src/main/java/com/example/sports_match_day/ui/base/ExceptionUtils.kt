@@ -25,7 +25,7 @@ object ExceptionUtils {
         }
 
         if(BuildConfig.DEBUG)
-            error += exception.message
+            error += "\n ${exception.message}"
         return error
     }
 }

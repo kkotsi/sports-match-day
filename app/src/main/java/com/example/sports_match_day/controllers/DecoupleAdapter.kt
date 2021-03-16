@@ -33,21 +33,21 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
         val participants = mutableListOf<Participant>()
 
         // Use dependency retrieval instead of constructor to avoid circular dependency
-        val localRepository = get<LocalRepository>()
-        val sport = localRepository.getSport(match.sportId)
+        val coreController = get<CoreController>()
+        val sport = coreController.getSport(match.sportId)
 
         sport?.let {
             match.participants.forEach {
                 val matchParticipant = if (sport.type == SportType.TEAM) {
-                    localRepository.getSquad(it.id)
+                    coreController.getSquad(it.id)
                 } else {
-                    localRepository.getAthlete(it.id)
+                    coreController.getAthlete(it.id)
                 }
                 participants.add(participantsConverter(it, matchParticipant))
             }
         }
 
-        return Match(date, city, country, sport, participants)
+        return Match(match.id,date, city, country, sport, participants)
     }
 
     fun toSports(sports: List<com.example.sports_match_day.room.entities.Sport>): List<Sport> {
@@ -98,8 +98,8 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
             val gender = if (athlete.gender) Gender.MALE else Gender.FEMALE
 
-            val localRepository = get<LocalRepository>()
-            val sport = localRepository.getSport(athlete.sportId) ?: return null
+            val coreController = get<CoreController>()
+            val sport = coreController.getSport(athlete.sportId) ?: return null
 
             return Athlete(athlete.id, athlete.name, city, country, sport, birthday, gender)
         }
@@ -123,8 +123,8 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val city = locationConverter(squad.city)
             val country = countryConverter(squad.country)
 
-            val localRepository = get<LocalRepository>()
-            val sport = localRepository.getSport(squad.sportId) ?: return null
+            val coreController = get<CoreController>()
+            val sport = coreController.getSport(squad.sportId) ?: return null
 
             return Squad(
                 squad.id,

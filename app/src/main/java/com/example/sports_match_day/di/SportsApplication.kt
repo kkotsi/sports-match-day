@@ -2,6 +2,7 @@ package com.example.sports_match_day.di
 
 import android.app.Application
 import android.content.ContextWrapper
+import com.google.firebase.FirebaseApp
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.pixplicity.easyprefs.library.Prefs
 import org.koin.android.ext.koin.androidContext
@@ -15,6 +16,9 @@ class SportsApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        //Firebase
+        FirebaseApp.initializeApp(this)
 
         //LocalDateTime
         AndroidThreeTen.init(this)

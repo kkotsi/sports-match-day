@@ -4,6 +4,7 @@ package com.example.sports_match_day.model.network
  * Created by Kristo on 08-Mar-21
  */
 class Match (
+    var id: Int,
     var date: Long,
     var city: String,
     var country: String,

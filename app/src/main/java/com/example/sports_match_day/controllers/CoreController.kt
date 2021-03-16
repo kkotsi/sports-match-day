@@ -59,6 +59,10 @@ class CoreControllerImpl(
         return true
     }
 
+    override fun getMatches(): LiveData<PagedList<Match>> {
+        return localRepository.getMatches()
+    }
+
     override suspend fun getAthlete(id: Int): Athlete? {
         return localRepository.getAthlete(id)
     }
@@ -138,8 +142,7 @@ interface CoreController {
     suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean
     suspend fun loadSamples(): Boolean
 
-    suspend fun getAthlete(id: Int): Athlete?
-
+    fun getMatches(): LiveData<PagedList<Match>>
     fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSquads(): LiveData<PagedList<Squad>>
     fun getSports(): LiveData<PagedList<Sport>>
@@ -148,6 +151,7 @@ interface CoreController {
     suspend fun getAllSquads(): MutableList<Squad>
     suspend fun getAllSports(): MutableList<Sport>
 
+    suspend fun getAthlete(id: Int): Athlete?
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
 

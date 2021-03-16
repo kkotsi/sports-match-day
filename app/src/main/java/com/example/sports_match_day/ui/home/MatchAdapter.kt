@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.paging.PagedListAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Gender
@@ -26,60 +28,29 @@ import java.util.*
 class MatchAdapter(
     private val context: Context,
     private val matches: List<Match>,
-    val selectMatch: (Match) -> Unit
-) :
-    RecyclerView.Adapter<MatchAdapter.MyViewHolder>() {
+    private val selectMatch: (Match) -> Unit
+):
+    PagedListAdapter<Match, MatchAdapter.MyViewHolder>(
+        diff()
+    ) {
 
     private var lastSelected: MyViewHolder? = null
 
-    override fun getItemCount(): Int {
-        return matches.size
-    }
+    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val countryImage: ImageView = itemView.findViewById(R.id.image_country)
+        private val textSport: TextView = view.findViewById(R.id.text_sport)
+        private val participantFirst: TextView = view.findViewById(R.id.text_first_squad)
+        private val participantSecond: TextView = view.findViewById(R.id.text_sec_squad)
+        private val scoreFirst: TextView = view.findViewById(R.id.text_first_score)
+        private val scoreSecond: TextView = view.findViewById(R.id.text_sec_score)
+        private val date: TextView = view.findViewById(R.id.text_date)
+        private val moreText: TextView = view.findViewById(R.id.text_more)
+        private val locationText: TextView = view.findViewById(R.id.text_location)
+        private val genderImage: ImageView = itemView.findViewById(R.id.image_sport_gender)
+        private val typeImage: ImageView = itemView.findViewById(R.id.image_sport_type)
+        val extraLayout: LinearLayout = itemView.findViewById(R.id.extra)
 
-    class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val countryImage: ImageView = itemView.findViewById<ImageView>(R.id.image_country)
-        val textSport: TextView = view.findViewById<TextView>(R.id.text_sport)
-        val participantFirst: TextView = view.findViewById<TextView>(R.id.text_first_squad)
-        val participantSecond: TextView = view.findViewById<TextView>(R.id.text_sec_squad)
-        val scoreFirst: TextView = view.findViewById<TextView>(R.id.text_first_score)
-        val scoreSecond: TextView = view.findViewById<TextView>(R.id.text_sec_score)
-        val date: TextView = view.findViewById<TextView>(R.id.text_date)
-        val moreText: TextView = view.findViewById<TextView>(R.id.text_more)
-        val locationText: TextView = view.findViewById<TextView>(R.id.text_location)
-        val genderImage: ImageView = itemView.findViewById<ImageView>(R.id.image_sport_gender)
-        val typeImage: ImageView = itemView.findViewById<ImageView>(R.id.image_sport_type)
-        val extraLayout: LinearLayout = itemView.findViewById<LinearLayout>(R.id.extra)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder =
-            MyViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_match, parent, false)
-            )
-
-        holder.apply {
-            itemView.findViewById<View>(R.id.container_match)?.setOnClickListener {
-                if (adapterPosition >= 0) {
-
-                    selectMatch.invoke(matches[adapterPosition])
-                    lastSelected?.let {
-                        it.extraLayout.visibility = View.GONE
-                    }
-                    lastSelected = this
-
-                    lastSelected?.let {
-                        it.extraLayout.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-        return holder
-    }
-
-    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-        holder.apply {
-            val match = matches[position]
+        fun bind(match: Match) {
             val country = match.country.toString()
             val url = FlagManager.getFlagURL(country)
 
@@ -138,6 +109,49 @@ class MatchAdapter(
                 moreText.visibility = View.GONE
 
             locationText.text = location
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
+        val holder =  MyViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_match, parent, false)
+        )
+        holder.apply {
+            itemView.findViewById<View>(R.id.container_match)?.setOnClickListener {
+                if (adapterPosition >= 0) {
+
+                    selectMatch.invoke(matches[adapterPosition])
+                    lastSelected?.let {
+                        it.extraLayout.visibility = View.GONE
+                    }
+                    lastSelected = this
+
+                    lastSelected?.let {
+                        it.extraLayout.visibility = View.VISIBLE
+                    }
+                }
+            }
+        }
+        return holder
+    }
+
+    override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.bind(getItem(position)!!)
+    }
+
+    fun getMatch(position: Int): Match? {
+        return getItem(position)
+    }
+}
+
+fun diff() : DiffUtil.ItemCallback<Match>{
+    return object : DiffUtil.ItemCallback<Match>(){
+        override fun areItemsTheSame(oldItem: Match, newItem: Match): Boolean {
+            return true
+        }
+
+        override fun areContentsTheSame(oldItem: Match, newItem: Match): Boolean {
+            return oldItem.id == newItem.id
         }
     }
 }

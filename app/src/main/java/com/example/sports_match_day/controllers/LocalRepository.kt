@@ -5,9 +5,11 @@ import androidx.paging.Config
 import androidx.paging.PagedList
 import androidx.paging.toLiveData
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
+import com.example.sports_match_day.controllers.paging.MatchesDataSource
 import com.example.sports_match_day.controllers.paging.SportsDataSource
 import com.example.sports_match_day.controllers.paging.SquadsDataSource
 import com.example.sports_match_day.model.Athlete
+import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.room.SportsDatabase
@@ -18,11 +20,17 @@ import com.example.sports_match_day.room.SportsDatabase
 class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
+    private var matchesFactory: MatchesDataSource.Factory,
     private var athletesFactory: AthletesDataSource.Factory,
     private var squadsFactory: SquadsDataSource.Factory,
     private var sportsFactory: SportsDataSource.Factory,
     private var memoryRepository: MemoryRepository
 ) : LocalRepository {
+
+    override fun getMatches(): LiveData<PagedList<Match>> {
+        val config = Config(MatchesDataSource.PAGE_SIZE, MatchesDataSource.PAGE_SIZE - 2, false)
+        return matchesFactory.toLiveData(config)
+    }
 
     override fun getAthletes(): LiveData<PagedList<Athlete>> {
         val config = Config(AthletesDataSource.PAGE_SIZE, AthletesDataSource.PAGE_SIZE - 2, false)
@@ -185,6 +193,7 @@ class LocalRepositoryImpl(
 }
 
 interface LocalRepository {
+    fun getMatches(): LiveData<PagedList<Match>>
     fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSports(): LiveData<PagedList<Sport>>
     fun getSquads(): LiveData<PagedList<Squad>>

@@ -19,6 +19,7 @@ class FirebaseRepositoryImpl: FirebaseRepository {
                     FirebaseDatabase.getInstance().reference
                         .child("matches")
                         .removeEventListener(this)
+                    throw error.toException()
                 }
 
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
