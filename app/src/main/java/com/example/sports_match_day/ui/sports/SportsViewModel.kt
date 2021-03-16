@@ -20,9 +20,7 @@ class SportsViewModel(private val coreController: CoreController) : ScopedViewMo
         sport?.let {
             launchWithLoad({
                 coreController.removeSport(it)
-            }) {
-
-            }
+            }) {}
         }
     }
 }

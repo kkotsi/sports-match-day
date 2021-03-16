@@ -21,9 +21,7 @@ class SquadsViewModel(private var coreController: CoreController) : ScopedViewMo
         squad?.let {
             launchWithLoad({
                 coreController.removeSquad(it)
-            }){
-
-            }
+            }) {}
         }
     }
 }

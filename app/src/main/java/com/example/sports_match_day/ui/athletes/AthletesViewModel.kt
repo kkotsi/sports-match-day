@@ -20,9 +20,7 @@ class AthletesViewModel(private var coreController: CoreController) : ScopedView
         athlete?.let {
             launchWithLoad({
                 coreController.removeAthlete(it)
-            }){
-
-            }
+            }) {}
         }
     }
 }

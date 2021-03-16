@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Match
+import com.example.sports_match_day.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -20,7 +20,7 @@ import java.util.*
 /**
  * Created by Kristo on 05-Mar-21
  */
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var recyclerMatches: RecyclerView
@@ -32,10 +32,7 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.fragment_home, container, false)
-
-
-        return root
+        return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,6 +58,10 @@ class HomeFragment : Fragment() {
             }else {
                 loader.visibility = View.INVISIBLE
             }
+        })
+
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
         })
     }
 

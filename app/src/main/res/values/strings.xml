@@ -39,4 +39,9 @@
     <string name="help_gender">Only people with the selected gender can participate to this sport.</string>
     <string name="help_type">Group sports or individual sports.</string>
     <string name="gender">Gender</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="wrong_value">Wrong value</string>
+
+    <string name="ok">OK</string>
+
 </resources>

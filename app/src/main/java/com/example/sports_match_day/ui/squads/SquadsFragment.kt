@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -14,13 +13,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by Kristo on 05-Mar-21
  */
-class SquadsFragment : Fragment() {
+class SquadsFragment : BaseFragment() {
 
     private val viewModel: SquadsViewModel by viewModel()
     private lateinit var recyclerSquads: RecyclerView
@@ -107,6 +107,10 @@ class SquadsFragment : Fragment() {
                 }
             })
             (recyclerSquads.adapter as SquadsAdapter).submitList(it)
+        })
+
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
         })
     }
 
