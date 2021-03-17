@@ -71,15 +71,18 @@ class MatchAdapter(
             val format = DecimalFormat("0.#")
 
             textSport.text = match.sport?.name ?: ""
-            participantFirst.text = match.participants[0].participant?.name ?: ""
-            val score = match.participants[0].score
 
-            if(score >= 0)
-                scoreFirst.text = format.format(match.participants[0].score).toString()
-            else
-                scoreFirst.text = "-"
 
             if(match.participants.size > 1) {
+
+                participantFirst.text = match.participants[0].participant?.name ?: ""
+                val score = match.participants[0].score
+
+                if(score >= 0)
+                    scoreFirst.text = format.format(match.participants[0].score).toString()
+                else
+                    scoreFirst.text = "-"
+
                 participantSecond.text = match.participants[1].participant?.name ?: ""
 
                 val secondScore = match.participants[1].score

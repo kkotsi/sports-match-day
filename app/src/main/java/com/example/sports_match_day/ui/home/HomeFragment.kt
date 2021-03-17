@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import androidx.paging.PagedList
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
@@ -13,6 +14,7 @@ import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -41,7 +43,15 @@ class HomeFragment : BaseFragment() {
         setupLoader()
         setupObservers()
         setupCalendar()
-        viewModel.loadData()
+        setupAddButton()
+    }
+
+    private fun setupAddButton(){
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+            it.setOnClickListener {
+               viewModel.addMatch()
+            }
+        }
     }
 
     private fun setupObservers(){
@@ -129,6 +139,20 @@ class HomeFragment : BaseFragment() {
             }
 
             (recyclerMatches.adapter as MatchAdapter).submitList(matches)
+
+            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                    return false
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                    val position = viewHolder.adapterPosition
+                    viewModel.removeMatch((recyclerMatches.adapter as? MatchAdapter)?.getMatch(position))
+                    recyclerMatches.adapter?.notifyItemRemoved(position)
+                }
+            }
+            val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+            itemTouchHelper.attachToRecyclerView(recyclerMatches)
         }
     }
 

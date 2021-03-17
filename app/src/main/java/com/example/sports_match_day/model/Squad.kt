@@ -9,11 +9,11 @@ import java.util.*
  * A class that represents an individual squad
  */
 class Squad(
-    var id: Int,
+    id: Int,
     name: String,
     var stadium: String,
     var city: Address?,
     var country: Locale,
     var sport: Sport?,
     var birthday: LocalDateTime
-): MatchParticipant(name)
+): Contestant(name, id)

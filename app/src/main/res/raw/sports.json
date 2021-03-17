@@ -3,24 +3,28 @@
     "id" : 1,
     "name": "Football",
     "type": false,
-    "gender": true
+    "gender": true,
+    "participantsCount" : 2
   },
   {
     "id" : 2,
     "name": "Ping Pong",
     "type": true,
-    "gender": true
+    "gender": true,
+    "participantsCount" : 2
   },
   {
     "id" : 3,
     "name": "100m Dash",
     "type": true,
-    "gender": true
+    "gender": true,
+    "participantsCount" : 3
   },
   {
     "id" : 4,
     "name": "Volley",
     "type": false,
-    "gender": false
+    "gender": false,
+    "participantsCount" : 2
   }
 ]

@@ -144,9 +144,9 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
     private fun participantsConverter(
         participant: com.example.sports_match_day.model.network.Participant,
-        matchParticipant: MatchParticipant?
+        contestant: Contestant?
     ): Participant {
-        return Participant(matchParticipant, participant.score)
+        return Participant(contestant, participant.score)
     }
 
     private fun countryConverter(code: String): Locale {

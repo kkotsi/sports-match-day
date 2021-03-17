@@ -30,11 +30,12 @@ class MatchesDataSource private constructor(
             return
         }
 
-        memoryRepository.athletes.clear()
-        firebaseRepository.getMatches(PAGE_SIZE) { list ->
+        memoryRepository.matches.clear()
+        firebaseRepository.getMatchesInitial(PAGE_SIZE) { list ->
             GlobalScope.launch(Dispatchers.Default) {
                 list?.let {
                     val matches = decoupleAdapter.toMatches(it)
+                    memoryRepository.matches = matches
                     callback.onResult(matches, null, PAGE_SIZE)
                 }
             }

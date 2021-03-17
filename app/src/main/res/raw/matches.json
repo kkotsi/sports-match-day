@@ -1,47 +1,74 @@
-  [
-    {
-      "id": 1,
-      "date": 1615192003,
-      "city": "Thessaloniki",
-      "country": "gr",
-      "sportId": 1,
-      "participants": [
-        {"id": 1,"score": 2.0},
-        {"id": 2, "score": 0.0}
-      ]
-    },
-    {
-      "id": 2,
-      "date": 1605012013,
-      "city": "New York",
-      "country": "us",
-      "sportId": 2,
-      "participants": [
-        {"id": 1,"score": 0.0},
-        {"id": 2, "score": 0.0}
-      ]
-    },
-    {
-      "id": 3,
-      "date": 1615320543,
-      "city": "Athens",
-      "country": "gr",
-      "sportId": 3,
-      "participants": [
-        {"id": 3, "score": -1.0},
-        {"id": 4, "score": -1.0},
-        {"id": 5, "score": -1.0}
-      ]
-    },
-    {
-      "id": 4,
-      "date": 1610222943,
-      "city": "Paris",
-      "country": "fr",
-      "sportId": 4,
-      "participants": [
-        {"id": 3, "score": 3.0},
-        {"id": 4, "score": 2.0}
-      ]
-    }
-  ]
+{
+  "1": {
+    "id": 1,
+    "date": 1615192003,
+    "city": "Thessaloniki",
+    "country": "gr",
+    "sportId": 1,
+    "participants": [
+      {
+        "id": 1,
+        "score": 2.0
+      },
+      {
+        "id": 2,
+        "score": 0.0
+      }
+    ]
+  },
+  "2": {
+    "id": 2,
+    "date": 1605012013,
+    "city": "New York",
+    "country": "us",
+    "sportId": 2,
+    "participants": [
+      {
+        "id": 1,
+        "score": 0.0
+      },
+      {
+        "id": 2,
+        "score": 0.0
+      }
+    ]
+  },
+  "3": {
+    "id": 3,
+    "date": 1615320543,
+    "city": "Athens",
+    "country": "gr",
+    "sportId": 3,
+    "participants": [
+      {
+        "id": 3,
+        "score": -1.0
+      },
+      {
+        "id": 4,
+        "score": -1.0
+      },
+      {
+        "id": 5,
+        "score": -1.0
+      }
+    ]
+  },
+  "4": {
+    "id": 4,
+    "date": 1610222943,
+    "city": "Paris",
+    "country": "fr",
+    "sportId": 4,
+    "participants": [
+      {
+        "id": 3,
+        "score": 3.0
+      },
+      {
+        "id": 4,
+        "score": 2.0
+      }
+    ]
+  }
+}

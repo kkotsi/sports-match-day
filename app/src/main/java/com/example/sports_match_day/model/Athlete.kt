@@ -9,11 +9,11 @@ import java.util.*
  * A class that represents an individual athlete
  */
 class Athlete(
-    var id: Int,
+    id: Int,
     name: String,
     var city: Address?,
     var country: Locale,
     var sport: Sport,
     var birthday: LocalDateTime,
     var gender: Gender
-): MatchParticipant(name)
+): Contestant(name, id)

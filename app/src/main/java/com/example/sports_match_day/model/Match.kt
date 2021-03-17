@@ -17,6 +17,6 @@ class Match (
     )
 
 class Participant(
-    var participant: MatchParticipant?,
+    var participant: Contestant?,
     var score: Double
 )

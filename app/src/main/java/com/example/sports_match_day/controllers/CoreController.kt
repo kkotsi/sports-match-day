@@ -5,10 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.example.sports_match_day.firebase.FirebaseRepository
-import com.example.sports_match_day.model.Athlete
-import com.example.sports_match_day.model.Match
-import com.example.sports_match_day.model.Sport
-import com.example.sports_match_day.model.Squad
+import com.example.sports_match_day.model.*
 import com.example.sports_match_day.utils.RawManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.pixplicity.easyprefs.library.Prefs
@@ -99,16 +96,33 @@ class CoreControllerImpl(
         return localRepository.getSport(id)
     }
 
+    override suspend fun removeMatch(match: Match) {
+        memoryRepository.matches.remove(match)
+        firebaseRepository.removeMatch(match.id)
+    }
+
     override suspend fun removeAthlete(athlete: Athlete) {
+        memoryRepository.athletes.remove(athlete)
         return localRepository.removeAthlete(athlete)
     }
 
     override suspend fun removeSquad(squad: Squad) {
+        memoryRepository.squads.remove(squad)
         return localRepository.removeSquad(squad)
     }
 
     override suspend fun removeSport(sport: Sport) {
+        memoryRepository.sports.remove(sport)
         return localRepository.removeSport(sport)
+    }
+
+    override suspend fun addMatch(
+        city: String,
+        country: String,
+        sportId: Int,
+        date: LocalDateTime,
+        participants: List<Participant>) {
+        firebaseRepository.addMatch(city,country,sportId,date.atZone(ZoneId.systemDefault()).toEpochSecond(),participants)
     }
 
     override suspend fun addAthlete(
@@ -155,11 +169,14 @@ interface CoreController {
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
 
+    suspend fun removeMatch(match: Match)
     suspend fun removeAthlete(athlete: Athlete)
     suspend fun removeSquad(squad: Squad)
     suspend fun removeSport(sport: Sport)
 
+    suspend fun addMatch(city: String, country: String, sportId: Int, date: LocalDateTime, participants: List<Participant>)
     suspend fun addAthlete(name: String, city: String, country: String, gender: Boolean, sportId: Int, birthday: LocalDateTime): Boolean
     suspend fun addSquad(name: String, city: String, country: String, stadium: String, sportId: Int, birthday: LocalDateTime): Boolean
     suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean
+
 }

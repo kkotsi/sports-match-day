@@ -1,5 +1,6 @@
 package com.example.sports_match_day.firebase
 
+import com.example.sports_match_day.model.Participant
 import com.example.sports_match_day.model.network.Match
 import com.google.firebase.database.*
 
@@ -10,10 +11,12 @@ import com.google.firebase.database.*
 class FirebaseRepositoryImpl : FirebaseRepository {
     //The last id we downloaded. (Pagination offset)
     private var offset = 0.0
-    override fun getMatches(
-        count: Int,
-        onComplete: (List<Match>?) -> Unit
-    ) {
+    override fun getMatchesInitial(count: Int, onComplete: (List<Match>?) -> Unit) {
+        offset = 0.0
+        getMatches(count,onComplete)
+    }
+
+    override fun getMatches(count: Int, onComplete: (List<Match>?) -> Unit) {
         FirebaseDatabase.getInstance().reference
             .child("matches")
             .orderByChild("id")
@@ -63,12 +66,60 @@ class FirebaseRepositoryImpl : FirebaseRepository {
                 }
             })
     }
+
+    override fun removeMatch(matchId: Int) {
+
+        FirebaseDatabase.getInstance().reference
+            .child("matches")
+            .child("$matchId")
+
+            .removeValue { error, ref ->
+                print("ok")
+            }
+    }
+
+    override fun addMatch(city: String, country: String, sportId: Int, date: Long, participants: List<Participant>){
+        val firebaseMatch = HashMap<String, Any>()
+        firebaseMatch["city"] = city
+        firebaseMatch["country"] = country
+        firebaseMatch["sportId"] = sportId
+        firebaseMatch["id"] = 5
+
+        val listParticipants = mutableListOf<HashMap<String,Any>>()
+        participants.forEach {
+            val map = hashMapOf<String,Any>()
+            map["id"] = it.participant?.id ?: 0
+            map["score"] = it.score
+
+            listParticipants.add(map)
+        }
+
+        firebaseMatch["participants"] = listParticipants
+
+        FirebaseDatabase.getInstance().reference
+            .child("matches")
+            .child("5")
+            .setValue(firebaseMatch
+            ) { error, ref ->
+                print("ok")
+            }
+    }
 }
 
 interface FirebaseRepository {
+
+    fun getMatchesInitial(
+        count: Int,
+        onComplete: (List<Match>?) -> Unit
+    )
+
     fun getMatches(
         count: Int,
         onComplete: (List<Match>?) -> Unit
     )
+
+    fun removeMatch(matchId: Int)
+
+    fun addMatch(city: String, country: String, sportId: Int, date: Long, participants: List<Participant>)
 }
 
