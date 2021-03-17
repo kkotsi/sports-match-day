@@ -1,6 +1,5 @@
 package com.example.sports_match_day.ui.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +25,6 @@ import java.util.*
  * Created by Kristo on 07-Mar-21
  */
 class MatchAdapter(
-    private val context: Context,
-    private val matches: List<Match>,
     private val selectMatch: (Match) -> Unit
 ):
     PagedListAdapter<Match, MatchAdapter.MyViewHolder>(
@@ -36,8 +33,8 @@ class MatchAdapter(
 
     private var lastSelected: MyViewHolder? = null
 
-    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val countryImage: ImageView = itemView.findViewById(R.id.image_country)
+    inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
+        private val countryImage: ImageView = view.findViewById(R.id.image_country)
         private val textSport: TextView = view.findViewById(R.id.text_sport)
         private val participantFirst: TextView = view.findViewById(R.id.text_first_squad)
         private val participantSecond: TextView = view.findViewById(R.id.text_sec_squad)
@@ -46,16 +43,28 @@ class MatchAdapter(
         private val date: TextView = view.findViewById(R.id.text_date)
         private val moreText: TextView = view.findViewById(R.id.text_more)
         private val locationText: TextView = view.findViewById(R.id.text_location)
-        private val genderImage: ImageView = itemView.findViewById(R.id.image_sport_gender)
-        private val typeImage: ImageView = itemView.findViewById(R.id.image_sport_type)
-        val extraLayout: LinearLayout = itemView.findViewById(R.id.extra)
+        private val genderImage: ImageView = view.findViewById(R.id.image_sport_gender)
+        private val typeImage: ImageView = view.findViewById(R.id.image_sport_type)
+        private val extraLayout: LinearLayout = view.findViewById(R.id.extra)
 
         fun bind(match: Match) {
             val country = match.country.toString()
             val url = FlagManager.getFlagURL(country)
 
+            view.findViewById<View>(R.id.container_match)?.setOnClickListener {
+                selectMatch.invoke(match)
+                lastSelected?.let {
+                    it.extraLayout.visibility = View.GONE
+                }
+                lastSelected = this
+
+                lastSelected?.let {
+                    it.extraLayout.visibility = View.VISIBLE
+                }
+            }
+
             Picasso
-                .with(context)
+                .with(view.context)
                 .load(url)
                 .into(countryImage)
 
@@ -113,26 +122,9 @@ class MatchAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder =  MyViewHolder(
+        return MyViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_match, parent, false)
         )
-        holder.apply {
-            itemView.findViewById<View>(R.id.container_match)?.setOnClickListener {
-                if (adapterPosition >= 0) {
-
-                    selectMatch.invoke(matches[adapterPosition])
-                    lastSelected?.let {
-                        it.extraLayout.visibility = View.GONE
-                    }
-                    lastSelected = this
-
-                    lastSelected?.let {
-                        it.extraLayout.visibility = View.VISIBLE
-                    }
-                }
-            }
-        }
-        return holder
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {

@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import com.example.sports_match_day.R
 
 /**
@@ -17,7 +16,7 @@ object PopupManager {
         val mBuilder = AlertDialog.Builder(context)
         val mView = View.inflate(context, R.layout.pop_up, null)
         val alertDialog = mBuilder.setView(mView).create()
-        alertDialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context,R.color.colorPrimary))
+//        alertDialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context,R.color.colorPrimary))
 
         mView.findViewById<TextView>(R.id.text_pop_up_description).text = message
         mView.findViewById<Button>(R.id.button_pop_up_yes).setOnClickListener {

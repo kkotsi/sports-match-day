@@ -1,5 +1,6 @@
 package com.example.sports_match_day.di
 
+import com.example.sports_match_day.ui.LoginViewModel
 import com.example.sports_match_day.ui.MainActivityViewModel
 import com.example.sports_match_day.ui.athletes.AthletesViewModel
 import com.example.sports_match_day.ui.athletes.add.AthletesAddViewModel
@@ -15,6 +16,7 @@ import org.koin.dsl.module
  * Created by Kristo on 07-Mar-21
  */
 val viewModelModule = module {
+    viewModel { LoginViewModel(get()) }
     viewModel { MainActivityViewModel() }
     viewModel { HomeViewModel(get()) }
 

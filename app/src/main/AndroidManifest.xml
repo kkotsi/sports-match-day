@@ -10,22 +10,24 @@
     <application
         android:name=".di.SportsApplication"
         android:allowBackup="false"
-        tools:replace="android:allowBackup"
         android:icon="@mipmap/ic_sports_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_sports_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SportsMatchDay">
-        <activity
-            android:name=".ui.MainActivity"
-            android:label="@string/app_name"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/Theme.SportsMatchDay.NoActionBar">
+        android:theme="@style/Theme.SportsMatchDay"
+        tools:replace="android:allowBackup">
+        <activity android:name=".ui.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.SportsMatchDay.NoActionBar"
+            android:windowSoftInputMode="adjustPan">
         </activity>
     </application>
 

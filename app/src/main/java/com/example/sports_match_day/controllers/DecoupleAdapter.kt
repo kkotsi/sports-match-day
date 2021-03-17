@@ -17,15 +17,17 @@ import java.util.*
  */
 class DecoupleAdapter(var context: Context) : KoinComponent {
 
-    suspend fun toMatches(matches: List<com.example.sports_match_day.model.network.Match>): MutableList<Match> {
+    suspend fun toMatches(matches: List<com.example.sports_match_day.model.network.Match?>): MutableList<Match> {
         val newMatches = mutableListOf<Match>()
         matches.forEach {
-            newMatches.add(toMatch(it))
+            it?.let {
+                newMatches.add(toMatch(it))
+            }
         }
         return newMatches
     }
 
-    suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match {
+    private suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match {
         val date = epochConverter(match.date)
         val city = locationConverter(match.city)
         val country = countryConverter(match.country)
@@ -38,12 +40,13 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
         sport?.let {
             match.participants.forEach {
-                val matchParticipant = if (sport.type == SportType.TEAM) {
-                    coreController.getSquad(it.id)
+                val participant = com.example.sports_match_day.model.network.Participant(it)
+                val athleteOrSquad = if (sport.type == SportType.TEAM) {
+                    coreController.getSquad(participant.id)
                 } else {
-                    coreController.getAthlete(it.id)
+                    coreController.getAthlete(participant.id)
                 }
-                participants.add(participantsConverter(it, matchParticipant))
+                participants.add(participantsConverter(participant, athleteOrSquad))
             }
         }
 

@@ -1,33 +1,42 @@
 {
   "project_info": {
-    "project_number": "622449623644",
-    "project_id": "sports-match-day",
-    "storage_bucket": "sports-match-day.appspot.com"
+    "project_number": "711479227938",
+    "firebase_url": "https://sports-match-day-7e624-default-rtdb.firebaseio.com",
+    "project_id": "sports-match-day-7e624",
+    "storage_bucket": "sports-match-day-7e624.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:622449623644:android:e5f5040ab21146503c1c99",
+        "mobilesdk_app_id": "1:711479227938:android:49b25d66e9e2464284fc7b",
         "android_client_info": {
           "package_name": "com.example.sports_match_day"
         }
       },
       "oauth_client": [
         {
-          "client_id": "622449623644-krqkcg40g6obg360e45dipcj4v3k4reg.apps.googleusercontent.com",
+          "client_id": "711479227938-bi7llm384fijtscc1ms4l08d617b9d59.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sports_match_day",
+            "certificate_hash": "1d8a3bf73d0408e9143f2484926c3ef0d0efd31a"
+          }
+        },
+        {
+          "client_id": "711479227938-c74rlt8emrj5851a6cn0kfqs03dfd8bh.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCT16_S3_RDwgHHRyM1j3D0u0eVakfY0NU"
+          "current_key": "AIzaSyC0mMHl_FzjYDyi5DgFa1ZjB6cEfDU1bMM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "622449623644-krqkcg40g6obg360e45dipcj4v3k4reg.apps.googleusercontent.com",
+              "client_id": "711479227938-c74rlt8emrj5851a6cn0kfqs03dfd8bh.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

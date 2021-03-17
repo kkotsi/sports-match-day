@@ -25,19 +25,19 @@ class MatchesDataSource private constructor(
         callback: LoadInitialCallback<Int, Match>
     ) {
 
-        GlobalScope.launch(Dispatchers.Default) {
+        if (memoryRepository.matches.size >= PAGE_SIZE) {
+            callback.onResult(memoryRepository.matches, null, memoryRepository.athletes.size)
+            return
+        }
 
-            if(memoryRepository.matches.size >= PAGE_SIZE){
-                callback.onResult(memoryRepository.matches, null, memoryRepository.athletes.size)
-                return@launch
+        memoryRepository.athletes.clear()
+        firebaseRepository.getMatches(PAGE_SIZE) { list ->
+            GlobalScope.launch(Dispatchers.Default) {
+                list?.let {
+                    val matches = decoupleAdapter.toMatches(it)
+                    callback.onResult(matches, null, PAGE_SIZE)
+                }
             }
-
-            memoryRepository.athletes.clear()
-            firebaseRepository.getMatches {
-                print(it)
-            }
-
-            callback.onResult(mutableListOf(), null, PAGE_SIZE)
         }
     }
 
@@ -46,9 +46,13 @@ class MatchesDataSource private constructor(
     }
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Match>) {
-        GlobalScope.launch(Dispatchers.Default) {
-
-            callback.onResult(mutableListOf(), params.key + PAGE_SIZE)
+        firebaseRepository.getMatches(PAGE_SIZE) { list ->
+            GlobalScope.launch(Dispatchers.Default) {
+                list?.let {
+                    val matches = decoupleAdapter.toMatches(it)
+                    callback.onResult(matches, params.key + PAGE_SIZE)
+                }
+            }
         }
     }
 
@@ -62,7 +66,7 @@ class MatchesDataSource private constructor(
         }
     }
 
-    companion object{
+    companion object {
         const val PAGE_SIZE = 5
     }
 }

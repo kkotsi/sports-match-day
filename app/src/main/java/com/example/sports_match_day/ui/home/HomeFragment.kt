@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.applandeo.materialcalendarview.CalendarView
@@ -46,9 +47,22 @@ class HomeFragment : BaseFragment() {
     private fun setupObservers(){
         viewModel.matches.observe(viewLifecycleOwner, {
             it?.let {
-                repeat(it.size) {
-                    setUpEvent()
-                }
+
+                it.addWeakCallback(null, object: PagedList.Callback() {
+                    override fun onChanged(position: Int, count: Int) {
+                        //refreshLayout.isRefreshing = false
+                        setUpEvent()
+                    }
+                    override fun onInserted(position: Int, count: Int) {
+                        //refreshLayout.isRefreshing = false
+                        loader.visibility = View.INVISIBLE
+                        setUpEvent()
+                    }
+                    override fun onRemoved(position: Int, count: Int) {
+                    }
+                })
+
+                setUpEvent()
                 recyclerSetup(it)
             }
         })
@@ -92,6 +106,7 @@ class HomeFragment : BaseFragment() {
     private fun setUpEvent(){
         val events = mutableListOf<EventDay>()
 
+        calendarView.setEvents(mutableListOf())
         viewModel.getEventDates().forEach { date ->
             val calendar: Calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, date.year)
@@ -104,14 +119,16 @@ class HomeFragment : BaseFragment() {
         calendarView.setEvents(events)
     }
 
-    private fun recyclerSetup(matches: List<Match>){
+    private fun recyclerSetup(matches: PagedList<Match>){
         view?.let {
             recyclerMatches = it.findViewById(R.id.recycler_matches)
             recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
-            recyclerMatches.adapter = MatchAdapter(requireContext(), matches){ match ->
+            recyclerMatches.adapter = MatchAdapter{ match ->
                 selectDate(match.date)
             }
+
+            (recyclerMatches.adapter as MatchAdapter).submitList(matches)
         }
     }
 
