@@ -25,8 +25,12 @@ class SportsDataSource private constructor(
         callback: LoadInitialCallback<Int, Sport>
     ) {
 
+        if (memoryRepository.sports.size > 0) {
+            callback.onResult(memoryRepository.sports, null, memoryRepository.sports.size)
+            return
+        }
+
         GlobalScope.launch(Dispatchers.Default) {
-            memoryRepository.sports.clear()
             val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, 0)
             val sports = decoupleAdapter.toSports(roomSports)
             memoryRepository.sports.addAll(sports)

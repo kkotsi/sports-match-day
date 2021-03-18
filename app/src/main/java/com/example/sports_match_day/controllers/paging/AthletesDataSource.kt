@@ -24,15 +24,12 @@ class AthletesDataSource private constructor(
         params: LoadInitialParams<Int>,
         callback: LoadInitialCallback<Int, Athlete>
     ) {
+        if(memoryRepository.athletes.size > 0){
+            callback.onResult(memoryRepository.athletes, null, memoryRepository.athletes.size)
+            return
+        }
 
         GlobalScope.launch(Dispatchers.Default) {
-
-            if(memoryRepository.athletes.size >= PAGE_SIZE){
-                callback.onResult(memoryRepository.athletes, null, memoryRepository.athletes.size)
-                return@launch
-            }
-
-            memoryRepository.athletes.clear()
             val roomAthletes = sportsDatabase.athletesDao().getAthletes(PAGE_SIZE, 0)
             val athletes = decoupleAdapter.toAthletes(roomAthletes)
             memoryRepository.athletes.addAll(athletes)
@@ -46,7 +43,6 @@ class AthletesDataSource private constructor(
 
     override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Athlete>) {
         GlobalScope.launch(Dispatchers.Default) {
-
             val roomAthletes = sportsDatabase.athletesDao().getAthletes(PAGE_SIZE, params.key)
             val athletes = decoupleAdapter.toAthletes(roomAthletes)
             memoryRepository.athletes.addAll(athletes)

@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Participant
-import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
 
@@ -14,7 +13,11 @@ import org.threeten.bp.LocalDateTime
 class HomeViewModel(private var coreController: CoreController) : ScopedViewModel() {
 
     val matches = coreController.getMatches()
-    val squads = MutableLiveData<List<Squad>>()
+    val removeSuccessful = MutableLiveData<Boolean>()
+
+    fun invalidatedData() {
+        matches.value?.dataSource?.invalidate()
+    }
 
     fun getEventDates(): List<LocalDateTime>{
         val eventDates = mutableListOf<LocalDateTime>()
@@ -27,7 +30,7 @@ class HomeViewModel(private var coreController: CoreController) : ScopedViewMode
     fun removeMatch(match: Match?){
         launchWithLoad({
             match?.let {
-                coreController.removeMatch(match)
+                removeSuccessful.value = coreController.removeMatch(match)
             }
         }) {}
     }

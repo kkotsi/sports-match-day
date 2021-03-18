@@ -25,8 +25,12 @@ class SquadsDataSource private constructor(
         callback: LoadInitialCallback<Int, Squad>
     ) {
 
+        if (memoryRepository.squads.size > 0) {
+            callback.onResult(memoryRepository.squads, null, memoryRepository.squads.size)
+            return
+        }
+
         GlobalScope.launch(Dispatchers.Default) {
-            memoryRepository.squads.clear()
             val roomSquads = sportsDatabase.squadsDao().getSquads(PAGE_SIZE, 0)
             val squads = decoupleAdapter.toSquads(roomSquads)
             memoryRepository.squads.addAll(squads)

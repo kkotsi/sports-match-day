@@ -80,16 +80,19 @@ class LocalRepositoryImpl(
         }
     }
 
-    override suspend fun removeAthlete(athlete: Athlete) {
+    override suspend fun removeAthlete(athlete: Athlete): Boolean {
         sportsDatabase.athletesDao().deleteAthlete(athlete.id)
+        return true
     }
 
-    override suspend fun removeSquad(squad: Squad) {
+    override suspend fun removeSquad(squad: Squad): Boolean {
         sportsDatabase.squadsDao().deleteSquad(squad.id)
+        return true
     }
 
-    override suspend fun removeSport(sport: Sport) {
+    override suspend fun removeSport(sport: Sport): Boolean {
         sportsDatabase.sportsDao().deleteSport(sport.id)
+        return true
     }
 
     override suspend fun getAllAthletes(): MutableList<Athlete> {
@@ -179,13 +182,17 @@ class LocalRepositoryImpl(
         return true
     }
 
-    override suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean {
+    override suspend fun addSport(
+        name: String, type: Boolean, gender: Boolean,
+        count: Int
+    ): Boolean {
 
         val sport = com.example.sports_match_day.room.entities.Sport(
             0,
             name,
             type,
-            gender
+            gender,
+            count
         )
         sportsDatabase.sportsDao().insertSport(sport)
         return true
@@ -207,9 +214,9 @@ interface LocalRepository {
     suspend fun setSports(sports: List<com.example.sports_match_day.room.entities.Sport>)
     suspend fun setSquads(squads: List<com.example.sports_match_day.room.entities.Squad>)
 
-    suspend fun removeAthlete(athlete: Athlete)
-    suspend fun removeSquad(squad: Squad)
-    suspend fun removeSport(sport: Sport)
+    suspend fun removeAthlete(athlete: Athlete): Boolean
+    suspend fun removeSquad(squad: Squad): Boolean
+    suspend fun removeSport(sport: Sport): Boolean
 
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
@@ -233,5 +240,8 @@ interface LocalRepository {
         birthday: Long
     ): Boolean
 
-    suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean
+    suspend fun addSport(
+        name: String, type: Boolean, gender: Boolean,
+        count: Int
+    ): Boolean
 }

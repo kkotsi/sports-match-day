@@ -112,6 +112,10 @@ class SportsFragment : BaseFragment() {
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
+
+        viewModel.removeSuccessful.observe(viewLifecycleOwner, {
+            viewModel.invalidatedData()
+        })
     }
 
     private fun recyclerSetup(){
@@ -129,7 +133,6 @@ class SportsFragment : BaseFragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.adapterPosition
                     viewModel.removeSport((recyclerSports.adapter as? SportsAdapter)?.getSport(position))
-                    recyclerSports.adapter?.notifyItemRemoved(position)
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)

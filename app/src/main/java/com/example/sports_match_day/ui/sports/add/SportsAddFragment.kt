@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.OnTouchListener
@@ -19,12 +20,14 @@ class SportsAddFragment : Fragment() {
 
     private val viewModel: SportsAddViewModel by viewModel()
     private var nameEditTextView: AutoCompleteTextView? = null
+    private var participantsCountEditTextView: AutoCompleteTextView? = null
     private var toggleGender: ToggleButton? = null
     private var toggleType: ToggleButton? = null
     private var buttonSave: Button? = null
     private var loader: ProgressBar? = null
     private var genderTextHelp: MaterialCardView? = null
     private var typeTextHelp: MaterialCardView? = null
+    private var participantTextHelp: MaterialCardView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,14 +39,49 @@ class SportsAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupObservers()
         setupGenderToggle()
         setupSaveButton()
         setupNameEditText()
+        setupParticipantCountEditText()
         setupTypeToggle()
         setupHelpButton()
     }
 
+    private fun setupObservers() {
+        loader = view?.findViewById(R.id.progress_loading)
+        viewModel.isDataLoading.observe(viewLifecycleOwner, {
+            if (it)
+                loader?.visibility = View.VISIBLE
+            else
+                loader?.visibility = View.INVISIBLE
+        })
+
+        viewModel.saveSuccessful.observe(viewLifecycleOwner, {
+            if(it) {
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigateUp()
+            }
+        })
+    }
+
+    private fun setupParticipantCountEditText(){
+        participantsCountEditTextView = view?.findViewById(R.id.editText_participants_count)
+        participantsCountEditTextView?.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                val country = participantsCountEditTextView?.editableText.toString()
+                if (country.isBlank()) {
+                    participantsCountEditTextView?.error =  getString(R.string.error_blank)
+                } else {
+                    participantsCountEditTextView?.error = null
+                }
+            }
+        }
+    }
+
     private fun setupHelpButton(){
+        //Gender
         val genderHelp = view?.findViewById<ImageButton>(R.id.button_help_gender)
         genderTextHelp = view?.findViewById<MaterialCardView>(R.id.container_gender_help)
         genderTextHelp?.setOnFocusChangeListener { _, hasFocus ->
@@ -56,6 +94,7 @@ class SportsAddFragment : Fragment() {
             genderTextHelp?.requestFocus()
         }
 
+        //Type
         val typeHelp = view?.findViewById<ImageButton>(R.id.button_help_type)
         typeTextHelp = view?.findViewById<MaterialCardView>(R.id.container_type_help)
         typeTextHelp?.setOnFocusChangeListener { _, hasFocus ->
@@ -67,13 +106,26 @@ class SportsAddFragment : Fragment() {
             typeTextHelp?.visibility = View.VISIBLE
             typeTextHelp?.requestFocus()
         }
+
+        //Count
+        val participantHelp = view?.findViewById<ImageButton>(R.id.button_help_count)
+        participantTextHelp = view?.findViewById<MaterialCardView>(R.id.container_participants_help)
+        participantTextHelp?.setOnFocusChangeListener { _, hasFocus ->
+            if(!hasFocus)
+                participantTextHelp?.visibility = View.GONE
+        }
+
+        participantHelp?.setOnClickListener {
+            participantTextHelp?.visibility = View.VISIBLE
+            participantTextHelp?.requestFocus()
+        }
     }
     private fun setupNameEditText() {
         nameEditTextView = view?.findViewById(R.id.editText_name)
         nameEditTextView?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val country = nameEditTextView?.editableText.toString()
-                if (country.isBlank()) {
+                val name = nameEditTextView?.editableText.toString()
+                if (name.isBlank()) {
                     nameEditTextView?.error =  getString(R.string.error_blank)
                 } else {
                     nameEditTextView?.error = null
@@ -88,10 +140,11 @@ class SportsAddFragment : Fragment() {
             val gender = toggleGender?.isChecked ?: false
             val type = toggleType?.isChecked ?: false
 
+            val count = participantsCountEditTextView?.text?.toString()?.trim() ?: "0"
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
 
             if(validateData())
-                viewModel.addSport(name, type, gender)
+                viewModel.addSport(name, type, gender, count.toInt())
         }
     }
 
@@ -106,6 +159,17 @@ class SportsAddFragment : Fragment() {
 
         if(name.isBlank()){
             nameEditTextView?.error = getString(R.string.error_blank)
+            pass = false
+        }
+
+        val count = participantsCountEditTextView?.text?.toString() ?: ""
+
+        if(participantsCountEditTextView?.error != null){
+            pass = false
+        }
+
+        if(count.isBlank()){
+            participantsCountEditTextView?.error = getString(R.string.error_blank)
             pass = false
         }
         return pass
@@ -126,6 +190,7 @@ class SportsAddFragment : Fragment() {
             override fun onTouch() {
                 typeTextHelp?.visibility = View.GONE
                 genderTextHelp?.visibility = View.GONE
+                participantTextHelp?.visibility = View.GONE
             }
         }
     }

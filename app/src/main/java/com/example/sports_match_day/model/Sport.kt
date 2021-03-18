@@ -8,7 +8,8 @@ class Sport(
   var id: Int,
   var name: String,
   var type: SportType,
-  var gender: Gender
+  var gender: Gender,
+  var participantCount: Int
 )
 
 /**

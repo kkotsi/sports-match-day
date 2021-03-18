@@ -28,7 +28,6 @@ class SquadsFragment : BaseFragment() {
     private lateinit var loader: ProgressBar
     private lateinit var buttonAdd: FloatingActionButton
     private lateinit var refreshLayout: SwipeRefreshLayout
-    private var total = 0
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -111,6 +110,10 @@ class SquadsFragment : BaseFragment() {
 
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
+        })
+
+        viewModel.removeSuccessful.observe(viewLifecycleOwner, {
+            viewModel.invalidatedData()
         })
     }
 

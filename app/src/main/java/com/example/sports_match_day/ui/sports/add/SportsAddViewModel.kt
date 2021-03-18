@@ -13,11 +13,12 @@ class SportsAddViewModel(private val coreController: CoreController) : ScopedVie
     fun addSport(
         name: String,
         type: Boolean,
-        gender: Boolean
+        gender: Boolean,
+        count: Int
     ) {
         launchWithLoad({
             saveSuccessful.value =
-                coreController.addSport(name, type, gender)
+                coreController.addSport(name, type, gender, count)
         }) {}
     }
 }

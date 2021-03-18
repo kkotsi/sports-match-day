@@ -17,5 +17,7 @@ data class Sport (
     @ColumnInfo
     var type: Boolean,
     @ColumnInfo
-    var gender: Boolean
+    var gender: Boolean,
+    @ColumnInfo
+    var participantsCount: Int
 )

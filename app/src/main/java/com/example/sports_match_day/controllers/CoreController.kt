@@ -35,8 +35,8 @@ class CoreControllerImpl(
     }
 
     override suspend fun loadSamples(): Boolean {
-        if(Prefs.getBoolean(PreferencesKeys.SETUP_SAMPLE_DATA, false)){
-           return true
+        if (Prefs.getBoolean(PreferencesKeys.SETUP_SAMPLE_DATA, false)) {
+            return true
         }
 
         val sampleSports =
@@ -96,22 +96,23 @@ class CoreControllerImpl(
         return localRepository.getSport(id)
     }
 
-    override suspend fun removeMatch(match: Match) {
+    override suspend fun removeMatch(match: Match) : Boolean{
         memoryRepository.matches.remove(match)
         firebaseRepository.removeMatch(match.id)
+        return true
     }
 
-    override suspend fun removeAthlete(athlete: Athlete) {
+    override suspend fun removeAthlete(athlete: Athlete): Boolean {
         memoryRepository.athletes.remove(athlete)
         return localRepository.removeAthlete(athlete)
     }
 
-    override suspend fun removeSquad(squad: Squad) {
+    override suspend fun removeSquad(squad: Squad): Boolean {
         memoryRepository.squads.remove(squad)
         return localRepository.removeSquad(squad)
     }
 
-    override suspend fun removeSport(sport: Sport) {
+    override suspend fun removeSport(sport: Sport): Boolean {
         memoryRepository.sports.remove(sport)
         return localRepository.removeSport(sport)
     }
@@ -121,8 +122,15 @@ class CoreControllerImpl(
         country: String,
         sportId: Int,
         date: LocalDateTime,
-        participants: List<Participant>) {
-        firebaseRepository.addMatch(city,country,sportId,date.atZone(ZoneId.systemDefault()).toEpochSecond(),participants)
+        participants: List<Participant>
+    ) {
+        firebaseRepository.addMatch(
+            city,
+            country,
+            sportId,
+            date.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            participants
+        )
     }
 
     override suspend fun addAthlete(
@@ -133,7 +141,14 @@ class CoreControllerImpl(
         sportId: Int,
         birthday: LocalDateTime
     ): Boolean {
-        return localRepository.addAthlete(name, city, country, gender, sportId, birthday.atZone(ZoneId.systemDefault()).toEpochSecond())
+        return localRepository.addAthlete(
+            name,
+            city,
+            country,
+            gender,
+            sportId,
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+        )
     }
 
     override suspend fun addSquad(
@@ -144,11 +159,21 @@ class CoreControllerImpl(
         sportId: Int,
         birthday: LocalDateTime
     ): Boolean {
-        return localRepository.addSquad(name, city, country, stadium, sportId, birthday.atZone(ZoneId.systemDefault()).toEpochSecond())
+        return localRepository.addSquad(
+            name,
+            city,
+            country,
+            stadium,
+            sportId,
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+        )
     }
 
-    override suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean {
-        return localRepository.addSport(name, type, gender)
+    override suspend fun addSport(
+        name: String, type: Boolean, gender: Boolean,
+        count: Int
+    ): Boolean {
+        return localRepository.addSport(name, type, gender, count)
     }
 }
 
@@ -169,14 +194,40 @@ interface CoreController {
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
 
-    suspend fun removeMatch(match: Match)
-    suspend fun removeAthlete(athlete: Athlete)
-    suspend fun removeSquad(squad: Squad)
-    suspend fun removeSport(sport: Sport)
+    suspend fun removeMatch(match: Match): Boolean
+    suspend fun removeAthlete(athlete: Athlete): Boolean
+    suspend fun removeSquad(squad: Squad): Boolean
+    suspend fun removeSport(sport: Sport): Boolean
 
-    suspend fun addMatch(city: String, country: String, sportId: Int, date: LocalDateTime, participants: List<Participant>)
-    suspend fun addAthlete(name: String, city: String, country: String, gender: Boolean, sportId: Int, birthday: LocalDateTime): Boolean
-    suspend fun addSquad(name: String, city: String, country: String, stadium: String, sportId: Int, birthday: LocalDateTime): Boolean
-    suspend fun addSport(name: String, type: Boolean, gender: Boolean): Boolean
+    suspend fun addMatch(
+        city: String,
+        country: String,
+        sportId: Int,
+        date: LocalDateTime,
+        participants: List<Participant>
+    )
+
+    suspend fun addAthlete(
+        name: String,
+        city: String,
+        country: String,
+        gender: Boolean,
+        sportId: Int,
+        birthday: LocalDateTime
+    ): Boolean
+
+    suspend fun addSquad(
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        birthday: LocalDateTime
+    ): Boolean
+
+    suspend fun addSport(
+        name: String, type: Boolean, gender: Boolean,
+        count: Int
+    ): Boolean
 
 }

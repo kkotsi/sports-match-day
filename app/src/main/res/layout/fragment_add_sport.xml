@@ -123,6 +123,56 @@
         app:layout_constraintStart_toStartOf="@+id/toggle_gender"
         app:layout_constraintTop_toBottomOf="@+id/toggle_gender" />
 
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/container_participants_help"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:minHeight="70dp"
+        android:background="@color/colorBackgroundCard"
+        android:visibility="invisible"
+        app:cardElevation="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_help_count"
+        app:layout_constraintStart_toEndOf="@+id/button_help_count">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:gravity="center"
+            android:text="@string/help_participants"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/participants"
+        app:layout_constraintBottom_toTopOf="@+id/editText_participants_count"
+        app:layout_constraintStart_toStartOf="@+id/editText_participants_count" />
+
+    <ImageButton
+        android:id="@+id/button_help_count"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_help"
+        app:layout_constraintBottom_toBottomOf="@+id/textView5"
+        app:layout_constraintStart_toEndOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+    <AutoCompleteTextView
+        android:id="@+id/editText_participants_count"
+        style="@style/RoundedEditText"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="50dp"
+        android:hint="@string/count"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_type" />
+
     <ProgressBar
         android:id="@id/progress_loading"
         android:layout_width="wrap_content"

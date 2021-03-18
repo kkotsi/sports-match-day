@@ -43,5 +43,8 @@
     <string name="wrong_value">Wrong value</string>
 
     <string name="ok">OK</string>
+    <string name="count">Count</string>
+    <string name="participants">Participants</string>
+    <string name="help_participants">The number of the allowed participants in a match.</string>
 
 </resources>

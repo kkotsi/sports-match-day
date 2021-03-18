@@ -77,7 +77,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             } else {
                 Gender.FEMALE
             }
-            return Sport(sport.id, sport.name, type, gender)
+            return Sport(sport.id, sport.name, type, gender, sport.participantsCount)
         }
         return null
     }

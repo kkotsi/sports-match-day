@@ -25,8 +25,8 @@ class MatchesDataSource private constructor(
         callback: LoadInitialCallback<Int, Match>
     ) {
 
-        if (memoryRepository.matches.size >= PAGE_SIZE) {
-            callback.onResult(memoryRepository.matches, null, memoryRepository.athletes.size)
+        if (memoryRepository.matches.size > 0) {
+            callback.onResult(memoryRepository.matches, null, memoryRepository.matches.size)
             return
         }
 
@@ -35,7 +35,7 @@ class MatchesDataSource private constructor(
             GlobalScope.launch(Dispatchers.Default) {
                 list?.let {
                     val matches = decoupleAdapter.toMatches(it)
-                    memoryRepository.matches = matches
+                    memoryRepository.matches.addAll(matches)
                     callback.onResult(matches, null, PAGE_SIZE)
                 }
             }
@@ -51,6 +51,7 @@ class MatchesDataSource private constructor(
             GlobalScope.launch(Dispatchers.Default) {
                 list?.let {
                     val matches = decoupleAdapter.toMatches(it)
+                    memoryRepository.matches.addAll(matches)
                     callback.onResult(matches, params.key + PAGE_SIZE)
                 }
             }

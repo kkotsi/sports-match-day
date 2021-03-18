@@ -1,6 +1,7 @@
 package com.example.sports_match_day.ui.sports
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Sport
@@ -11,15 +12,16 @@ import com.example.sports_match_day.ui.base.ScopedViewModel
  */
 class SportsViewModel(private val coreController: CoreController) : ScopedViewModel() {
     var pagedSports: LiveData<PagedList<Sport>> = coreController.getSports()
+    val removeSuccessful = MutableLiveData<Boolean>()
 
-    fun invalidatedData(){
+    fun invalidatedData() {
         pagedSports.value?.dataSource?.invalidate()
     }
 
     fun removeSport(sport: Sport?) {
         sport?.let {
             launchWithLoad({
-                coreController.removeSport(it)
+                    removeSuccessful.value = coreController.removeSport(it)
             }) {}
         }
     }

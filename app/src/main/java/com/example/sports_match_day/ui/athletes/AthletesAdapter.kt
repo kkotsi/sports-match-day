@@ -56,11 +56,9 @@ class AthletesAdapter:
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder =
-            MyViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_athlete, parent, false)
-            )
-        return holder
+        return MyViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_athlete, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -75,7 +73,7 @@ class AthletesAdapter:
 private fun diff() : DiffUtil.ItemCallback<Athlete>{
     return object : DiffUtil.ItemCallback<Athlete>(){
         override fun areItemsTheSame(oldItem: Athlete, newItem: Athlete): Boolean {
-            return true
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Athlete, newItem: Athlete): Boolean {

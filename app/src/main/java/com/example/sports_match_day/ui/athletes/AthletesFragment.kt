@@ -92,6 +92,8 @@ class AthletesFragment : BaseFragment() {
         })
 
         viewModel.pagedAthletes.observe(viewLifecycleOwner, {
+            refreshCount()
+            refreshLayout.isRefreshing = false
             it.addWeakCallback(null, object: PagedList.Callback() {
                 override fun onChanged(position: Int, count: Int) {
                     refreshCount()
@@ -107,13 +109,20 @@ class AthletesFragment : BaseFragment() {
                 }
             })
             (recyclerAthletes.adapter as AthletesAdapter).submitList(it)
+            //recyclerAthletes.adapter?.notifyDataSetChanged()
         })
 
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
+
+        viewModel.removeSuccessful.observe(viewLifecycleOwner, {
+            viewModel.invalidatedData()
+            //refreshCount()
+        })
     }
 
+    var positionRemoved = 0
     private fun recyclerSetup(){
         view?.let {
             recyclerAthletes = it.findViewById(R.id.recycler_athletes)
@@ -128,8 +137,8 @@ class AthletesFragment : BaseFragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.adapterPosition
+                    positionRemoved = position
                     viewModel.removeAthlete((recyclerAthletes.adapter as? AthletesAdapter)?.getAthlete(position))
-                    recyclerAthletes.adapter?.notifyItemRemoved(position)
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)

@@ -89,6 +89,10 @@ class HomeFragment : BaseFragment() {
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
+
+        viewModel.removeSuccessful.observe(viewLifecycleOwner, {
+            viewModel.invalidatedData()
+        })
     }
 
     private fun setupLoader(){
@@ -148,7 +152,6 @@ class HomeFragment : BaseFragment() {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.adapterPosition
                     viewModel.removeMatch((recyclerMatches.adapter as? MatchAdapter)?.getMatch(position))
-                    recyclerMatches.adapter?.notifyItemRemoved(position)
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
