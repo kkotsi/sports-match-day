@@ -16,16 +16,16 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class SquadsAdapter() :
+class SquadsAdapter :
     PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        private val textName: TextView = view.findViewById<TextView>(R.id.text_squad)
-        private val textCity: TextView = view.findViewById<TextView>(R.id.text_city)
-        private val textStadium: TextView = view.findViewById<TextView>(R.id.text_stadium)
-        private val textSport: TextView = view.findViewById<TextView>(R.id.text_sport)
-        private val textBirthday: TextView = view.findViewById<TextView>(R.id.text_birthday)
-        private val imageCountry: ImageView = view.findViewById<ImageView>(R.id.image_country)
+        private val textName: TextView = view.findViewById(R.id.text_squad)
+        private val textCity: TextView = view.findViewById(R.id.text_city)
+        private val textStadium: TextView = view.findViewById(R.id.text_stadium)
+        private val textSport: TextView = view.findViewById(R.id.text_sport)
+        private val textBirthday: TextView = view.findViewById(R.id.text_birthday)
+        private val imageCountry: ImageView = view.findViewById(R.id.image_country)
 
         fun bind(item: Squad) {
             textName.text = item.name

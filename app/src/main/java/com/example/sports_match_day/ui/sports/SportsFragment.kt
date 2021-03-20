@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
-import androidx.paging.PagedList
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +15,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -25,9 +26,7 @@ class SportsFragment : BaseFragment() {
     private val viewModel: SportsViewModel by viewModel()
     private lateinit var recyclerSports: RecyclerView
     private lateinit var textTotal: TextView
-    private lateinit var loader: ProgressBar
     private lateinit var refreshLayout: SwipeRefreshLayout
-    private var total = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,12 +39,11 @@ class SportsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupLoader()
         setupTotalText()
         recyclerSetup()
-        setupObservers()
         setupAddButton()
         setupRefreshLayout()
+        setupObservers()
     }
 
     private fun setupRefreshLayout() {
@@ -54,7 +52,7 @@ class SportsFragment : BaseFragment() {
         }
 
         refreshLayout.setOnRefreshListener {
-            viewModel.invalidatedData()
+            (recyclerSports.adapter as SportsAdapter).refresh()
         }
     }
 
@@ -69,12 +67,6 @@ class SportsFragment : BaseFragment() {
         }
     }
 
-    private fun setupLoader(){
-        view?.findViewById<ProgressBar>(R.id.progress_loading)?.let{
-            loader = it
-        }
-    }
-
     private fun setupTotalText(){
         view?.findViewById<TextView>(R.id.text_total)?.let{
             textTotal = it
@@ -84,37 +76,28 @@ class SportsFragment : BaseFragment() {
     private fun setupObservers(){
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if(it){
-                loader.visibility = View.VISIBLE
-            }else{
-                loader.visibility = View.INVISIBLE
-            }
+            refreshLayout.isRefreshing = it
         })
 
-        viewModel.pagedSports.observe(viewLifecycleOwner, {
-            it.addWeakCallback(null, object: PagedList.Callback() {
-                override fun onChanged(position: Int, count: Int) {
-                    refreshCount()
-                    refreshLayout.isRefreshing = false
-                }
-                override fun onInserted(position: Int, count: Int) {
-                    refreshCount()
-                    refreshLayout.isRefreshing = false
-                    loader.visibility = View.INVISIBLE
-                }
-                override fun onRemoved(position: Int, count: Int) {
-                    refreshCount()
-                }
-            })
-            (recyclerSports.adapter as SportsAdapter).submitList(it)
-        })
+        lifecycleScope.launchWhenCreated {
+            (recyclerSports.adapter as SportsAdapter).loadStateFlow.collectLatest { loadStates ->
+                refreshCount()
+                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated  {
+            viewModel.pagedSports.collectLatest {
+                (recyclerSports.adapter as SportsAdapter).submitData(it)
+            }
+        }
 
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
 
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
-            viewModel.invalidatedData()
+            (recyclerSports.adapter as SportsAdapter).refresh()
         })
     }
 
@@ -131,7 +114,7 @@ class SportsFragment : BaseFragment() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.adapterPosition
+                    val position = viewHolder.absoluteAdapterPosition
                     viewModel.removeSport((recyclerSports.adapter as? SportsAdapter)?.getSport(position))
                 }
             }

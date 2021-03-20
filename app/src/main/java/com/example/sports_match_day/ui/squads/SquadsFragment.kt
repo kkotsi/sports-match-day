@@ -17,7 +17,6 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -81,14 +80,14 @@ class SquadsFragment : BaseFragment() {
             refreshLayout.isRefreshing = it
         })
 
-        lifecycleScope.launch {
+        lifecycleScope.launchWhenCreated {
             (recyclerSquads.adapter as SquadsAdapter).loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
                 refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
             }
         }
 
-        viewLifecycleOwner.lifecycleScope.launchWhenCreated  {
+        lifecycleScope.launchWhenCreated  {
             viewModel.pagedSquads.collectLatest {
                 (recyclerSquads.adapter as SquadsAdapter).submitData(it)
             }

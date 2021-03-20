@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
@@ -17,14 +17,12 @@ import com.example.sports_match_day.model.SportType
  * Created by Kristo on 11-Mar-21
  */
 class SportsAdapter:
-    PagedListAdapter<Sport, SportsAdapter.MyViewHolder>(
-        diff()
-    ) {
+    PagingDataAdapter<Sport, SportsAdapter.MyViewHolder>(diff()) {
 
-    inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        private val textName: TextView = view.findViewById<TextView>(R.id.text_sport)
-        private val imageGender: ImageView = view.findViewById<ImageView>(R.id.image_sport_gender)
-        private val imageSportType: ImageView = view.findViewById<ImageView>(R.id.image_sport_type)
+    inner class MyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val textName: TextView = view.findViewById(R.id.text_sport)
+        private val imageGender: ImageView = view.findViewById(R.id.image_sport_gender)
+        private val imageSportType: ImageView = view.findViewById(R.id.image_sport_type)
 
         fun bind(item: Sport) {
             textName.text = item.name

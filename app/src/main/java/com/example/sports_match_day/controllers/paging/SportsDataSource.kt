@@ -1,68 +1,70 @@
 package com.example.sports_match_day.controllers.paging
 
-import androidx.paging.DataSource
-import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.example.sports_match_day.controllers.DecoupleAdapter
 import com.example.sports_match_day.controllers.MemoryRepository
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.room.SportsDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * Created by Kristo on 11-Mar-21
  */
-class SportsDataSource private constructor(
+class SportsDataSource constructor(
     private var decoupleAdapter: DecoupleAdapter,
     private var sportsDatabase: SportsDatabase,
     private var memoryRepository: MemoryRepository
 ) :
-    PageKeyedDataSource<Int, Sport>() {
+    PagingSource<Int, Sport>() {
 
-    override fun loadInitial(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, Sport>
-    ) {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Sport> {
+        val offset = params.key ?: 0
 
-        if (memoryRepository.sports.size > 0) {
-            callback.onResult(memoryRepository.sports, null, memoryRepository.sports.size)
-            return
+        val sports = mutableListOf<Sport>()
+        val cacheSize = memoryRepository.sports.size
+
+        if (offset + PAGE_SIZE <= cacheSize) {
+            //get all data from memory
+            val nextKey = offset + PAGE_SIZE
+            val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
+            val returned = mutableListOf<Sport>()
+            returned.addAll(memoryRepository.sports.subList(offset, offset + PAGE_SIZE))
+            return LoadResult.Page(
+                data = returned,
+                prevKey = prevKey,
+                nextKey = nextKey
+            )
+        } else if (offset < cacheSize) {
+            //Get as many cached data as possible.
+            sports.addAll(memoryRepository.sports.subList(offset, cacheSize))
         }
 
-        GlobalScope.launch(Dispatchers.Default) {
-            val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, 0)
-            val sports = decoupleAdapter.toSports(roomSports)
-            memoryRepository.sports.addAll(sports)
-            callback.onResult(sports, null, PAGE_SIZE)
+        val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, offset + sports.size)
+        val newSports = decoupleAdapter.toSports(roomSports)
+        sports.addAll(newSports)
+        memoryRepository.sports.addAll(newSports)
+
+        val nextKey = if (sports.size >= PAGE_SIZE) offset + PAGE_SIZE else null
+        val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
+
+        return LoadResult.Page(
+            data = sports,
+            prevKey = prevKey,
+            nextKey = nextKey
+        )
+    }
+
+    override val keyReuseSupported: Boolean
+        get() = true
+
+    override fun getRefreshKey(state: PagingState<Int, Sport>): Int? {
+        //Find the start of the closest page.
+        return state.anchorPosition?.let { anchorPosition ->
+            anchorPosition - (anchorPosition % PAGE_SIZE)
         }
     }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Sport>) {
-        //do nothing
-    }
-
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Sport>) {
-        GlobalScope.launch(Dispatchers.Default) {
-
-            val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, params.key)
-            val sports = decoupleAdapter.toSports(roomSports)
-            memoryRepository.sports.addAll(sports)
-            callback.onResult(sports, params.key + PAGE_SIZE)
-        }
-    }
-
-    class Factory(
-        private var decoupleAdapter: DecoupleAdapter,
-        private var sportsDatabase: SportsDatabase,
-        private var memoryRepository: MemoryRepository
-    ) : DataSource.Factory<Int, Sport>() {
-        override fun create(): DataSource<Int, Sport> {
-            return SportsDataSource(decoupleAdapter, sportsDatabase, memoryRepository)
-        }
-    }
-
-    companion object{
+    companion object {
         const val PAGE_SIZE = 15
     }
 }

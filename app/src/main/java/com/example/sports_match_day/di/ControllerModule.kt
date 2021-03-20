@@ -17,11 +17,11 @@ val controllerModule = module {
     single<FirebaseRepository> { FirebaseRepositoryImpl() }
     single { MemoryRepository() }
     single { DecoupleAdapter(get()) }
-    single<LocalRepository> { LocalRepositoryImpl(get(), get(), get(), get(), get(), get()) }
+    single<LocalRepository> { LocalRepositoryImpl(get(), get(), get(), get(), get()) }
 
     single { AthletesDataSource.Factory(get(), get(), get()) }
 
     factory { SquadsDataSource(get(), get(), get()) }
-    single { SportsDataSource.Factory(get(), get(), get()) }
+    factory { SportsDataSource(get(), get(), get()) }
     single { MatchesDataSource.Factory(get(), get(), get()) }
 }

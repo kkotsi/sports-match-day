@@ -35,7 +35,7 @@ class SquadsDataSource(
                 nextKey = nextKey
             )
         } else if (offset < cacheSize) {
-            //Get as many cached data we can.
+            //Get as many cached data as possible.
             squads.addAll(memoryRepository.squads.subList(offset, cacheSize))
         }
 

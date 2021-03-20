@@ -73,7 +73,7 @@ class CoreControllerImpl(
         return localRepository.getSquads()
     }
 
-    override fun getSports(): LiveData<PagedList<Sport>> {
+    override fun getSports(): Pager<Int, Sport> {
         return localRepository.getSports()
     }
 
@@ -184,8 +184,8 @@ interface CoreController {
 
     fun getMatches(): LiveData<PagedList<Match>>
     fun getAthletes(): LiveData<PagedList<Athlete>>
-    fun getSquads(): Pager<Int,Squad>
-    fun getSports(): LiveData<PagedList<Sport>>
+    fun getSquads(): Pager<Int, Squad>
+    fun getSports(): Pager<Int, Sport>
 
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
