@@ -56,14 +56,16 @@ class SportsAdapter:
     }
 }
 
-fun diff() : DiffUtil.ItemCallback<Sport>{
+private fun diff() : DiffUtil.ItemCallback<Sport>{
     return object : DiffUtil.ItemCallback<Sport>(){
         override fun areItemsTheSame(oldItem: Sport, newItem: Sport): Boolean {
-            return true
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Sport, newItem: Sport): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name &&
+                    oldItem.type == newItem.type &&
+                    oldItem.gender == newItem.gender
         }
     }
 }

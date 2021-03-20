@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
@@ -18,18 +18,16 @@ import com.squareup.picasso.Picasso
  * Created by Kristo on 10-Mar-21
  */
 class AthletesAdapter:
-    PagedListAdapter<Athlete, AthletesAdapter.MyViewHolder>(
-        diff()
-    ) {
+PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-        private val textName: TextView = view.findViewById<TextView>(R.id.text_name)
-        private val textCity: TextView = view.findViewById<TextView>(R.id.text_city)
-        private val textSport: TextView = view.findViewById<TextView>(R.id.text_sport)
-        private val textBirthday: TextView = view.findViewById<TextView>(R.id.text_birthday)
-        private val imageCountry: ImageView = view.findViewById<ImageView>(R.id.image_country)
-        private val imageGender: ImageView = view.findViewById<ImageView>(R.id.image_gender)
-        private val imagePerson: ImageView = view.findViewById<ImageView>(R.id.image_person)
+        private val textName: TextView = view.findViewById(R.id.text_name)
+        private val textCity: TextView = view.findViewById(R.id.text_city)
+        private val textSport: TextView = view.findViewById(R.id.text_sport)
+        private val textBirthday: TextView = view.findViewById(R.id.text_birthday)
+        private val imageCountry: ImageView = view.findViewById(R.id.image_country)
+        private val imageGender: ImageView = view.findViewById(R.id.image_gender)
+        private val imagePerson: ImageView = view.findViewById(R.id.image_person)
 
         fun bind(item: Athlete) {
             textName.text = item.name
@@ -77,7 +75,8 @@ private fun diff() : DiffUtil.ItemCallback<Athlete>{
         }
 
         override fun areContentsTheSame(oldItem: Athlete, newItem: Athlete): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name &&
+                    oldItem.gender == newItem.gender
         }
     }
 }

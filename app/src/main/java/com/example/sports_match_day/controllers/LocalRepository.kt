@@ -21,7 +21,6 @@ class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
     private var matchesFactory: MatchesDataSource.Factory,
-    private var athletesFactory: AthletesDataSource.Factory,
     private var memoryRepository: MemoryRepository
 ) : LocalRepository, KoinComponent {
 
@@ -30,9 +29,10 @@ class LocalRepositoryImpl(
         return matchesFactory.toLiveData(config)
     }
 
-    override fun getAthletes(): LiveData<PagedList<Athlete>> {
-        val config = Config(AthletesDataSource.PAGE_SIZE, AthletesDataSource.PAGE_SIZE - 2, false)
-        return athletesFactory.toLiveData(config)
+    override fun getAthletes(): Pager<Int, Athlete> {
+        return Pager(PagingConfig(pageSize = AthletesDataSource.PAGE_SIZE, prefetchDistance = 4)){
+            get<AthletesDataSource>()
+        }
     }
 
     override fun getSports(): Pager<Int,Sport> {
@@ -201,7 +201,7 @@ class LocalRepositoryImpl(
 
 interface LocalRepository {
     fun getMatches(): LiveData<PagedList<Match>>
-    fun getAthletes(): LiveData<PagedList<Athlete>>
+    fun getAthletes(): Pager<Int, Athlete>
     fun getSports(): Pager<Int, Sport>
     fun getSquads(): Pager<Int, Squad>
 

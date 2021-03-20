@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
-import androidx.paging.PagedList
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -40,12 +42,12 @@ class AthletesFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupObservers()
         setupAddButton()
         setupLoader()
         setupTotalText()
         recyclerSetup()
         setupRefreshLayout()
+        setupObservers()
     }
 
     private fun setupRefreshLayout() {
@@ -54,7 +56,7 @@ class AthletesFragment : BaseFragment() {
         }
 
         refreshLayout.setOnRefreshListener {
-            viewModel.invalidatedData()
+            (recyclerAthletes.adapter as AthletesAdapter).refresh()
         }
     }
 
@@ -84,45 +86,31 @@ class AthletesFragment : BaseFragment() {
     private fun setupObservers(){
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if(it){
-                loader.visibility = View.VISIBLE
-            }else{
-                loader.visibility = View.INVISIBLE
-            }
+            refreshLayout.isRefreshing = it
         })
 
-        viewModel.pagedAthletes.observe(viewLifecycleOwner, {
-            refreshCount()
-            refreshLayout.isRefreshing = false
-            it.addWeakCallback(null, object: PagedList.Callback() {
-                override fun onChanged(position: Int, count: Int) {
-                    refreshCount()
-                    refreshLayout.isRefreshing = false
-                }
-                override fun onInserted(position: Int, count: Int) {
-                    refreshCount()
-                    loader.visibility = View.INVISIBLE
-                    refreshLayout.isRefreshing = false
-                }
-                override fun onRemoved(position: Int, count: Int) {
-                    refreshCount()
-                }
-            })
-            (recyclerAthletes.adapter as AthletesAdapter).submitList(it)
-            //recyclerAthletes.adapter?.notifyDataSetChanged()
-        })
+        lifecycleScope.launchWhenCreated {
+            (recyclerAthletes.adapter as AthletesAdapter).loadStateFlow.collectLatest { loadStates ->
+                refreshCount()
+                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+            }
+        }
+
+        lifecycleScope.launchWhenCreated  {
+            viewModel.pagedAthletes.collectLatest {
+                (recyclerAthletes.adapter as AthletesAdapter).submitData(it)
+            }
+        }
 
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
 
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
-            viewModel.invalidatedData()
-            //refreshCount()
+            (recyclerAthletes.adapter as AthletesAdapter).refresh()
         })
     }
 
-    var positionRemoved = 0
     private fun recyclerSetup(){
         view?.let {
             recyclerAthletes = it.findViewById(R.id.recycler_athletes)
@@ -136,8 +124,7 @@ class AthletesFragment : BaseFragment() {
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.adapterPosition
-                    positionRemoved = position
+                    val position = viewHolder.absoluteAdapterPosition
                     viewModel.removeAthlete((recyclerAthletes.adapter as? AthletesAdapter)?.getAthlete(position))
                 }
             }

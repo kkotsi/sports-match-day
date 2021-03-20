@@ -60,7 +60,7 @@ class SquadsAdapter :
 }
 
 
-fun diff(): DiffUtil.ItemCallback<Squad> {
+private fun diff(): DiffUtil.ItemCallback<Squad> {
     return object : DiffUtil.ItemCallback<Squad>() {
         override fun areItemsTheSame(oldItem: Squad, newItem: Squad): Boolean {
             return oldItem.id == newItem.id
