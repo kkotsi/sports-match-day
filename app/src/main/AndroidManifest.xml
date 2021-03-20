@@ -16,19 +16,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SportsMatchDay"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.LoginActivity">
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@style/Theme.SportsMatchDay.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/Theme.SportsMatchDay.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>
