@@ -1,10 +1,11 @@
 package com.example.sports_match_day.ui.squads
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
@@ -15,10 +16,8 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class SquadsAdapter:
-    PagedListAdapter<Squad, SquadsAdapter.MyViewHolder>(
-        diff()
-    ) {
+class SquadsAdapter() :
+    PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val textName: TextView = view.findViewById<TextView>(R.id.text_squad)
@@ -46,11 +45,9 @@ class SquadsAdapter:
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
-        val holder =
-            MyViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_squad, parent, false)
-            )
-        return holder
+        return MyViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.item_squad, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
@@ -62,14 +59,16 @@ class SquadsAdapter:
     }
 }
 
-fun diff() : DiffUtil.ItemCallback<Squad>{
-    return object : DiffUtil.ItemCallback<Squad>(){
+
+fun diff(): DiffUtil.ItemCallback<Squad> {
+    return object : DiffUtil.ItemCallback<Squad>() {
         override fun areItemsTheSame(oldItem: Squad, newItem: Squad): Boolean {
-            return true
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Squad, newItem: Squad): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.name == newItem.name &&
+                    oldItem.birthday == newItem.birthday
         }
     }
 }

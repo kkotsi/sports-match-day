@@ -1,9 +1,7 @@
 package com.example.sports_match_day.controllers
 
 import androidx.lifecycle.LiveData
-import androidx.paging.Config
-import androidx.paging.PagedList
-import androidx.paging.toLiveData
+import androidx.paging.*
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
 import com.example.sports_match_day.controllers.paging.MatchesDataSource
 import com.example.sports_match_day.controllers.paging.SportsDataSource
@@ -13,6 +11,8 @@ import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.room.SportsDatabase
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * Created by Kristo on 08-Mar-21
@@ -22,10 +22,9 @@ class LocalRepositoryImpl(
     private var decoupleAdapter: DecoupleAdapter,
     private var matchesFactory: MatchesDataSource.Factory,
     private var athletesFactory: AthletesDataSource.Factory,
-    private var squadsFactory: SquadsDataSource.Factory,
     private var sportsFactory: SportsDataSource.Factory,
     private var memoryRepository: MemoryRepository
-) : LocalRepository {
+) : LocalRepository, KoinComponent {
 
     override fun getMatches(): LiveData<PagedList<Match>> {
         val config = Config(MatchesDataSource.PAGE_SIZE, MatchesDataSource.PAGE_SIZE - 2, false)
@@ -42,9 +41,10 @@ class LocalRepositoryImpl(
         return sportsFactory.toLiveData(config)
     }
 
-    override fun getSquads(): LiveData<PagedList<Squad>> {
-        val config = Config(SquadsDataSource.PAGE_SIZE, SquadsDataSource.PAGE_SIZE - 2, false)
-        return squadsFactory.toLiveData(config)
+    override fun getSquads(): Pager<Int,Squad> {
+        return Pager(PagingConfig(pageSize = SquadsDataSource.PAGE_SIZE, prefetchDistance = 4)){
+            get<SquadsDataSource>()
+        }
     }
 
     override suspend fun getAthlete(id: Int): Athlete? {
@@ -203,8 +203,7 @@ interface LocalRepository {
     fun getMatches(): LiveData<PagedList<Match>>
     fun getAthletes(): LiveData<PagedList<Athlete>>
     fun getSports(): LiveData<PagedList<Sport>>
-    fun getSquads(): LiveData<PagedList<Squad>>
-
+    fun getSquads(): Pager<Int, Squad>
 
     suspend fun getAthlete(id: Int): Athlete?
     suspend fun getSport(id: Int): Sport?

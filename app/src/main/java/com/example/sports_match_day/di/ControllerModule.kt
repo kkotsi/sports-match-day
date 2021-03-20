@@ -13,14 +13,15 @@ import org.koin.dsl.module
  * Created by Kristo on 07-Mar-21
  */
 val controllerModule = module {
-    single<CoreController> { CoreControllerImpl(get(),get(),get(), get(), get()) }
+    single<CoreController> { CoreControllerImpl(get(), get(), get(), get(), get()) }
     single<FirebaseRepository> { FirebaseRepositoryImpl() }
     single { MemoryRepository() }
     single { DecoupleAdapter(get()) }
-    single<LocalRepository> { LocalRepositoryImpl(get(),get(), get(), get(), get(), get(), get())}
+    single<LocalRepository> { LocalRepositoryImpl(get(), get(), get(), get(), get(), get()) }
 
-    single { AthletesDataSource.Factory(get(),get(), get()) }
-    single { SquadsDataSource.Factory(get(),get(), get()) }
-    single { SportsDataSource.Factory(get(),get(), get()) }
-    single { MatchesDataSource.Factory(get(),get(), get()) }
+    single { AthletesDataSource.Factory(get(), get(), get()) }
+
+    factory { SquadsDataSource(get(), get(), get()) }
+    single { SportsDataSource.Factory(get(), get(), get()) }
+    single { MatchesDataSource.Factory(get(), get(), get()) }
 }

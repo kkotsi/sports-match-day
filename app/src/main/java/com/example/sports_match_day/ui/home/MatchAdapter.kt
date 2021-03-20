@@ -26,7 +26,7 @@ import java.util.*
  */
 class MatchAdapter(
     private val selectMatch: (Match) -> Unit
-):
+) :
     PagedListAdapter<Match, MatchAdapter.MyViewHolder>(
         diff()
     ) {
@@ -73,12 +73,12 @@ class MatchAdapter(
             textSport.text = match.sport?.name ?: ""
 
 
-            if(match.participants.size > 1) {
+            if (match.participants.size > 1) {
 
                 participantFirst.text = match.participants[0].participant?.name ?: ""
                 val score = match.participants[0].score
 
-                if(score >= 0)
+                if (score >= 0)
                     scoreFirst.text = format.format(match.participants[0].score).toString()
                 else
                     scoreFirst.text = "-"
@@ -86,7 +86,7 @@ class MatchAdapter(
                 participantSecond.text = match.participants[1].participant?.name ?: ""
 
                 val secondScore = match.participants[1].score
-                if(secondScore >= 0)
+                if (secondScore >= 0)
                     scoreSecond.text = format.format(match.participants[1].score).toString()
                 else
                     scoreSecond.text = "-"
@@ -110,7 +110,7 @@ class MatchAdapter(
                 if (it.type == SportType.SOLO) {
                     typeImage.setImageResource(R.drawable.ic_person)
                 } else {
-                    location +=  " \n"+ itemView.context.resources.getString(R.string.stadium) + ": " + (match.participants[0].participant as Squad).stadium
+                    location += " \n" + itemView.context.resources.getString(R.string.stadium) + ": " + (match.participants[0].participant as? Squad)?.stadium
                     typeImage.setImageResource(R.drawable.ic_group)
                 }
             }
@@ -139,8 +139,8 @@ class MatchAdapter(
     }
 }
 
-fun diff() : DiffUtil.ItemCallback<Match>{
-    return object : DiffUtil.ItemCallback<Match>(){
+fun diff(): DiffUtil.ItemCallback<Match> {
+    return object : DiffUtil.ItemCallback<Match>() {
         override fun areItemsTheSame(oldItem: Match, newItem: Match): Boolean {
             return true
         }
