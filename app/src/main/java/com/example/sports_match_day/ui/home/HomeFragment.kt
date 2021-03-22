@@ -33,6 +33,7 @@ class HomeFragment : BaseFragment() {
     private lateinit var calendarView: CalendarView
     private lateinit var textTotal: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var adapter: MatchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,13 +81,10 @@ class HomeFragment : BaseFragment() {
                 refreshCount()
                 refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
-                when (loadStates.refresh) {
-                    is LoadState.Error -> {
-                        showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
-                    }
-                    is LoadState.NotLoading -> {
-                        setUpEvent()
-                    }
+                if (loadStates.refresh is LoadState.Error) {
+                    showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
+                } else if (loadStates.refresh is LoadState.NotLoading) {
+                    setUpEvent()
                 }
             }
         }
@@ -105,6 +103,7 @@ class HomeFragment : BaseFragment() {
             adapter.refresh()
         })
     }
+
 
     private fun setupTotalText() {
         view?.findViewById<TextView>(R.id.text_matches_total)?.let {
@@ -143,8 +142,6 @@ class HomeFragment : BaseFragment() {
 
         calendarView.setEvents(events)
     }
-
-    private lateinit var adapter: MatchAdapter
 
     private fun recyclerSetup() {
         view?.let {

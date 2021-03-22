@@ -18,40 +18,44 @@ class SportsDataSource constructor(
     PagingSource<Int, Sport>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Sport> {
-        val offset = params.key ?: 0
+        try {
+            val offset = params.key ?: 0
 
-        val sports = mutableListOf<Sport>()
-        val cacheSize = memoryRepository.sports.size
+            val sports = mutableListOf<Sport>()
+            val cacheSize = memoryRepository.sports.size
 
-        if (offset + PAGE_SIZE <= cacheSize) {
-            //get all data from memory
-            val nextKey = offset + PAGE_SIZE
+            if (offset + PAGE_SIZE <= cacheSize) {
+                //get all data from memory
+                val nextKey = offset + PAGE_SIZE
+                val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
+                val returned = mutableListOf<Sport>()
+                returned.addAll(memoryRepository.sports.subList(offset, offset + PAGE_SIZE))
+                return LoadResult.Page(
+                    data = returned,
+                    prevKey = prevKey,
+                    nextKey = nextKey
+                )
+            } else if (offset < cacheSize) {
+                //Get as many cached data as possible.
+                sports.addAll(memoryRepository.sports.subList(offset, cacheSize))
+            }
+
+            val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, offset + sports.size)
+            val newSports = decoupleAdapter.toSports(roomSports)
+            sports.addAll(newSports)
+            memoryRepository.sports.addAll(newSports)
+
+            val nextKey = if (sports.size >= PAGE_SIZE) offset + PAGE_SIZE else null
             val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
-            val returned = mutableListOf<Sport>()
-            returned.addAll(memoryRepository.sports.subList(offset, offset + PAGE_SIZE))
+
             return LoadResult.Page(
-                data = returned,
+                data = sports,
                 prevKey = prevKey,
                 nextKey = nextKey
             )
-        } else if (offset < cacheSize) {
-            //Get as many cached data as possible.
-            sports.addAll(memoryRepository.sports.subList(offset, cacheSize))
+        } catch (t: Throwable) {
+            return LoadResult.Error(t)
         }
-
-        val roomSports = sportsDatabase.sportsDao().getSports(PAGE_SIZE, offset + sports.size)
-        val newSports = decoupleAdapter.toSports(roomSports)
-        sports.addAll(newSports)
-        memoryRepository.sports.addAll(newSports)
-
-        val nextKey = if (sports.size >= PAGE_SIZE) offset + PAGE_SIZE else null
-        val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
-
-        return LoadResult.Page(
-            data = sports,
-            prevKey = prevKey,
-            nextKey = nextKey
-        )
     }
 
     override val keyReuseSupported: Boolean

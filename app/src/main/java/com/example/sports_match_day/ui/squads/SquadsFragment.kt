@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
@@ -29,6 +30,7 @@ class SquadsFragment : BaseFragment() {
     private lateinit var textTotal: TextView
     private lateinit var buttonAdd: FloatingActionButton
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var adapter: SquadsAdapter
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -53,7 +55,7 @@ class SquadsFragment : BaseFragment() {
         }
 
         refreshLayout.setOnRefreshListener {
-            (recyclerSquads.adapter as? SquadsAdapter)?.refresh()
+            adapter.refresh()
         }
     }
 
@@ -81,15 +83,19 @@ class SquadsFragment : BaseFragment() {
         })
 
         lifecycleScope.launchWhenCreated {
-            (recyclerSquads.adapter as SquadsAdapter).loadStateFlow.collectLatest { loadStates ->
+            adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
                 refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+
+                if (loadStates.refresh is LoadState.Error) {
+                    showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
+                }
             }
         }
 
         lifecycleScope.launchWhenCreated  {
             viewModel.pagedSquads.collectLatest {
-                (recyclerSquads.adapter as SquadsAdapter).submitData(it)
+                adapter.submitData(it)
             }
         }
 
@@ -98,7 +104,7 @@ class SquadsFragment : BaseFragment() {
         })
 
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
-            (recyclerSquads.adapter as SquadsAdapter).refresh()
+            adapter.refresh()
         })
     }
 
@@ -107,7 +113,12 @@ class SquadsFragment : BaseFragment() {
             recyclerSquads = it.findViewById(R.id.recycler_squads)
             recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
 
-            recyclerSquads.adapter = SquadsAdapter()
+            adapter = SquadsAdapter()
+
+            recyclerSquads.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = ExampleLoadStateAdapter { adapter.refresh() },
+                footer = ExampleLoadStateAdapter { adapter.refresh() }
+            )
 
             val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -116,7 +127,7 @@ class SquadsFragment : BaseFragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.absoluteAdapterPosition
-                    viewModel.removeSquad((recyclerSquads.adapter as? SquadsAdapter)?.getSquad(position))
+                    viewModel.removeSquad(adapter.getSquad(position))
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -125,7 +136,7 @@ class SquadsFragment : BaseFragment() {
     }
 
     private fun refreshCount(){
-        val total = recyclerSquads.adapter?.itemCount ?: 0
+        val total = adapter.itemCount
         textTotal.text =  String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
 }

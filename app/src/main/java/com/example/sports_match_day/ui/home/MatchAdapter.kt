@@ -67,7 +67,7 @@ class MatchAdapter(
 
             val format = DecimalFormat("0.#")
 
-            textSport.text = "${match.id}" + match.sport?.name ?: ""
+            textSport.text = match.sport?.name ?: ""
 
 
             if (match.participants.size > 1) {

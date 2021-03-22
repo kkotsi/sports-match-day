@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +28,7 @@ class SportsFragment : BaseFragment() {
     private lateinit var recyclerSports: RecyclerView
     private lateinit var textTotal: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var adapter: SportsAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,7 +54,7 @@ class SportsFragment : BaseFragment() {
         }
 
         refreshLayout.setOnRefreshListener {
-            (recyclerSports.adapter as SportsAdapter).refresh()
+            adapter.refresh()
         }
     }
 
@@ -80,15 +82,19 @@ class SportsFragment : BaseFragment() {
         })
 
         lifecycleScope.launchWhenCreated {
-            (recyclerSports.adapter as SportsAdapter).loadStateFlow.collectLatest { loadStates ->
+            adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
                 refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+
+                if (loadStates.refresh is LoadState.Error) {
+                    showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
+                }
             }
         }
 
         lifecycleScope.launchWhenCreated  {
             viewModel.pagedSports.collectLatest {
-                (recyclerSports.adapter as SportsAdapter).submitData(it)
+                adapter.submitData(it)
             }
         }
 
@@ -97,7 +103,7 @@ class SportsFragment : BaseFragment() {
         })
 
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
-            (recyclerSports.adapter as SportsAdapter).refresh()
+            adapter.refresh()
         })
     }
 
@@ -106,7 +112,12 @@ class SportsFragment : BaseFragment() {
             recyclerSports = it.findViewById(R.id.recycler_sports)
             recyclerSports.layoutManager = LinearLayoutManager(requireContext())
 
-            recyclerSports.adapter = SportsAdapter()
+            adapter = SportsAdapter()
+
+            recyclerSports.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = ExampleLoadStateAdapter { adapter.refresh() },
+                footer = ExampleLoadStateAdapter { adapter.refresh() }
+            )
 
             val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
                 override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -115,7 +126,7 @@ class SportsFragment : BaseFragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.absoluteAdapterPosition
-                    viewModel.removeSport((recyclerSports.adapter as? SportsAdapter)?.getSport(position))
+                    viewModel.removeSport(adapter.getSport(position))
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -124,7 +135,7 @@ class SportsFragment : BaseFragment() {
     }
 
     private fun refreshCount(){
-        val total = recyclerSports.adapter?.itemCount ?: 0
+        val total = adapter.itemCount ?: 0
         textTotal.text =  String.format(requireContext().resources.getString(R.string.total_sports), "$total")
     }
 }
