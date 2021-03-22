@@ -1,74 +1,85 @@
 package com.example.sports_match_day.controllers.paging
 
-import androidx.paging.DataSource
-import androidx.paging.PageKeyedDataSource
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.example.sports_match_day.controllers.DecoupleAdapter
 import com.example.sports_match_day.controllers.MemoryRepository
 import com.example.sports_match_day.firebase.FirebaseRepository
 import com.example.sports_match_day.model.Match
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * Created by Kristo on 16-Mar-21
  */
-class MatchesDataSource private constructor(
+class MatchesDataSource constructor(
     private var decoupleAdapter: DecoupleAdapter,
     private var firebaseRepository: FirebaseRepository,
     private var memoryRepository: MemoryRepository
-) :
-    PageKeyedDataSource<Int, Match>() {
+) : PagingSource<Int, Match>() {
 
-    override fun loadInitial(
-        params: LoadInitialParams<Int>,
-        callback: LoadInitialCallback<Int, Match>
-    ) {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Match> {
 
-        if (memoryRepository.matches.size > 0) {
-            callback.onResult(memoryRepository.matches, null, memoryRepository.matches.size)
-            return
-        }
+        try {
+            val offset = params.key ?: 0
 
-        memoryRepository.matches.clear()
-        firebaseRepository.getMatchesInitial(PAGE_SIZE) { list ->
-            GlobalScope.launch(Dispatchers.Default) {
-                list?.let {
-                    val matches = decoupleAdapter.toMatches(it)
-                    memoryRepository.matches.addAll(matches)
-                    callback.onResult(matches, null, PAGE_SIZE)
-                }
+            val matches = mutableListOf<Match>()
+            val cacheSize = memoryRepository.matches.size
+
+            if (offset + PAGE_SIZE <= cacheSize) {
+
+                //get all data from memory
+                val nextKey = offset + PAGE_SIZE
+                val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
+                val returned = mutableListOf<Match>()
+                returned.addAll(memoryRepository.matches.subList(offset, offset + PAGE_SIZE))
+                return LoadResult.Page(
+                    data = returned,
+                    prevKey = prevKey,
+                    nextKey = nextKey
+                )
+            } else if (offset < cacheSize) {
+                //Get as many cached data as possible.
+                matches.addAll(memoryRepository.matches.subList(offset, cacheSize))
             }
-        }
-    }
 
-    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Match>) {
-        //do nothing
-    }
+            val firebaseMatches = firebaseRepository.getMatches(PAGE_SIZE, getLastId())
 
-    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, Match>) {
-        firebaseRepository.getMatches(PAGE_SIZE) { list ->
-            GlobalScope.launch(Dispatchers.Default) {
-                list?.let {
-                    val matches = decoupleAdapter.toMatches(it)
-                    memoryRepository.matches.addAll(matches)
-                    callback.onResult(matches, params.key + PAGE_SIZE)
-                }
+            firebaseMatches?.let {
+                val newMatches = decoupleAdapter.toMatches(firebaseMatches)
+                matches.addAll(newMatches)
+                memoryRepository.matches.addAll(newMatches)
             }
+
+            val nextKey = if (matches.size >= PAGE_SIZE) offset + PAGE_SIZE else null
+            val prevKey = if (offset >= PAGE_SIZE) offset - PAGE_SIZE else null
+
+            return LoadResult.Page(
+                data = matches,
+                prevKey = prevKey,
+                nextKey = nextKey
+            )
+        } catch (t: Throwable) {
+            return LoadResult.Error(t)
         }
     }
 
-    class Factory(
-        private var decoupleAdapter: DecoupleAdapter,
-        private var firebaseRepository: FirebaseRepository,
-        private var memoryRepository: MemoryRepository
-    ) : DataSource.Factory<Int, Match>() {
-        override fun create(): DataSource<Int, Match> {
-            return MatchesDataSource(decoupleAdapter, firebaseRepository, memoryRepository)
+    private fun getLastId(): Int? {
+        if (memoryRepository.matches.isNotEmpty()) {
+            return memoryRepository.matches.last().id
+        }
+        return null
+    }
+
+    override val keyReuseSupported: Boolean
+        get() = true
+
+    override fun getRefreshKey(state: PagingState<Int, Match>): Int? {
+        //Find the start of the closest page.
+        return state.anchorPosition?.let { anchorPosition ->
+            anchorPosition - (anchorPosition % PAGE_SIZE)
         }
     }
 
     companion object {
-        const val PAGE_SIZE = 5
+        const val PAGE_SIZE = 10
     }
 }

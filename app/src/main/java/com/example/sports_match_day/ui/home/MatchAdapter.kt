@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
@@ -26,10 +26,7 @@ import java.util.*
  */
 class MatchAdapter(
     private val selectMatch: (Match) -> Unit
-) :
-    PagedListAdapter<Match, MatchAdapter.MyViewHolder>(
-        diff()
-    ) {
+) : PagingDataAdapter<Match, MatchAdapter.MyViewHolder>(diff()) {
 
     private var lastSelected: MyViewHolder? = null
 
@@ -70,7 +67,7 @@ class MatchAdapter(
 
             val format = DecimalFormat("0.#")
 
-            textSport.text = match.sport?.name ?: ""
+            textSport.text = "${match.id}" + match.sport?.name ?: ""
 
 
             if (match.participants.size > 1) {

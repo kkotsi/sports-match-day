@@ -46,5 +46,6 @@
     <string name="count">Count</string>
     <string name="participants">Participants</string>
     <string name="help_participants">The number of the allowed participants in a match.</string>
+    <string name="retry">Retry</string>
 
 </resources>

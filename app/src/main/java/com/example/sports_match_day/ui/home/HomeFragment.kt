@@ -4,17 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import androidx.paging.PagedList
+import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
-import com.example.sports_match_day.model.Match
+import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -28,7 +31,8 @@ class HomeFragment : BaseFragment() {
     private val viewModel: HomeViewModel by viewModel()
     private lateinit var recyclerMatches: RecyclerView
     private lateinit var calendarView: CalendarView
-    private lateinit var loader: ProgressBar
+    private lateinit var textTotal: TextView
+    private lateinit var refreshLayout: SwipeRefreshLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,68 +44,75 @@ class HomeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupLoader()
-        setupObservers()
+        setupTotalText()
+        recyclerSetup()
         setupCalendar()
         setupAddButton()
+        setupRefreshLayout()
+        setupObservers()
     }
 
-    private fun setupAddButton(){
-        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+    private fun setupAddButton() {
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
             it.setOnClickListener {
-               viewModel.addMatch()
+                viewModel.addMatch()
             }
         }
     }
 
-    private fun setupObservers(){
-        viewModel.matches.observe(viewLifecycleOwner, {
-            it?.let {
+    private fun setupRefreshLayout() {
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
+            refreshLayout = it
+        }
 
-                it.addWeakCallback(null, object: PagedList.Callback() {
-                    override fun onChanged(position: Int, count: Int) {
-                        //refreshLayout.isRefreshing = false
-                        setUpEvent()
-                    }
-                    override fun onInserted(position: Int, count: Int) {
-                        //refreshLayout.isRefreshing = false
-                        loader.visibility = View.INVISIBLE
-                        setUpEvent()
-                    }
-                    override fun onRemoved(position: Int, count: Int) {
-                    }
-                })
+        refreshLayout.setOnRefreshListener {
+            adapter.refresh()
+        }
+    }
 
-                setUpEvent()
-                recyclerSetup(it)
-            }
-        })
-
+    private fun setupObservers() {
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if(it){
-                loader.visibility = View.VISIBLE
-                loader.animate()
-            }else {
-                loader.visibility = View.INVISIBLE
-            }
+            refreshLayout.isRefreshing = it
         })
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                refreshCount()
+                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+
+                when (loadStates.refresh) {
+                    is LoadState.Error -> {
+                        showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
+                    }
+                    is LoadState.NotLoading -> {
+                        setUpEvent()
+                    }
+                }
+            }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.matches.collectLatest {
+                adapter.submitData(it)
+            }
+        }
 
         viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
             showErrorPopup(it)
         })
 
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
-            viewModel.invalidatedData()
+            adapter.refresh()
         })
     }
 
-    private fun setupLoader(){
-        view?.let { v ->
-            loader = v.findViewById(R.id.progress_loading)
+    private fun setupTotalText() {
+        view?.findViewById<TextView>(R.id.text_matches_total)?.let {
+            textTotal = it
         }
     }
 
-    private fun setupCalendar(){
+    private fun setupCalendar() {
         view?.let { v ->
             calendarView = v.findViewById(R.id.calendarView)
 
@@ -117,7 +128,7 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun setUpEvent(){
+    private fun setUpEvent() {
         val events = mutableListOf<EventDay>()
 
         calendarView.setEvents(mutableListOf())
@@ -133,25 +144,39 @@ class HomeFragment : BaseFragment() {
         calendarView.setEvents(events)
     }
 
-    private fun recyclerSetup(matches: PagedList<Match>){
+    private lateinit var adapter: MatchAdapter
+
+    private fun recyclerSetup() {
         view?.let {
             recyclerMatches = it.findViewById(R.id.recycler_matches)
             recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
-            recyclerMatches.adapter = MatchAdapter{ match ->
+            adapter = MatchAdapter { match ->
                 selectDate(match.date)
             }
 
-            (recyclerMatches.adapter as MatchAdapter).submitList(matches)
+            recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(
+                header = ExampleLoadStateAdapter { adapter.refresh() },
+                footer = ExampleLoadStateAdapter { adapter.refresh() }
+            )
 
-            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
                     return false
                 }
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.adapterPosition
-                    viewModel.removeMatch((recyclerMatches.adapter as? MatchAdapter)?.getMatch(position))
+                    val position = viewHolder.absoluteAdapterPosition
+                    viewModel.removeMatch(
+                        adapter.getMatch(
+                            position
+                        )
+                    )
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -159,7 +184,7 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    private fun selectDate(date: LocalDateTime){
+    private fun selectDate(date: LocalDateTime) {
         val calendar: Calendar = Calendar.getInstance()
 
         calendar.set(Calendar.YEAR, date.year)
@@ -167,5 +192,11 @@ class HomeFragment : BaseFragment() {
         calendar.set(Calendar.DATE, date.dayOfMonth)
 
         calendarView.setDate(calendar)
+    }
+
+    private fun refreshCount() {
+        val total = adapter.itemCount
+        textTotal.text =
+            String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
 }

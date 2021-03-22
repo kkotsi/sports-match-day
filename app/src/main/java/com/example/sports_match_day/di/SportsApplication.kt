@@ -19,7 +19,6 @@ class SportsApplication: Application() {
 
         //Firebase
         FirebaseApp.initializeApp(this)
-
         //LocalDateTime
         AndroidThreeTen.init(this)
 

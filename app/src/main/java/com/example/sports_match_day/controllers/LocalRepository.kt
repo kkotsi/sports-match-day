@@ -1,13 +1,11 @@
 package com.example.sports_match_day.controllers
 
-import androidx.lifecycle.LiveData
-import androidx.paging.*
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
-import com.example.sports_match_day.controllers.paging.MatchesDataSource
 import com.example.sports_match_day.controllers.paging.SportsDataSource
 import com.example.sports_match_day.controllers.paging.SquadsDataSource
 import com.example.sports_match_day.model.Athlete
-import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.room.SportsDatabase
@@ -20,14 +18,8 @@ import org.koin.core.get
 class LocalRepositoryImpl(
     private var sportsDatabase: SportsDatabase,
     private var decoupleAdapter: DecoupleAdapter,
-    private var matchesFactory: MatchesDataSource.Factory,
     private var memoryRepository: MemoryRepository
 ) : LocalRepository, KoinComponent {
-
-    override fun getMatches(): LiveData<PagedList<Match>> {
-        val config = Config(MatchesDataSource.PAGE_SIZE, MatchesDataSource.PAGE_SIZE - 2, false)
-        return matchesFactory.toLiveData(config)
-    }
 
     override fun getAthletes(): Pager<Int, Athlete> {
         return Pager(PagingConfig(pageSize = AthletesDataSource.PAGE_SIZE, prefetchDistance = 4)){
@@ -200,7 +192,6 @@ class LocalRepositoryImpl(
 }
 
 interface LocalRepository {
-    fun getMatches(): LiveData<PagedList<Match>>
     fun getAthletes(): Pager<Int, Athlete>
     fun getSports(): Pager<Int, Sport>
     fun getSquads(): Pager<Int, Squad>

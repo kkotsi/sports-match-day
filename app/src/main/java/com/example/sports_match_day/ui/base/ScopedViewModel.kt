@@ -24,7 +24,7 @@ abstract class ScopedViewModel : ViewModel() {
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
 
-    private val _apiErrorMessage = MutableLiveData<Throwable>()
+    protected val _apiErrorMessage = MutableLiveData<Throwable>()
     val apiErrorMessage: LiveData<Throwable> = _apiErrorMessage.toSingleEvent()
 
     fun clearError(){

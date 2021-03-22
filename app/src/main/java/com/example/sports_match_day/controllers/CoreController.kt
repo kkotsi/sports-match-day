@@ -1,11 +1,8 @@
 package com.example.sports_match_day.controllers
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.paging.PagedList
 import androidx.paging.Pager
-import com.example.sports_match_day.firebase.FirebaseRepository
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.utils.RawManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
@@ -18,7 +15,7 @@ import org.threeten.bp.ZoneId
  */
 class CoreControllerImpl(
     private var context: Context,
-    private var firebaseRepository: FirebaseRepository,
+    private var remoteRepository: RemoteRepository,
     private var memoryRepository: MemoryRepository,
     private var decoupleAdapter: DecoupleAdapter,
     private var localRepository: LocalRepository,
@@ -57,8 +54,16 @@ class CoreControllerImpl(
         return true
     }
 
-    override fun getMatches(): LiveData<PagedList<Match>> {
-        return localRepository.getMatches()
+    override fun getMatchEvents(): List<LocalDateTime> {
+        val returned = mutableListOf<LocalDateTime>()
+        memoryRepository.matches.forEach {
+            returned.add(it.date)
+        }
+        return returned
+    }
+
+    override fun getMatches(): Pager<Int, Match> {
+        return remoteRepository.getMatches()
     }
 
     override suspend fun getAthlete(id: Int): Athlete? {
@@ -69,7 +74,7 @@ class CoreControllerImpl(
         return localRepository.getAthletes()
     }
 
-    override fun getSquads(): Pager<Int,Squad> {
+    override fun getSquads(): Pager<Int, Squad> {
         return localRepository.getSquads()
     }
 
@@ -97,9 +102,9 @@ class CoreControllerImpl(
         return localRepository.getSport(id)
     }
 
-    override suspend fun removeMatch(match: Match) : Boolean{
+    override suspend fun removeMatch(match: Match): Boolean {
         memoryRepository.matches.remove(match)
-        firebaseRepository.removeMatch(match.id)
+        remoteRepository.removeMatch(match)
         return true
     }
 
@@ -125,11 +130,11 @@ class CoreControllerImpl(
         date: LocalDateTime,
         participants: List<Participant>
     ) {
-        firebaseRepository.addMatch(
+        remoteRepository.addMatch(
             city,
             country,
             sportId,
-            date.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            date,
             participants
         )
     }
@@ -181,8 +186,9 @@ class CoreControllerImpl(
 interface CoreController {
     suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean
     suspend fun loadSamples(): Boolean
+    fun getMatchEvents(): List<LocalDateTime>
 
-    fun getMatches(): LiveData<PagedList<Match>>
+    fun getMatches(): Pager<Int, Match>
     fun getAthletes(): Pager<Int, Athlete>
     fun getSquads(): Pager<Int, Squad>
     fun getSports(): Pager<Int, Sport>
