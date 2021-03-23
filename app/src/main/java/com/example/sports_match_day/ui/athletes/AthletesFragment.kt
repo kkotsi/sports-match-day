@@ -34,9 +34,9 @@ class AthletesFragment : BaseFragment() {
     private lateinit var adapter: AthletesAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_athletes, container, false)
     }
@@ -53,7 +53,7 @@ class AthletesFragment : BaseFragment() {
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let{
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
             refreshLayout = it
         }
 
@@ -62,8 +62,8 @@ class AthletesFragment : BaseFragment() {
         }
     }
 
-    private fun setupAddButton(){
-        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+    private fun setupAddButton() {
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
             buttonAdd = it
             buttonAdd.setOnClickListener {
 
@@ -73,19 +73,19 @@ class AthletesFragment : BaseFragment() {
         }
     }
 
-    private fun setupLoader(){
-        view?.findViewById<ProgressBar>(R.id.progress_loading)?.let{
+    private fun setupLoader() {
+        view?.findViewById<ProgressBar>(R.id.progress_loading)?.let {
             loader = it
         }
     }
 
-    private fun setupTotalText(){
-        view?.findViewById<TextView>(R.id.text_total)?.let{
+    private fun setupTotalText() {
+        view?.findViewById<TextView>(R.id.text_total)?.let {
             textTotal = it
         }
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
             refreshLayout.isRefreshing = it
@@ -102,7 +102,7 @@ class AthletesFragment : BaseFragment() {
             }
         }
 
-        lifecycleScope.launchWhenCreated  {
+        lifecycleScope.launchWhenCreated {
             viewModel.pagedAthletes.collectLatest {
                 adapter.submitData(it)
             }
@@ -115,9 +115,20 @@ class AthletesFragment : BaseFragment() {
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
             adapter.refresh()
         })
+
+        val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+
+        // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
+            ATHLETES_REFRESH_KEY
+        )?.observe(
+            viewLifecycleOwner
+        ) {
+            adapter.refresh()
+        }
     }
 
-    private fun recyclerSetup(){
+    private fun recyclerSetup() {
         view?.let {
             recyclerAthletes = it.findViewById(R.id.recycler_athletes)
             recyclerAthletes.layoutManager = LinearLayoutManager(requireContext())
@@ -129,8 +140,13 @@ class AthletesFragment : BaseFragment() {
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
 
-            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
                     return false
                 }
 
@@ -144,13 +160,13 @@ class AthletesFragment : BaseFragment() {
         }
     }
 
-    private fun refreshCount(){
+    private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =  String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
+        textTotal.text =
+            String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
     }
 
-    override fun onResume() {
-        super.onResume()
-        refreshCount()
+    companion object {
+        const val ATHLETES_REFRESH_KEY = "athletes_resume_key"
     }
 }

@@ -33,9 +33,9 @@ class SquadsFragment : BaseFragment() {
     private lateinit var adapter: SquadsAdapter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_squads, container, false)
     }
@@ -50,7 +50,7 @@ class SquadsFragment : BaseFragment() {
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let{
+        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
             refreshLayout = it
         }
 
@@ -59,8 +59,8 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
-    private fun setupAddButton(){
-        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let{
+    private fun setupAddButton() {
+        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
             buttonAdd = it
             buttonAdd.setOnClickListener {
 
@@ -71,13 +71,13 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
-    private fun setupTotalText(){
-        view?.findViewById<TextView>(R.id.text_squads_total)?.let{
+    private fun setupTotalText() {
+        view?.findViewById<TextView>(R.id.text_squads_total)?.let {
             textTotal = it
         }
     }
 
-    private fun setupObservers(){
+    private fun setupObservers() {
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
             refreshLayout.isRefreshing = it
         })
@@ -93,7 +93,7 @@ class SquadsFragment : BaseFragment() {
             }
         }
 
-        lifecycleScope.launchWhenCreated  {
+        lifecycleScope.launchWhenCreated {
             viewModel.pagedSquads.collectLatest {
                 adapter.submitData(it)
             }
@@ -106,9 +106,21 @@ class SquadsFragment : BaseFragment() {
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
             adapter.refresh()
         })
+
+
+        val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+        // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
+            SQUADS_REFRESH_KEY
+        )?.observe(
+            viewLifecycleOwner
+        ) {
+            adapter.refresh()
+        }
     }
 
-    private fun recyclerSetup(){
+    private fun recyclerSetup() {
         view?.let {
             recyclerSquads = it.findViewById(R.id.recycler_squads)
             recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
@@ -120,8 +132,13 @@ class SquadsFragment : BaseFragment() {
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
 
-            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
                     return false
                 }
 
@@ -135,8 +152,13 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
-    private fun refreshCount(){
+    private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =  String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+        textTotal.text =
+            String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+    }
+
+    companion object {
+        const val SQUADS_REFRESH_KEY = "squads_resume_key"
     }
 }

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.athletes.add.SportsAdapter
+import com.example.sports_match_day.ui.squads.SquadsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -224,6 +225,8 @@ class SquadsAddFragment: Fragment() {
             if(it) {
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                //This will trigger the SquadsFragment to refresh.
+                navController.previousBackStackEntry?.savedStateHandle?.set(SquadsFragment.SQUADS_REFRESH_KEY, true)
                 navController.navigateUp()
             }
         })

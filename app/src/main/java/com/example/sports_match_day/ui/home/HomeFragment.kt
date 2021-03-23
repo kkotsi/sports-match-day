@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -102,6 +104,21 @@ class HomeFragment : BaseFragment() {
         viewModel.removeSuccessful.observe(viewLifecycleOwner, {
             adapter.refresh()
         })
+
+        //If the activity has been created the NavController will not be found, thus an exception will be thrown.
+        if(requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+            // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+            navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
+                HomeFragment.HOME_REFRESH_KEY
+            )?.observe(
+                viewLifecycleOwner
+            ) {
+                adapter.refresh()
+            }
+        }
     }
 
 
@@ -195,5 +212,8 @@ class HomeFragment : BaseFragment() {
         val total = adapter.itemCount
         textTotal.text =
             String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+    }
+    companion object{
+        const val HOME_REFRESH_KEY = "home_resume_key"
     }
 }

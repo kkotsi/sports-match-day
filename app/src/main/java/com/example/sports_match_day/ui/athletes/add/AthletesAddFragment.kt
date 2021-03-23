@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.sports_match_day.R
+import com.example.sports_match_day.ui.athletes.AthletesFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -207,6 +208,9 @@ class AthletesAddFragment : Fragment() {
             if(it) {
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+                //This will trigger the AthletesFragment to refresh.
+                navController.previousBackStackEntry?.savedStateHandle?.set(AthletesFragment.ATHLETES_REFRESH_KEY, true)
                 navController.navigateUp()
             }
         })

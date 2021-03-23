@@ -10,6 +10,7 @@ import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.OnTouchListener
+import com.example.sports_match_day.ui.sports.SportsFragment
 import com.google.android.material.card.MaterialCardView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -61,6 +62,8 @@ class SportsAddFragment : Fragment() {
             if(it) {
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                //This will trigger the SportsFragment to refresh.
+                navController.previousBackStackEntry?.savedStateHandle?.set(SportsFragment.SPORTS_REFRESH_KEY, true)
                 navController.navigateUp()
             }
         })
