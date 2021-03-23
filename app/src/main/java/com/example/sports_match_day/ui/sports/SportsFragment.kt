@@ -151,7 +151,7 @@ class SportsFragment : BaseFragment() {
     }
 
     private fun refreshCount() {
-        val total = adapter.itemCount ?: 0
+        val total = adapter.itemCount
         textTotal.text =
             String.format(requireContext().resources.getString(R.string.total_sports), "$total")
     }

@@ -37,7 +37,7 @@ class SquadsAdapter :
                 .load(url)
                 .into(imageCountry)
 
-            textCity.text = item.city?.locality ?: item.city?.adminArea ?: item.city?.countryName
+            textCity.text = item.city
             textStadium.text = item.stadium
             textSport.text = item.sport?.name ?: ""
             textBirthday.text = item.birthday.year.toString()

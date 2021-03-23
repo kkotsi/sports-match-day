@@ -1,6 +1,5 @@
 package com.example.sports_match_day.model
 
-import android.location.Address
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -11,7 +10,7 @@ import java.util.*
 class Athlete(
     id: Int,
     name: String,
-    var city: Address?,
+    var city: String,
     var country: Locale,
     var sport: Sport,
     var birthday: LocalDateTime,

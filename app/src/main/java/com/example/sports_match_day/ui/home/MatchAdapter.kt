@@ -95,7 +95,7 @@ class MatchAdapter(
             ) + " " + match.date.dayOfMonth + "/" + match.date.monthValue + "\n" + match.date.hour + ":" + match.date.minute
             date.text = dateString
 
-            var location = match.city?.locality ?: match.city?.adminArea ?: match.city?.countryName
+            var location = match.city
 
             match.sport?.let {
                 if (it.gender == Gender.MALE) {

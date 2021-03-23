@@ -29,7 +29,6 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
     private suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match {
         val date = epochConverter(match.date)
-        val city = locationConverter(match.city)
         val country = countryConverter(match.country)
 
         val participants = mutableListOf<Participant>()
@@ -50,7 +49,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             }
         }
 
-        return Match(match.id,date, city, country, sport, participants)
+        return Match(match.id,date, match.city, country, sport, participants)
     }
 
     fun toSports(sports: List<com.example.sports_match_day.room.entities.Sport>): List<Sport> {
@@ -96,7 +95,6 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
     suspend fun toAthlete(athlete: com.example.sports_match_day.room.entities.Athlete?): Athlete? {
         athlete?.let {
             val birthday = epochConverter(athlete.birthday)
-            val city = locationConverter(athlete.city)
             val country = countryConverter(athlete.country)
 
             val gender = if (athlete.gender) Gender.MALE else Gender.FEMALE
@@ -104,7 +102,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val coreController = get<CoreController>()
             val sport = coreController.getSport(athlete.sportId) ?: return null
 
-            return Athlete(athlete.id, athlete.name, city, country, sport, birthday, gender)
+            return Athlete(athlete.id, athlete.name, athlete.city, country, sport, birthday, gender)
         }
         return null
     }
@@ -123,7 +121,6 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
     suspend fun toSquad(squad: com.example.sports_match_day.room.entities.Squad?): Squad? {
         squad?.let {
             val birthday = epochConverter(squad.birthday)
-            val city = locationConverter(squad.city)
             val country = countryConverter(squad.country)
 
             val coreController = get<CoreController>()
@@ -133,7 +130,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                 squad.id,
                 squad.name,
                 squad.stadium,
-                city,
+                squad.city,
                 country,
                 sport,
                 birthday
