@@ -22,6 +22,8 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="50dp"
         android:hint="@string/name"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,18 +51,19 @@
         android:id="@+id/container_gender_help"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:minHeight="70dp"
         android:background="@color/colorBackgroundCard"
+        android:minHeight="70dp"
         android:visibility="invisible"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/button_help_gender"
         app:layout_constraintStart_toEndOf="@+id/button_help_gender">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:gravity="center"
-            android:text="@string/help_gender"/>
+            android:padding="10dp"
+            android:text="@string/help_gender" />
     </com.google.android.material.card.MaterialCardView>
 
     <ToggleButton
@@ -87,18 +90,19 @@
         android:id="@+id/container_type_help"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:minHeight="70dp"
         android:background="@color/colorBackgroundCard"
+        android:minHeight="70dp"
         android:visibility="invisible"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/button_help_type"
         app:layout_constraintStart_toEndOf="@+id/button_help_type">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:gravity="center"
-            android:text="@string/help_type"/>
+            android:padding="10dp"
+            android:text="@string/help_type" />
     </com.google.android.material.card.MaterialCardView>
 
     <ImageButton
@@ -127,18 +131,19 @@
         android:id="@+id/container_participants_help"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:minHeight="70dp"
         android:background="@color/colorBackgroundCard"
+        android:minHeight="70dp"
         android:visibility="invisible"
         app:cardElevation="10dp"
         app:layout_constraintBottom_toTopOf="@+id/button_help_count"
         app:layout_constraintStart_toEndOf="@+id/button_help_count">
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
             android:gravity="center"
-            android:text="@string/help_participants"/>
+            android:padding="10dp"
+            android:text="@string/help_participants" />
     </com.google.android.material.card.MaterialCardView>
 
     <TextView
@@ -167,9 +172,10 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="50dp"
         android:hint="@string/count"
+        android:imeOptions="actionDone"
+        android:inputType="number"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toggle_type" />
 
