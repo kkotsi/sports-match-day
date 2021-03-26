@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Match
-import com.example.sports_match_day.model.Participant
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import kotlinx.coroutines.flow.catch
 import org.threeten.bp.LocalDateTime
@@ -33,17 +32,6 @@ class HomeViewModel(private var coreController: CoreController) : ScopedViewMode
             match?.let {
                 removeSuccessful.value = coreController.removeMatch(match)
             }
-        }) {}
-    }
-
-    fun addMatch() {
-        //Dummy data. Todo: create a screen to get these data.
-        launchWithLoad({
-            val participants = mutableListOf<Participant>()
-            participants.add(Participant(coreController.getSquad(1), 2.0))
-            participants.add(Participant(coreController.getSquad(2), 3.0))
-
-            coreController.addMatch("Tirana", "al", 1, LocalDateTime.now(), participants)
         }) {}
     }
 }

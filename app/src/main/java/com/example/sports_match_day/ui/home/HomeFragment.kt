@@ -58,7 +58,10 @@ class HomeFragment : BaseFragment() {
     private fun setupAddButton() {
         view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
             it.setOnClickListener {
-                viewModel.addMatch()
+
+                val navController =
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                navController.navigate(R.id.action_nav_home_to_nav_match_add)
             }
         }
     }
@@ -106,7 +109,7 @@ class HomeFragment : BaseFragment() {
         })
 
         //If the activity has been created the NavController will not be found, thus an exception will be thrown.
-        if(requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+        if (requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
@@ -213,7 +216,8 @@ class HomeFragment : BaseFragment() {
         textTotal.text =
             String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
-    companion object{
+
+    companion object {
         const val HOME_REFRESH_KEY = "home_resume_key"
     }
 }

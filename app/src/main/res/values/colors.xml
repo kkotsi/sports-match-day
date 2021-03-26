@@ -16,4 +16,5 @@
     <color name="colorFemale">#FFAA66CC</color>
 
     <color name="colorLink">#3F84D7</color>
+    <color name="colorTransparent">#00000000</color>
 </resources>

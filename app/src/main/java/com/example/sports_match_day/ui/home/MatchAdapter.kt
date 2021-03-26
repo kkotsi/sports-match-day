@@ -45,7 +45,7 @@ class MatchAdapter(
         private val extraLayout: LinearLayout = view.findViewById(R.id.extra)
 
         fun bind(match: Match) {
-            val country = match.country.toString()
+            val country = match.getCountryCode()
             val url = FlagManager.getFlagURL(country)
 
             view.findViewById<View>(R.id.container_match)?.setOnClickListener {
@@ -72,7 +72,7 @@ class MatchAdapter(
 
             if (match.participants.size > 1) {
 
-                participantFirst.text = match.participants[0].participant?.name ?: ""
+                participantFirst.text = match.participants[0].contestant?.name ?: ""
                 val score = match.participants[0].score
 
                 if (score >= 0)
@@ -80,7 +80,7 @@ class MatchAdapter(
                 else
                     scoreFirst.text = "-"
 
-                participantSecond.text = match.participants[1].participant?.name ?: ""
+                participantSecond.text = match.participants[1].contestant?.name ?: ""
 
                 val secondScore = match.participants[1].score
                 if (secondScore >= 0)
@@ -107,7 +107,7 @@ class MatchAdapter(
                 if (it.type == SportType.SOLO) {
                     typeImage.setImageResource(R.drawable.ic_person)
                 } else {
-                    location += " \n" + itemView.context.resources.getString(R.string.stadium) + ": " + (match.participants[0].participant as? Squad)?.stadium
+                    location += " \n" + itemView.context.resources.getString(R.string.stadium) + ": " + (match.participants[0].contestant as? Squad)?.stadium
                     typeImage.setImageResource(R.drawable.ic_group)
                 }
             }

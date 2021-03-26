@@ -12,6 +12,9 @@ interface SquadsDao {
     @Query("SELECT * FROM squads")
     suspend fun getSquads(): List<Squad>
 
+    @Query("SELECT * FROM squads WHERE squads.sportId = :sportId")
+    suspend fun getSquads(sportId: Int): List<Squad>
+
     @Query("SELECT * FROM squads LIMIT :count OFFSET :mOffset")
     suspend fun getSquads(count: Int, mOffset: Int ): List<Squad>
 

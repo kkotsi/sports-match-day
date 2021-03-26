@@ -147,7 +147,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
     }
 
     private fun countryConverter(code: String): Locale {
-        return Locale(code)
+        return Locale("",code)
     }
 
     private fun locationConverter(location: String): Address? {

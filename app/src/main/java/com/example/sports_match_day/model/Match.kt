@@ -13,9 +13,19 @@ class Match (
     var country: Locale,
     var sport: Sport?,
     var participants: List<Participant>
-    )
+    ){
+
+    fun getCountryCode(): String{
+        return country.toString().replaceFirst("_","")
+    }
+}
 
 class Participant(
-    var participant: Contestant?,
+    var contestant: Contestant?,
     var score: Double
-)
+){
+    companion object{
+        //If the score hasn't be decided yet.
+        const val UNSET_SCORE = -1.0
+    }
+}

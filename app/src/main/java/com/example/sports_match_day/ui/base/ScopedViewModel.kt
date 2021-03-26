@@ -1,8 +1,6 @@
 package com.example.sports_match_day.ui.base
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -48,4 +46,13 @@ abstract class ScopedViewModel : ViewModel() {
             }
         }
     }
+}
+fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+    observe(lifecycleOwner, object : Observer<T> {
+        override fun onChanged(t: T?) {
+            if(t == null) return
+            observer.onChanged(t)
+            removeObserver(this)
+        }
+    })
 }

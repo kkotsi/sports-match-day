@@ -26,7 +26,7 @@ class SportsAdapter(var context: Context, var sports: List<Sport>): BaseAdapter(
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         var view = convertView
         if(view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_spinner, parent, false)
+            view = LayoutInflater.from(context).inflate(R.layout.item_spinner_text, parent, false)
 
             val vh = ViewHolder(view)
             vh.bind(sports[position])

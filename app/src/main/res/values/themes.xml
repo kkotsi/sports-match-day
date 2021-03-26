@@ -15,6 +15,10 @@
 
     </style>
 
+    <style name="MyDatePickerStyle" parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:colorControlActivated">@color/colorAccent</item>
+    </style>
+
     <style name="Theme.SportsMatchDay.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

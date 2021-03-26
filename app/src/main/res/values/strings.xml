@@ -47,5 +47,13 @@
     <string name="participants">Participants</string>
     <string name="help_participants">The number of the allowed participants in a match.</string>
     <string name="retry">Retry</string>
+    <string name="score">Score</string>
+    <string name="cancel">Cancel</string>
+    <string name="squad">Squad</string>
+    <string name="solo">Individual</string>
+
+    <string name="error_not_enough_participants">You need at least %1$s participants for this match.</string>
+    <string name="error_no_sport">You must select a sport!</string>
+    <string name="error_duplicate_participant">A participant exists twice!</string>
 
 </resources>

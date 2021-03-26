@@ -87,6 +87,15 @@ class LocalRepositoryImpl(
         return true
     }
 
+    override suspend fun getAllAthletes(sportId: Int): MutableList<Athlete> {
+        val count = sportsDatabase.athletesDao().getCount()
+        if (memoryRepository.athletes.size < count) {
+            return decoupleAdapter.toAthletes(
+                sportsDatabase.athletesDao().getAthletes(sportId)).toMutableList()
+        }
+        return memoryRepository.athletes.filter { it.sport.id == sportId }.toMutableList()
+    }
+
     override suspend fun getAllAthletes(): MutableList<Athlete> {
         val count = sportsDatabase.athletesDao().getCount()
         if (memoryRepository.athletes.size < count) {
@@ -100,6 +109,15 @@ class LocalRepositoryImpl(
             )
         }
         return memoryRepository.athletes
+    }
+
+    override suspend fun getAllSquads(sportId: Int): MutableList<Squad> {
+        val count = sportsDatabase.squadsDao().getCount()
+        if (memoryRepository.squads.size < count) {
+            return decoupleAdapter.toSquads(
+                    sportsDatabase.squadsDao().getSquads(sportId)).toMutableList()
+        }
+        return memoryRepository.squads.filter { it.sport?.id == sportId }.toMutableList()
     }
 
     override suspend fun getAllSquads(): MutableList<Squad> {
@@ -192,6 +210,9 @@ class LocalRepositoryImpl(
 }
 
 interface LocalRepository {
+    suspend fun getAllAthletes(sportId: Int): MutableList<Athlete>
+    suspend fun getAllSquads(sportId: Int): MutableList<Squad>
+
     fun getAthletes(): Pager<Int, Athlete>
     fun getSports(): Pager<Int, Sport>
     fun getSquads(): Pager<Int, Squad>

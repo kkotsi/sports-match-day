@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/image_match"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/matches"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_date_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/colorBackgroundCard"
+        android:drawableEnd="@drawable/ic_calendar"
+        android:stateListAnimator="@null"
+        android:textColor="@color/colorPrimary"
+        app:drawableTint="@color/colorPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/button_time_picker"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/colorGrey"
+        app:strokeWidth="1dp"
+        tools:text="19-1-2004" />
+
+    <Button
+        android:id="@+id/button_time_picker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:backgroundTint="@color/colorBackgroundCard"
+        android:drawableEnd="@drawable/ic_clock"
+        android:stateListAnimator="@null"
+        android:text="15:00"
+        android:textColor="@color/colorPrimary"
+        app:drawableTint="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/button_date_picker"
+        app:layout_constraintTop_toTopOf="@+id/button_date_picker"
+        app:strokeColor="@color/colorGrey"
+        app:strokeWidth="1dp"
+        tools:ignore="HardcodedText" />
+
+    <AutoCompleteTextView
+        android:id="@+id/editText_city"
+        style="@style/RoundedEditText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/city"
+        android:imeOptions="actionNext"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:lines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/bg_border"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="@+id/container_spinner_sport"
+        app:layout_constraintTop_toBottomOf="@+id/container_spinner_sport" />
+
+    <FrameLayout
+        android:id="@+id/container_spinner_sport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bg_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_date_picker">
+
+        <Spinner
+            android:id="@+id/spinner_sport"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toStartOf="@+id/spinner_month"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_country"
+            tools:listitem="@layout/item_spinner_text" />
+    </FrameLayout>
+
+    <AutoCompleteTextView
+        android:id="@+id/editText_country"
+        style="@style/RoundedEditText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/country"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:lines="1"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/bg_border"
+        app:layout_constraintStart_toStartOf="@+id/editText_city"
+        app:layout_constraintTop_toBottomOf="@+id/editText_city" />
+
+    <AutoCompleteTextView
+        android:id="@+id/editText_stadium"
+        style="@style/RoundedEditText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:autofillHints="Greece,Spain,France"
+        android:hint="@string/stadium"
+        android:imeOptions="actionDone"
+        android:inputType="textAutoComplete|textAutoCorrect"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:background="@drawable/bg_border"
+        app:layout_constraintStart_toStartOf="@+id/editText_city"
+        app:layout_constraintTop_toBottomOf="@+id/editText_country" />
+
+    <TextView
+        android:id="@+id/text_participants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/participants"
+        app:layout_constraintStart_toStartOf="@id/editText_stadium"
+        app:layout_constraintTop_toBottomOf="@+id/image_match" />
+
+    <ProgressBar
+        android:id="@id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/recycles_participants"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recycles_participants" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycles_participants"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@+id/button_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_participants"
+        tools:itemCount="2"
+        tools:listitem="@layout/item_contestant" />
+
+    <TextView
+        android:id="@+id/text_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/recycles_participants" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:drawableStart="@drawable/ic_save"
+        android:padding="5dp"
+        android:text="@string/save"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

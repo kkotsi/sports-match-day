@@ -18,6 +18,9 @@ interface AthletesDao {
     @Query("SELECT * FROM athletes WHERE athletes.id = :id")
     suspend fun getAthlete(id: Int): Athlete
 
+    @Query("SELECT * FROM athletes WHERE athletes.sportId = :sportId")
+    suspend fun getAthletes(sportId: Int): List<Athlete>
+
     @Insert
     suspend fun insertAthlete(athlete: Athlete)
 

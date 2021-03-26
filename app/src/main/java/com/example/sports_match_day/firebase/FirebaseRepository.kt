@@ -6,24 +6,37 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import kotlinx.coroutines.tasks.await
 
-
 /**
  * Created by Kristo on 08-Mar-21
  */
 class FirebaseRepositoryImpl : FirebaseRepository {
 
+    private suspend fun getLastId(): Int {
+        val dataSnapshot = FirebaseDatabase.getInstance().reference
+            .child("max_id")
+            .awaitQueryValue()
+
+        return dataSnapshot.value.toString().toInt()
+    }
+
+    private suspend fun updateLastId(id: Int) {
+        FirebaseDatabase.getInstance().reference
+            .child("max_id")
+            .setValue(id)
+            .await()
+    }
+
     override suspend fun getMatches(count: Int, offsetId: Int?): List<Match>? {
         try {
             //Exclude the match with id == offsetId by added 1.0
             val offset = offsetId?.plus(1) ?: 0
-
             val dataSnapshot = FirebaseDatabase.getInstance().reference
                 .child("matches")
                 .orderByKey()
                 .startAt("$offset")
                 //.startAt(offset)
                 .limitToFirst(count)
-                .get().await()
+                .awaitQueryValue()
 
             /**
              * Firebase returns a list of items if the count is > 1
@@ -53,8 +66,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
 
             return null
         } catch (t: Throwable) {
-            //If the connection to wifi is briefly lost firebase seems to be unable to reconnect.
-            if(t.message == "Client is offline") {
+            //get() randomly closes connection firebase issue
+            if (t.message == "Client is offline") {
                 FirebaseDatabase.getInstance().goOffline()
                 FirebaseDatabase.getInstance().goOnline()
             }
@@ -62,18 +75,15 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         }
     }
 
-    override fun removeMatch(matchId: Int) {
+    override suspend fun removeMatch(matchId: Int) {
 
         FirebaseDatabase.getInstance().reference
             .child("matches")
             .child("$matchId")
-
-            .removeValue { error, ref ->
-                print("ok")
-            }
+            .removeValue()
     }
 
-    override fun addMatch(
+    override suspend fun addMatch(
         city: String,
         country: String,
         sportId: Int,
@@ -81,15 +91,17 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         participants: List<Participant>
     ) {
         val firebaseMatch = HashMap<String, Any>()
+        val matchId = getLastId() + 1
         firebaseMatch["city"] = city
         firebaseMatch["country"] = country
         firebaseMatch["sportId"] = sportId
-        firebaseMatch["id"] = 5
+        firebaseMatch["date"] = date
+        firebaseMatch["id"] = matchId
 
         val listParticipants = mutableListOf<HashMap<String, Any>>()
         participants.forEach {
             val map = hashMapOf<String, Any>()
-            map["id"] = it.participant?.id ?: 0
+            map["id"] = it.contestant!!.id
             map["score"] = it.score
 
             listParticipants.add(map)
@@ -99,12 +111,12 @@ class FirebaseRepositoryImpl : FirebaseRepository {
 
         FirebaseDatabase.getInstance().reference
             .child("matches")
-            .child("5")
+            .child("$matchId")
             .setValue(
                 firebaseMatch
-            ) { error, ref ->
-                print("ok")
-            }
+            ).await()
+
+        updateLastId(matchId)
     }
 }
 
@@ -117,9 +129,9 @@ interface FirebaseRepository {
      */
     suspend fun getMatches(count: Int, offsetId: Int?): List<Match>?
 
-    fun removeMatch(matchId: Int)
+    suspend fun removeMatch(matchId: Int)
 
-    fun addMatch(
+    suspend fun addMatch(
         city: String,
         country: String,
         sportId: Int,

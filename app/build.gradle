@@ -58,7 +58,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 
-    implementation platform('com.google.firebase:firebase-bom:26.5.0')
 
     //Room
     implementation "androidx.room:room-runtime:$room_version"
@@ -69,6 +68,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.5.2'
 
     //Firebase
+    implementation platform('com.google.firebase:firebase-bom:26.8.0')
     implementation 'com.google.firebase:firebase-database-ktx'
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.firebase:firebase-analytics'
@@ -111,5 +111,4 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation "androidx.paging:paging-compose:1.0.0-alpha08"
-    //implementation 'androidx.paging:paging-runtime-ktx:2.1.2'
 }

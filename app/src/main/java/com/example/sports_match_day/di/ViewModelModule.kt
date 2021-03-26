@@ -5,6 +5,7 @@ import com.example.sports_match_day.ui.MainActivityViewModel
 import com.example.sports_match_day.ui.athletes.AthletesViewModel
 import com.example.sports_match_day.ui.athletes.add.AthletesAddViewModel
 import com.example.sports_match_day.ui.home.HomeViewModel
+import com.example.sports_match_day.ui.home.add.MatchesAddViewModel
 import com.example.sports_match_day.ui.sports.SportsViewModel
 import com.example.sports_match_day.ui.sports.add.SportsAddViewModel
 import com.example.sports_match_day.ui.squads.SquadsViewModel
@@ -18,7 +19,9 @@ import org.koin.dsl.module
 val viewModelModule = module {
     viewModel { LoginViewModel(get()) }
     viewModel { MainActivityViewModel() }
+
     viewModel { HomeViewModel(get()) }
+    viewModel { MatchesAddViewModel(get()) }
 
     viewModel { AthletesViewModel(get()) }
     viewModel { AthletesAddViewModel(get()) }

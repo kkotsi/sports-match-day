@@ -82,8 +82,16 @@ class CoreControllerImpl(
         return localRepository.getSports()
     }
 
+    override suspend fun getAllAthletes(sportId: Int): MutableList<Athlete> {
+        return localRepository.getAllAthletes(sportId)
+    }
+
     override suspend fun getAllAthletes(): MutableList<Athlete> {
         return localRepository.getAllAthletes()
+    }
+
+    override suspend fun getAllSquads(sportId: Int): MutableList<Squad> {
+        return localRepository.getAllSquads(sportId)
     }
 
     override suspend fun getAllSquads(): MutableList<Squad> {
@@ -124,12 +132,16 @@ class CoreControllerImpl(
     }
 
     override suspend fun addMatch(
+        sportId: Int,
         city: String,
         country: String,
-        sportId: Int,
+        stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
-    ) {
+    ): Boolean {
+        participants.forEach {
+            if (it.score < 0) it.score = Participant.UNSET_SCORE
+        }
         remoteRepository.addMatch(
             city,
             country,
@@ -137,6 +149,7 @@ class CoreControllerImpl(
             date,
             participants
         )
+        return true
     }
 
     override suspend fun addAthlete(
@@ -193,6 +206,9 @@ interface CoreController {
     fun getSquads(): Pager<Int, Squad>
     fun getSports(): Pager<Int, Sport>
 
+    suspend fun getAllAthletes(sportId: Int): MutableList<Athlete>
+    suspend fun getAllSquads(sportId: Int): MutableList<Squad>
+
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
     suspend fun getAllSports(): MutableList<Sport>
@@ -207,12 +223,13 @@ interface CoreController {
     suspend fun removeSport(sport: Sport): Boolean
 
     suspend fun addMatch(
+        sportId: Int,
         city: String,
         country: String,
-        sportId: Int,
+        stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
-    )
+    ): Boolean
 
     suspend fun addAthlete(
         name: String,
