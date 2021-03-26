@@ -50,7 +50,8 @@
                 android:textSize="10sp"
                 app:layout_constraintStart_toEndOf="@+id/text_sport"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Madrid, \nStadium: Mestalla" />
+                tools:text="Madrid, \nStadium: Mestalla"
+                tools:ignore="SmallSp" />
 
             <TextView
                 android:id="@+id/text_first_squad"
@@ -130,6 +131,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="7dp"
+                android:contentDescription="@string/description_type"
                 app:layout_constraintBottom_toTopOf="@+id/text_date"
                 app:layout_constraintEnd_toEndOf="@+id/text_date"
                 app:layout_constraintTop_toTopOf="parent"
@@ -140,6 +142,7 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="7dp"
+                android:contentDescription="@string/description_gender"
                 app:layout_constraintBottom_toTopOf="@+id/text_date"
                 app:layout_constraintStart_toStartOf="@+id/text_date"
                 app:layout_constraintTop_toTopOf="parent"
@@ -166,7 +169,8 @@
                     android:src="@drawable/ic_forward"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
 
             <com.makeramen.roundedimageview.RoundedImageView

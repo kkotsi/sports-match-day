@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.OnTouchListener
+import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.sports.SportsFragment
 import com.google.android.material.card.MaterialCardView
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,7 +17,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by Kristo on 15-Mar-21
  */
-class SportsAddFragment : Fragment() {
+class SportsAddFragment : BaseFragment() {
 
     private val viewModel: SportsAddViewModel by viewModel()
     private var nameEditTextView: AutoCompleteTextView? = null
@@ -66,6 +66,10 @@ class SportsAddFragment : Fragment() {
                 navController.previousBackStackEntry?.savedStateHandle?.set(SportsFragment.SPORTS_REFRESH_KEY, true)
                 navController.navigateUp()
             }
+        })
+
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
         })
     }
 

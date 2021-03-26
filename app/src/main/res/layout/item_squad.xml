@@ -29,6 +29,7 @@
                 android:layout_height="122dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
+                android:contentDescription="@string/description_squad"
                 android:src="@drawable/team_logo"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

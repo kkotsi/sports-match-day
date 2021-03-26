@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.athletes.AthletesFragment
+import com.example.sports_match_day.ui.base.BaseFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -17,7 +17,7 @@ import java.util.*
 /**
  * Created by Kristo on 12-Mar-21
  */
-class AthletesAddFragment : Fragment() {
+class AthletesAddFragment : BaseFragment() {
 
     private val viewModel: AthletesAddViewModel by viewModel()
     private lateinit var citiesEditTextView: AutoCompleteTextView
@@ -218,6 +218,11 @@ class AthletesAddFragment : Fragment() {
                 navController.navigateUp()
             }
         })
+
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
+        })
+
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner.adapter = SportsAdapter(requireContext(), it)
         })

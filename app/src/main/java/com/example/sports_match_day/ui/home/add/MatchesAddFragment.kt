@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -17,6 +16,7 @@ import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.ui.athletes.add.SportsAdapter
+import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.base.observeOnce
 import com.example.sports_match_day.ui.home.HomeFragment
 import com.example.sports_match_day.utils.PopupManager
@@ -27,7 +27,7 @@ import java.util.*
 /**
  * Created by Kristo on 23-Mar-21
  */
-class MatchesAddFragment : Fragment() {
+class MatchesAddFragment : BaseFragment() {
 
     private val viewModel: MatchesAddViewModel by viewModel()
     private lateinit var citiesEditTextView: AutoCompleteTextView
@@ -126,9 +126,9 @@ class MatchesAddFragment : Fragment() {
                     )
             }
 
-            if(adapter.participants.groupingBy { it.contestant?.id }.eachCount()
+            if (adapter.participants.groupingBy { it.contestant?.id }.eachCount()
                     .filter { it.value > 1 }.isNotEmpty()
-            ){
+            ) {
                 pass = false
                 errorTextView.text = getString(R.string.error_duplicate_participant)
             }
@@ -159,6 +159,10 @@ class MatchesAddFragment : Fragment() {
             }
         })
 
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
+        })
+
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner.adapter = SportsAdapter(requireContext(), it)
         })
@@ -167,6 +171,7 @@ class MatchesAddFragment : Fragment() {
     private fun setupSaveButton() {
         buttonSave = requireView().findViewById(R.id.button_save)
         buttonSave.setOnClickListener {
+            if (viewModel.isDataLoading.value == true) return@setOnClickListener
 
             if (validateData()) {
                 val sport = sportsSpinner.selectedItem as Sport
@@ -189,7 +194,6 @@ class MatchesAddFragment : Fragment() {
         adapter = ContestantsAdapter(participants)
         val header = AddContestantAdapter(false) {}
         footer = AddContestantAdapter(true) {
-
             errorTextView.text = ""
             viewModel.contestants.observeOnce(viewLifecycleOwner, {
                 val contestants = mutableListOf<String>()
@@ -207,24 +211,27 @@ class MatchesAddFragment : Fragment() {
                     contestants
                 ) { contestantName ->
 
-                    val contestant = it.find { contestant -> contestant.name == contestantName }
-                    contestant?.let {
-                        adapter.participants.add(Participant(contestant, 0.0))
-                        adapter.notifyItemInserted(adapter.participants.size - 1)
+                    if (previousSport?.participantCount ?: 0 > adapter.participants.size) {
+                        val contestant = it.find { contestant -> contestant.name == contestantName }
+                        contestant?.let {
+                            adapter.participants.add(Participant(contestant, 0.0))
+                            adapter.notifyItemInserted(adapter.participants.size - 1)
 
-                        if (previousSport?.participantCount ?: 0 <= adapter.participants.size) {
-                            footer.show = false
-                            footer.notifyDataSetChanged()
-                        }
+                            if (previousSport?.participantCount ?: 0 <= adapter.participants.size) {
+                                footer.show = false
+                                footer.notifyDataSetChanged()
+                            }
 
-                        if (adapter.participants.size == 1) {
-                            refreshData()
+                            if (adapter.participants.size == 1) {
+                                refreshData()
+                            }
                         }
                     }
                 }
             })
 
             if (viewModel.contestants.value == null) viewModel.getContestants(previousSport)
+
         }
         recyclerParticipants.adapter = ConcatAdapter(header, adapter, footer)
 

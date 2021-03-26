@@ -12,6 +12,7 @@
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
+        android:contentDescription="@string/description_athlete"
         android:backgroundTint="@color/colorBackgroundCard"
         app:cardForegroundColor="@android:color/transparent"
         app:layout_constraintEnd_toEndOf="parent"

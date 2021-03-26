@@ -56,4 +56,13 @@
     <string name="error_no_sport">You must select a sport!</string>
     <string name="error_duplicate_participant">A participant exists twice!</string>
 
+    <string name="description_simple_bgg">A simple background image</string>
+    <string name="description_athlete">The image of the athlete</string>
+    <string name="description_squad">The image of the squad</string>
+    <string name="fob_add">Add new item relevant to the screen</string>
+    <string name="description_squad_athlete">The image of the athlete or the squad in the current event.</string>
+    <string name="description_type">The type of sport (Team or Individual)</string>
+    <string name="description_gender">The gender of the sport or the individual.</string>
+    <string name="description_sport_icon">The icon of the sport</string>
+
 </resources>

@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
 import androidx.navigation.Navigation
 import com.example.sports_match_day.R
 import com.example.sports_match_day.ui.athletes.add.SportsAdapter
+import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.squads.SquadsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
@@ -18,7 +18,7 @@ import java.util.*
 /**
  * Created by Kristo on 14-Mar-21
  */
-class SquadsAddFragment: Fragment() {
+class SquadsAddFragment: BaseFragment() {
 
     private val viewModel: SquadsAddViewModel by viewModel()
     private var citiesEditTextView: AutoCompleteTextView? = null
@@ -230,6 +230,11 @@ class SquadsAddFragment: Fragment() {
                 navController.navigateUp()
             }
         })
+
+        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+            showErrorPopup(it)
+        })
+
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner?.adapter = SportsAdapter(requireContext(), it)
         })
