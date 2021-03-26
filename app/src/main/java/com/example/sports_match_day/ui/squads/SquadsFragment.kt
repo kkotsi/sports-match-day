@@ -31,6 +31,7 @@ class SquadsFragment : BaseFragment() {
     private lateinit var buttonAdd: FloatingActionButton
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: SquadsAdapter
+    private lateinit var addButton: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,14 +61,12 @@ class SquadsFragment : BaseFragment() {
     }
 
     private fun setupAddButton() {
-        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
-            buttonAdd = it
-            buttonAdd.setOnClickListener {
+        addButton = requireView().findViewById(R.id.fab_add)
 
-                val navController =
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.action_nav_squads_to_nav_squads_add)
-            }
+        addButton.setOnClickListener {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            navController.navigate(R.id.action_nav_squads_to_nav_squads_add)
         }
     }
 
@@ -131,6 +130,20 @@ class SquadsFragment : BaseFragment() {
                 header = ExampleLoadStateAdapter { adapter.refresh() },
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
+
+            recyclerSquads.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        addButton.show()
+                    }
+                    super.onScrollStateChanged(recyclerView, newState)
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy != 0 && addButton.isShown)
+                        addButton.hide()
+                }
+            })
 
             val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
                 ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {

@@ -36,6 +36,7 @@ class HomeFragment : BaseFragment() {
     private lateinit var textTotal: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: MatchAdapter
+    private lateinit var addButton: FloatingActionButton
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,7 +57,9 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupAddButton() {
-        view?.findViewById<FloatingActionButton>(R.id.fab_add)?.let {
+        addButton = requireView().findViewById(R.id.fab_add)
+
+        addButton.setOnClickListener{
             it.setOnClickListener {
 
                 val navController =
@@ -176,6 +179,20 @@ class HomeFragment : BaseFragment() {
                 header = ExampleLoadStateAdapter { adapter.refresh() },
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
+
+            recyclerMatches.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    if(newState == RecyclerView.SCROLL_STATE_IDLE){
+                        addButton.show()
+                    }
+                    super.onScrollStateChanged(recyclerView, newState)
+                }
+
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy != 0 && addButton.isShown)
+                        addButton.hide()
+                }
+            })
 
             val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
                 ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
