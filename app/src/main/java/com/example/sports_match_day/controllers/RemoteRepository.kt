@@ -14,10 +14,14 @@ import org.threeten.bp.ZoneId
 /**
  * Created by Kristo on 07-Mar-21
  */
-class RemoteRepositoryImpl(private val firebaseRepository: FirebaseRepository): RemoteRepository, KoinComponent {
+class RemoteRepositoryImpl(
+    private val firebaseRepository: FirebaseRepository,
+    private val decoupleAdapter: DecoupleAdapter
+) : RemoteRepository,
+    KoinComponent {
 
     override fun getMatches(): Pager<Int, Match> {
-        return Pager(PagingConfig(pageSize = MatchesDataSource.PAGE_SIZE, prefetchDistance = 4)){
+        return Pager(PagingConfig(pageSize = MatchesDataSource.PAGE_SIZE, prefetchDistance = 4)) {
             get<MatchesDataSource>()
         }
     }
@@ -31,6 +35,7 @@ class RemoteRepositoryImpl(private val firebaseRepository: FirebaseRepository): 
         city: String,
         country: String,
         sportId: Int,
+        stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
     ) {
@@ -38,13 +43,39 @@ class RemoteRepositoryImpl(private val firebaseRepository: FirebaseRepository): 
             city,
             country,
             sportId,
+            stadium,
             date.atZone(ZoneId.systemDefault()).toEpochSecond(),
             participants
         )
     }
+
+    override suspend fun getMatch(matchId: Int): Match? {
+        return decoupleAdapter.toMatch(firebaseRepository.getMatch(matchId))
+    }
+
+    override suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        date: LocalDateTime,
+        participants: List<Participant>
+    ): Boolean {
+        firebaseRepository.updateMatch(
+            id,
+            city,
+            country,
+            stadium,
+            sportId,
+            date.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            participants
+        )
+        return true
+    }
 }
 
-interface RemoteRepository{
+interface RemoteRepository {
     fun getMatches(): Pager<Int, Match>
 
     suspend fun removeMatch(match: Match): Boolean
@@ -53,7 +84,20 @@ interface RemoteRepository{
         city: String,
         country: String,
         sportId: Int,
+        stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
     )
+
+    suspend fun getMatch(matchId: Int): Match?
+
+    suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        date: LocalDateTime,
+        participants: List<Participant>
+    ): Boolean
 }

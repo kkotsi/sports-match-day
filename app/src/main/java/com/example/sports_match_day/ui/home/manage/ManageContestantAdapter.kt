@@ -1,10 +1,11 @@
-package com.example.sports_match_day.ui.home.add
+package com.example.sports_match_day.ui.home.manage
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Sport
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /**
@@ -39,6 +40,14 @@ class AddContestantAdapter(
 
     override fun onBindViewHolder(holder: AddContestantViewHolder, position: Int) {
         holder.bind()
+    }
+
+    fun refresh(size: Int, sport: Sport?){
+        val state = show
+        show = (sport?.participantCount ?: size + 1) > size
+
+        if(state != show)
+            notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int {

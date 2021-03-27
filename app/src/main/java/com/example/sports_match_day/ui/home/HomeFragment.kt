@@ -38,6 +38,8 @@ class HomeFragment : BaseFragment() {
     private lateinit var adapter: MatchAdapter
     private lateinit var addButton: FloatingActionButton
 
+    private var selectedMatchId: Int = -1
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -166,13 +168,25 @@ class HomeFragment : BaseFragment() {
         calendarView.setEvents(events)
     }
 
+    private fun editMatch(){
+        val navController =
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = HomeFragmentDirections.actionNavHomeToNavMatchAdd(selectedMatchId)
+        navController.navigate(action)
+    }
+
     private fun recyclerSetup() {
         view?.let {
             recyclerMatches = it.findViewById(R.id.recycler_matches)
             recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
             adapter = MatchAdapter { match ->
-                selectDate(match.date)
+                if(match.id == selectedMatchId){
+                    editMatch()
+                }else {
+                    selectDate(match.date)
+                }
+                selectedMatchId = match.id
             }
 
             recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(

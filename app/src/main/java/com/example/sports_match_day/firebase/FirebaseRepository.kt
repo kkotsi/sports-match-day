@@ -27,52 +27,53 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun getMatches(count: Int, offsetId: Int?): List<Match>? {
-        try {
-            //Exclude the match with id == offsetId by added 1.0
-            val offset = offsetId?.plus(1) ?: 0
-            val dataSnapshot = FirebaseDatabase.getInstance().reference
-                .child("matches")
-                .orderByKey()
-                .startAt("$offset")
-                //.startAt(offset)
-                .limitToFirst(count)
-                .awaitQueryValue()
+        //Exclude the match with id == offsetId by added 1.0
+        val offset = offsetId?.plus(1) ?: 0
+        val dataSnapshot = FirebaseDatabase.getInstance().reference
+            .child("matches")
+            .orderByKey()
+            .startAt("$offset")
+            .limitToFirst(count)
+            .awaitQueryValue()
 
-            /**
-             * Firebase returns a list of items if the count is > 1
-             * if the count is 1, firebase returns a HashMap with key the position of the item
-             * and value the actual data.
-             */
-            if (dataSnapshot.childrenCount > 1) {
-                if (dataSnapshot.value is ArrayList<*>) {
-                    val genericTypeIndicator = object : GenericTypeIndicator<List<Match>?>() {}
-                    return dataSnapshot.getValue(genericTypeIndicator)
-                } else if (dataSnapshot.value is HashMap<*, *>) {
-                    val genericTypeIndicator =
-                        object : GenericTypeIndicator<HashMap<String, Match>?>() {}
-                    return dataSnapshot.getValue(genericTypeIndicator)?.values?.toList()
-                }
-            } else if (dataSnapshot.childrenCount > 0) {
+        /**
+         * Firebase returns a list of items if the count is > 1
+         * if the count is 1, firebase returns a HashMap with key the position of the item
+         * and value the actual data.
+         */
+        if (dataSnapshot.childrenCount > 1) {
+            if (dataSnapshot.value is ArrayList<*>) {
+                val genericTypeIndicator = object : GenericTypeIndicator<List<Match>?>() {}
+                return dataSnapshot.getValue(genericTypeIndicator)
+            } else if (dataSnapshot.value is HashMap<*, *>) {
                 val genericTypeIndicator =
-                    object : GenericTypeIndicator<HashMap<String, Match>>() {}
-                val data = dataSnapshot.getValue(genericTypeIndicator)
-
-                val list = mutableListOf<Match>()
-                data?.values?.first()?.let {
-                    list.add(it)
-                }
-                return list
+                    object : GenericTypeIndicator<HashMap<String, Match>?>() {}
+                return dataSnapshot.getValue(genericTypeIndicator)?.values?.toList()
             }
+        } else if (dataSnapshot.childrenCount > 0) {
+            val genericTypeIndicator =
+                object : GenericTypeIndicator<HashMap<String, Match>>() {}
+            val data = dataSnapshot.getValue(genericTypeIndicator)
 
-            return null
-        } catch (t: Throwable) {
-            //get() randomly closes connection firebase issue
-            if (t.message == "Client is offline") {
-                FirebaseDatabase.getInstance().goOffline()
-                FirebaseDatabase.getInstance().goOnline()
+            val list = mutableListOf<Match>()
+            data?.values?.first()?.let {
+                list.add(it)
             }
-            throw t
+            return list
         }
+
+        return null
+    }
+
+    override suspend fun getMatch(matchId: Int): Match? {
+        val dataSnapshot = FirebaseDatabase.getInstance().reference
+            .child("matches")
+            .child("$matchId")
+            .awaitQueryValue()
+
+        val genericTypeIndicator =
+            object : GenericTypeIndicator<Match>() {}
+        return dataSnapshot.getValue(genericTypeIndicator)
     }
 
     override suspend fun removeMatch(matchId: Int) {
@@ -87,16 +88,43 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         city: String,
         country: String,
         sportId: Int,
+        stadium: String,
+        date: Long,
+        participants: List<Participant>
+    ) {
+        val matchId = getLastId() + 1
+        setMatch(matchId, city, country, stadium, sportId, date, participants)
+        updateLastId(matchId)
+    }
+
+    override suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        date: Long,
+        participants: List<Participant>
+    ) {
+        setMatch(id, city, country, stadium, sportId, date, participants)
+    }
+
+    private suspend fun setMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
         date: Long,
         participants: List<Participant>
     ) {
         val firebaseMatch = HashMap<String, Any>()
-        val matchId = getLastId() + 1
         firebaseMatch["city"] = city
         firebaseMatch["country"] = country
         firebaseMatch["sportId"] = sportId
+        firebaseMatch["stadium"] = stadium
         firebaseMatch["date"] = date
-        firebaseMatch["id"] = matchId
+        firebaseMatch["id"] = id
 
         val listParticipants = mutableListOf<HashMap<String, Any>>()
         participants.forEach {
@@ -111,12 +139,10 @@ class FirebaseRepositoryImpl : FirebaseRepository {
 
         FirebaseDatabase.getInstance().reference
             .child("matches")
-            .child("$matchId")
+            .child("$id")
             .setValue(
                 firebaseMatch
             ).await()
-
-        updateLastId(matchId)
     }
 }
 
@@ -128,12 +154,22 @@ interface FirebaseRepository {
      * @param offsetId The last match id.
      */
     suspend fun getMatches(count: Int, offsetId: Int?): List<Match>?
-
+    suspend fun getMatch(matchId: Int): Match?
     suspend fun removeMatch(matchId: Int)
-
     suspend fun addMatch(
         city: String,
         country: String,
+        sportId: Int,
+        stadium: String,
+        date: Long,
+        participants: List<Participant>
+    )
+
+    suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
         sportId: Int,
         date: Long,
         participants: List<Participant>

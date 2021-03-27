@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.home.add
+package com.example.sports_match_day.ui.home.manage
 
 import android.view.LayoutInflater
 import android.view.View

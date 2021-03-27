@@ -8,6 +8,7 @@ class Match(
     var date: Long = 0,
     var city: String = "",
     var country: String = "",
+    var stadium: String = "",
     var sportId: Int = 0,
     var participants: List<HashMap<String, Any>> = mutableListOf()
 )

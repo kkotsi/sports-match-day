@@ -12,14 +12,25 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_nav_home_to_nav_match_add"
-            app:destination="@id/nav_match_add" />
+            app:destination="@id/nav_match_add" >
+
+            <argument
+                android:name="matchId"
+                app:argType="integer"
+                android:defaultValue="-1" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/nav_match_add"
-        android:name="com.example.sports_match_day.ui.home.add.MatchesAddFragment"
+        android:name="com.example.sports_match_day.ui.home.manage.MatchesManageFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_add_matches" />
+        tools:layout="@layout/fragment_add_matches">
+        <argument
+            android:name="matchId"
+            app:argType="integer"
+            android:defaultValue="-1" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_athletes"

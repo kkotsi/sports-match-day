@@ -16,9 +16,8 @@ import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.utils.FlagManager
 import com.squareup.picasso.Picasso
-import org.threeten.bp.format.TextStyle
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.DecimalFormat
-import java.util.*
 
 
 /**
@@ -51,7 +50,7 @@ class MatchAdapter(
             view.findViewById<View>(R.id.container_match)?.setOnClickListener {
                 selectMatch.invoke(match)
                 lastSelected?.let {
-                    it.extraLayout.visibility = View.GONE
+                    it.extraLayout.visibility = View.INVISIBLE
                 }
                 lastSelected = this
 
@@ -89,11 +88,8 @@ class MatchAdapter(
                     scoreSecond.text = "-"
             }
 
-            val dateString = match.date.dayOfWeek.getDisplayName(
-                TextStyle.SHORT,
-                Locale.getDefault()
-            ) + " " + match.date.dayOfMonth + "/" + match.date.monthValue + "\n" + match.date.hour + ":" + match.date.minute
-            date.text = dateString
+            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yy\nhh:mm")
+            date.text = match.date.format(formatter)
 
             var location = match.city
 

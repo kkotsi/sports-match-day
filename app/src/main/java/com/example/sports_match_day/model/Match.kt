@@ -11,8 +11,9 @@ class Match (
     var date: LocalDateTime,
     var city: String,
     var country: Locale,
+    var stadium: String,
     var sport: Sport?,
-    var participants: List<Participant>
+    var participants: MutableList<Participant>
     ){
 
     fun getCountryCode(): String{

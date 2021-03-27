@@ -5,6 +5,7 @@
     "city": "Thessaloniki",
     "country": "gr",
     "sportId": 1,
+    "stadium": "Santiago Bernabeu",
     "participants": [
       {
         "id": 1,
@@ -62,6 +63,7 @@
     "city": "Paris",
     "country": "fr",
     "sportId": 4,
+    "stadium": "Parc des Princes",
     "participants": [
       {
         "id": 3,

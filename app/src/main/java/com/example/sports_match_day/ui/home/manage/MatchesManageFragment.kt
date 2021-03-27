@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.home.add
+package com.example.sports_match_day.ui.home.manage
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,15 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
-import com.example.sports_match_day.model.Participant
-import com.example.sports_match_day.model.Sport
-import com.example.sports_match_day.model.SportType
-import com.example.sports_match_day.model.Squad
+import com.example.sports_match_day.model.*
 import com.example.sports_match_day.ui.athletes.add.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.base.observeOnce
@@ -22,14 +20,16 @@ import com.example.sports_match_day.ui.home.HomeFragment
 import com.example.sports_match_day.utils.PopupManager
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.*
 
 /**
  * Created by Kristo on 23-Mar-21
  */
-class MatchesAddFragment : BaseFragment() {
+class MatchesManageFragment : BaseFragment() {
+    val args: MatchesAddFragmentArgs by navArgs()
 
-    private val viewModel: MatchesAddViewModel by viewModel()
+    private val viewModel: MatchesManageViewModel by viewModel()
     private lateinit var citiesEditTextView: AutoCompleteTextView
     private lateinit var countriesEditTextView: AutoCompleteTextView
     private lateinit var datePickerButton: Button
@@ -45,6 +45,7 @@ class MatchesAddFragment : BaseFragment() {
     lateinit var footer: AddContestantAdapter
     private var previousSport: Sport? = null
     private var matchDate = LocalDateTime.now()
+    private var matchId = -1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +58,10 @@ class MatchesAddFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //HomeFragmentDirections.actionNavHomeToNavMatchAdd(1L)
+        //val matchId = args
+        matchId = args.matchId
+        setUpForEdit()
         setUpErrorTextView()
         setupDatePickerButton()
         setupEditTextCountry()
@@ -69,6 +74,12 @@ class MatchesAddFragment : BaseFragment() {
         setupTimePickerButton()
     }
 
+    private fun setUpForEdit() {
+        if(matchId > -1) {
+            viewModel.loadMatch(matchId)
+        }
+    }
+
     private fun setUpErrorTextView() {
         errorTextView = requireView().findViewById(R.id.text_error)
     }
@@ -78,8 +89,8 @@ class MatchesAddFragment : BaseFragment() {
         timePickerButton.setOnClickListener {
             PopupManager.timePickerPopup(requireContext()) { hour, minute ->
                 matchDate = matchDate.withHour(hour).withMinute(minute)
-                val time = "$hour : $minute"
-                timePickerButton.text = time
+                val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                timePickerButton.text = matchDate.format(formatter)
             }
         }
     }
@@ -139,6 +150,38 @@ class MatchesAddFragment : BaseFragment() {
 
     private fun setupObservers() {
         loader = requireView().findViewById(R.id.progress_loading)
+
+        viewModel.match.observe(viewLifecycleOwner, {
+            previousSport = it.sport
+            viewModel.sports.value?.indexOf(it.sport)?.let{
+                sportsSpinner.setSelection(it)
+            }
+            stadiumEditTextView.setText(
+                it.stadium,
+                TextView.BufferType.EDITABLE
+            )
+            citiesEditTextView.setText(
+                it.city,
+                TextView.BufferType.EDITABLE
+            )
+            countriesEditTextView.setText(
+                it.country.displayCountry,
+                TextView.BufferType.EDITABLE
+            )
+            matchDate = it.date
+            adapter.participants.clear()
+            adapter.participants.addAll(it.participants)
+
+            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
+            datePickerButton.text = matchDate.format(formatter)
+
+            val formatter1 = DateTimeFormatter.ofPattern("HH:mm")
+            timePickerButton.text = matchDate.format(formatter1)
+
+            adapter.notifyDataSetChanged()
+            footer.refresh(adapter.itemCount, previousSport)
+        })
+
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
             if (it)
                 loader.visibility = View.VISIBLE
@@ -165,6 +208,9 @@ class MatchesAddFragment : BaseFragment() {
 
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner.adapter = SportsAdapter(requireContext(), it)
+            viewModel.match.value?.let { match ->
+                sportsSpinner.setSelection(it.indexOf(match.sport))
+            }
         })
     }
 
@@ -178,8 +224,12 @@ class MatchesAddFragment : BaseFragment() {
                 val city = citiesEditTextView.text.toString()
                 val country = countriesEditTextView.text.toString()
                 val stadium = stadiumEditTextView.text.toString()
+                val participants = adapter.participants
 
-                viewModel.addMatch(sport, city, country, stadium, matchDate, adapter.participants)
+                if(viewModel.match.value != null) {
+                    viewModel.updateMatch(matchId,matchDate,city,country,stadium,sport,participants)
+                }else
+                    viewModel.addMatch(sport, city, country, stadium, matchDate, adapter.participants)
             }
         }
     }
@@ -217,10 +267,7 @@ class MatchesAddFragment : BaseFragment() {
                             adapter.participants.add(Participant(contestant, 0.0))
                             adapter.notifyItemInserted(adapter.participants.size - 1)
 
-                            if (previousSport?.participantCount ?: 0 <= adapter.participants.size) {
-                                footer.show = false
-                                footer.notifyDataSetChanged()
-                            }
+                            footer.refresh(adapter.itemCount, previousSport)
 
                             if (adapter.participants.size == 1) {
                                 refreshData()
@@ -249,8 +296,7 @@ class MatchesAddFragment : BaseFragment() {
                 val position = viewHolder.absoluteAdapterPosition
                 adapter.participants.removeAt(position)
                 adapter.notifyItemRemoved(position)
-                footer.show = true
-                footer.notifyDataSetChanged()
+                footer.refresh(adapter.itemCount, previousSport)
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -268,8 +314,10 @@ class MatchesAddFragment : BaseFragment() {
                 id: Long
             ) {
                 val selectedSport = sportsSpinner.selectedItem as Sport
-                refreshData()
-                selectSport(selectedSport)
+                if (selectedSport.id != previousSport?.id) {
+                    refreshData()
+                    selectSport(selectedSport)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -310,15 +358,11 @@ class MatchesAddFragment : BaseFragment() {
     }
 
     private fun selectSport(selectedSport: Sport) {
-        //Clear the contestants
-        if (selectedSport.id != previousSport?.id) {
-            viewModel.contestants.value = null
-            adapter.participants.clear()
-            adapter.notifyDataSetChanged()
+        viewModel.contestants.value = null
+        adapter.participants.clear()
+        adapter.notifyDataSetChanged()
 
-            footer.show = true
-            footer.notifyDataSetChanged()
-        }
+        footer.refresh(adapter.itemCount, previousSport)
 
         previousSport = selectedSport
     }

@@ -21,35 +21,40 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
         val newMatches = mutableListOf<Match>()
         matches.forEach {
             it?.let {
-                newMatches.add(toMatch(it))
+                val match = toMatch(it)
+                if(match != null)
+                    newMatches.add(match)
             }
         }
         return newMatches
     }
 
-    private suspend fun toMatch(match: com.example.sports_match_day.model.network.Match): Match {
-        val date = epochConverter(match.date)
-        val country = countryConverter(match.country)
+    suspend fun toMatch(match: com.example.sports_match_day.model.network.Match?): Match? {
+        match?.let {
+            val date = epochConverter(match.date)
+            val country = countryConverter(match.country)
 
-        val participants = mutableListOf<Participant>()
+            val participants = mutableListOf<Participant>()
 
-        // Use dependency retrieval instead of constructor to avoid circular dependency
-        val coreController = get<CoreController>()
-        val sport = coreController.getSport(match.sportId)
+            // Use dependency retrieval instead of constructor to avoid circular dependency
+            val coreController = get<CoreController>()
+            val sport = coreController.getSport(match.sportId)
 
-        sport?.let {
-            match.participants.forEach {
-                val participant = com.example.sports_match_day.model.network.Participant(it)
-                val athleteOrSquad = if (sport.type == SportType.TEAM) {
-                    coreController.getSquad(participant.id)
-                } else {
-                    coreController.getAthlete(participant.id)
+            sport?.let {
+                match.participants.forEach {
+                    val participant = com.example.sports_match_day.model.network.Participant(it)
+                    val athleteOrSquad = if (sport.type == SportType.TEAM) {
+                        coreController.getSquad(participant.id)
+                    } else {
+                        coreController.getAthlete(participant.id)
+                    }
+                    participants.add(participantsConverter(participant, athleteOrSquad))
                 }
-                participants.add(participantsConverter(participant, athleteOrSquad))
             }
-        }
 
-        return Match(match.id,date, match.city, country, sport, participants)
+            return Match(match.id, date, match.city, country, match.stadium, sport, participants)
+        }
+        return null
     }
 
     fun toSports(sports: List<com.example.sports_match_day.room.entities.Sport>): List<Sport> {

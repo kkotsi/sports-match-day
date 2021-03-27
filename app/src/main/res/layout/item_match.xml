@@ -46,12 +46,12 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="2dp"
                 android:includeFontPadding="false"
-                android:visibility="gone"
                 android:textSize="10sp"
+                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@+id/text_sport"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="Madrid, \nStadium: Mestalla"
-                tools:ignore="SmallSp" />
+                tools:ignore="SmallSp"
+                tools:text="Madrid, \nStadium: Mestalla" />
 
             <TextView
                 android:id="@+id/text_first_squad"
@@ -73,8 +73,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:ellipsize="marquee"
-                android:textSize="16sp"
                 android:singleLine="true"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toTopOf="@+id/text_more"
                 app:layout_constraintStart_toStartOf="@+id/text_first_squad"
                 app:layout_constraintTop_toBottomOf="@+id/text_first_squad"
@@ -117,7 +117,7 @@
                 android:id="@+id/text_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
+                android:layout_marginEnd="5dp"
                 android:gravity="center"
                 android:minWidth="80dp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -152,9 +152,9 @@
                 android:id="@+id/extra"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:orientation="horizontal"
                 android:gravity="center"
-                android:visibility="gone"
+                android:orientation="horizontal"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -191,5 +191,4 @@
                 app:riv_tile_mode="repeat" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.pixplicity.easyprefs.library.Prefs
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import java.util.*
 
 /**
  * Created by Kristo on 08-Mar-21
@@ -102,6 +103,10 @@ class CoreControllerImpl(
         return localRepository.getAllSports()
     }
 
+    override suspend fun getMatch(matchId: Int): Match? {
+        return remoteRepository.getMatch(matchId)
+    }
+
     override suspend fun getSquad(id: Int): Squad? {
         return localRepository.getSquad(id)
     }
@@ -111,8 +116,8 @@ class CoreControllerImpl(
     }
 
     override suspend fun removeMatch(match: Match): Boolean {
-        memoryRepository.matches.remove(match)
         remoteRepository.removeMatch(match)
+        memoryRepository.matches.remove(match)
         return true
     }
 
@@ -146,6 +151,7 @@ class CoreControllerImpl(
             city,
             country,
             sportId,
+            stadium,
             date,
             participants
         )
@@ -194,6 +200,21 @@ class CoreControllerImpl(
     ): Boolean {
         return localRepository.addSport(name, type, gender, count)
     }
+
+    override suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sport: Sport,
+        date: LocalDateTime,
+        participants: List<Participant>
+    ): Boolean {
+        remoteRepository.updateMatch(id, city, country, stadium, sport.id, date, participants)
+        val countryLocale = Locale("",country)
+        memoryRepository.updateMatch(id, city, countryLocale, stadium, sport, date, participants)
+        return true
+    }
 }
 
 interface CoreController {
@@ -213,6 +234,7 @@ interface CoreController {
     suspend fun getAllSquads(): MutableList<Squad>
     suspend fun getAllSports(): MutableList<Sport>
 
+    suspend fun getMatch(matchId: Int): Match?
     suspend fun getAthlete(id: Int): Athlete?
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
@@ -253,4 +275,13 @@ interface CoreController {
         name: String, type: Boolean, gender: Boolean,
         count: Int
     ): Boolean
+
+    suspend fun updateMatch(
+        id: Int,
+        city: String,
+        country: String,
+        stadium: String,
+        sport: Sport,
+        date: LocalDateTime,
+        participants: List<Participant>): Boolean
 }

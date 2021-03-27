@@ -28,7 +28,6 @@ class SquadsFragment : BaseFragment() {
     private val viewModel: SquadsViewModel by viewModel()
     private lateinit var recyclerSquads: RecyclerView
     private lateinit var textTotal: TextView
-    private lateinit var buttonAdd: FloatingActionButton
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: SquadsAdapter
     private lateinit var addButton: FloatingActionButton
