@@ -1,12 +1,16 @@
-package com.example.sports_match_day.ui.sports.add
+package com.example.sports_match_day.ui.sports.manage
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Gender
+import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.OnTouchListener
 import com.example.sports_match_day.ui.base.BaseFragment
@@ -17,9 +21,10 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 /**
  * Created by Kristo on 15-Mar-21
  */
-class SportsAddFragment : BaseFragment() {
+class SportsManageFragment : BaseFragment() {
+    private val args: SportsManageFragmentArgs by navArgs()
 
-    private val viewModel: SportsAddViewModel by viewModel()
+    private val viewModel: SportsManageViewModel by viewModel()
     private var nameEditTextView: AutoCompleteTextView? = null
     private var participantsCountEditTextView: AutoCompleteTextView? = null
     private var toggleGender: ToggleButton? = null
@@ -30,6 +35,7 @@ class SportsAddFragment : BaseFragment() {
     private var typeTextHelp: MaterialCardView? = null
     private var participantTextHelp: MaterialCardView? = null
 
+    private var sportId = -1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,6 +46,7 @@ class SportsAddFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        sportId = args.sportId
         setupObservers()
         setupGenderToggle()
         setupSaveButton()
@@ -47,15 +54,40 @@ class SportsAddFragment : BaseFragment() {
         setupParticipantCountEditText()
         setupTypeToggle()
         setupHelpButton()
+        setUpForEdit()
+    }
+
+    private fun setUpForEdit() {
+        if(sportId > -1) {
+            viewModel.loadSport(sportId)
+            toggleGender?.isEnabled = false
+            toggleGender?.alpha = 0.5f
+            toggleType?.isEnabled = false
+            toggleType?.alpha = 0.5f
+            participantsCountEditTextView?.isEnabled = false
+        }
     }
 
     private fun setupObservers() {
         loader = view?.findViewById(R.id.progress_loading)
+
+        viewModel.sport.observe(viewLifecycleOwner, {
+
+            nameEditTextView?.setText(
+                it.name,
+                TextView.BufferType.EDITABLE
+            )
+            toggleType?.isChecked = it.type == SportType.SOLO
+            toggleGender?.isChecked = it.gender == Gender.MALE
+
+            participantsCountEditTextView?.setText(
+                "${it.participantCount}",
+                TextView.BufferType.EDITABLE
+            )
+        })
+
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if (it)
-                loader?.visibility = View.VISIBLE
-            else
-                loader?.visibility = View.INVISIBLE
+            loader?.isVisible = it
         })
 
         viewModel.saveSuccessful.observe(viewLifecycleOwner, {
@@ -116,7 +148,7 @@ class SportsAddFragment : BaseFragment() {
 
         //Count
         val participantHelp = view?.findViewById<ImageButton>(R.id.button_help_count)
-        participantTextHelp = view?.findViewById<MaterialCardView>(R.id.container_participants_help)
+        participantTextHelp = view?.findViewById(R.id.container_participants_help)
         participantTextHelp?.setOnFocusChangeListener { _, hasFocus ->
             if(!hasFocus)
                 participantTextHelp?.visibility = View.GONE
@@ -151,7 +183,11 @@ class SportsAddFragment : BaseFragment() {
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
 
             if(validateData())
-                viewModel.addSport(name, type, gender, count.toInt())
+                if(viewModel.sport.value == null) {
+                    viewModel.addSport(name, type, gender, count.toInt())
+                }else{
+                    viewModel.updateSport(sportId, name, type, gender, count.toInt())
+                }
         }
     }
 
@@ -183,7 +219,7 @@ class SportsAddFragment : BaseFragment() {
     }
 
     private fun setupTypeToggle() {
-        toggleType = view?.findViewById(R.id.toggle_gender)
+        toggleType = view?.findViewById(R.id.toggle_type)
     }
 
     private fun setupGenderToggle() {

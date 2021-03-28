@@ -207,6 +207,17 @@ class LocalRepositoryImpl(
         sportsDatabase.sportsDao().insertSport(sport)
         return true
     }
+
+    override suspend fun updateSport(
+        id: Int,
+        name: String,
+        type: Boolean,
+        gender: Boolean,
+        count: Int
+    ) {
+        val sport = com.example.sports_match_day.room.entities.Sport(id,name,type,gender,count)
+        sportsDatabase.sportsDao().updateSport(sport)
+    }
 }
 
 interface LocalRepository {
@@ -255,4 +266,6 @@ interface LocalRepository {
         name: String, type: Boolean, gender: Boolean,
         count: Int
     ): Boolean
+
+    suspend fun updateSport(id: Int, name: String, type: Boolean, gender: Boolean, count: Int)
 }

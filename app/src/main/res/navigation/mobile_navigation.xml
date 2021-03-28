@@ -9,15 +9,15 @@
         android:id="@+id/nav_home"
         android:name="com.example.sports_match_day.ui.home.HomeFragment"
         android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_nav_home_to_nav_match_add"
-            app:destination="@id/nav_match_add" >
+            app:destination="@id/nav_match_add">
 
             <argument
                 android:name="matchId"
-                app:argType="integer"
-                android:defaultValue="-1" />
+                android:defaultValue="-1"
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -28,15 +28,15 @@
         tools:layout="@layout/fragment_add_matches">
         <argument
             android:name="matchId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_athletes"
         android:name="com.example.sports_match_day.ui.athletes.AthletesFragment"
         android:label="@string/menu_athletes"
-        tools:layout="@layout/fragment_athletes" >
+        tools:layout="@layout/fragment_athletes">
         <action
             android:id="@+id/action_nav_athletes_to_nav_athletes_add"
             app:destination="@id/nav_athletes_add"
@@ -54,7 +54,7 @@
         android:id="@+id/nav_squads"
         android:name="com.example.sports_match_day.ui.squads.SquadsFragment"
         android:label="@string/menu_squads"
-        tools:layout="@layout/fragment_squads" >
+        tools:layout="@layout/fragment_squads">
         <action
             android:id="@+id/action_nav_squads_to_nav_squads_add"
             app:destination="@id/nav_squads_add" />
@@ -70,15 +70,27 @@
         android:id="@+id/nav_sports"
         android:name="com.example.sports_match_day.ui.sports.SportsFragment"
         android:label="@string/menu_sports"
-        tools:layout="@layout/fragment_squads" >
+        tools:layout="@layout/fragment_squads">
         <action
             android:id="@+id/action_nav_sports_to_nav_sports_add"
-            app:destination="@id/nav_sports_add" />
+            app:destination="@id/nav_sports_add">
+
+            <argument
+                android:name="sportId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/nav_sports_add"
-        android:name="com.example.sports_match_day.ui.sports.add.SportsAddFragment"
+        android:name="com.example.sports_match_day.ui.sports.manage.SportsManageFragment"
         android:label="@string/menu_sports"
-        tools:layout="@layout/fragment_squads" />
+        tools:layout="@layout/fragment_squads">
+
+        <argument
+            android:name="sportId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -30,28 +30,29 @@
     <string name="months">Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec</string>
     <string name="save">Save</string>
     <string name="sport">Sport</string>
-    <string name="error_blank">Cannot be blank</string>
-    <string name="error_empty_country">You should select a country!</string>
-    <string name="error_empty_city">Couldn\'t find this city!</string>
     <string name="stadium">Stadium</string>
     <string name="date_founded">Date Founded</string>
     <string name="type">Type</string>
-    <string name="help_gender">Only people with the selected gender can participate to this sport.</string>
-    <string name="help_type">Group sports or individual sports.</string>
     <string name="gender">Gender</string>
-    <string name="something_went_wrong">Something went wrong</string>
     <string name="wrong_value">Wrong value</string>
 
     <string name="ok">OK</string>
     <string name="count">Count</string>
     <string name="participants">Participants</string>
-    <string name="help_participants">The number of the allowed participants in a match.</string>
     <string name="retry">Retry</string>
     <string name="score">Score</string>
     <string name="cancel">Cancel</string>
     <string name="squad">Squad</string>
     <string name="solo">Individual</string>
 
+    <string name="help_gender">Only people with the selected gender can participate to this sport. You cannot change it later.</string>
+    <string name="help_type">Group sports or individual sports. You cannot change it later.</string>
+    <string name="help_participants">The number of the allowed participants in a match. You cannot change it later.</string>
+
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="error_blank">Cannot be blank</string>
+    <string name="error_empty_country">You should select a country!</string>
+    <string name="error_empty_city">Couldn\'t find this city!</string>
     <string name="error_not_enough_participants">You need at least %1$s participants for this match.</string>
     <string name="error_no_sport">You must select a sport!</string>
     <string name="error_duplicate_participant">A participant exists twice!</string>

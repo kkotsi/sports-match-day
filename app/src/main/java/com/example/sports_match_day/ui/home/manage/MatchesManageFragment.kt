@@ -27,7 +27,7 @@ import java.util.*
  * Created by Kristo on 23-Mar-21
  */
 class MatchesManageFragment : BaseFragment() {
-    val args: MatchesAddFragmentArgs by navArgs()
+    private val args: MatchesManageFragmentArgs by navArgs()
 
     private val viewModel: MatchesManageViewModel by viewModel()
     private lateinit var citiesEditTextView: AutoCompleteTextView

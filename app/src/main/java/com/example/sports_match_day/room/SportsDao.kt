@@ -13,7 +13,7 @@ interface SportsDao {
     suspend fun getSports(): List<Sport>
 
     @Query("SELECT * FROM sports LIMIT :count OFFSET :mOffset")
-    suspend fun getSports(count: Int, mOffset: Int ): List<Sport>
+    suspend fun getSports(count: Int, mOffset: Int): List<Sport>
 
     @Query("SELECT * FROM sports WHERE sports.id = :id")
     suspend fun getSport(id: Int): Sport

@@ -33,4 +33,13 @@ class MemoryRepository() {
             it.participants.addAll(participants)
         }
     }
+
+    fun updateSport(id: Int, name: String, type: Boolean, gender: Boolean, count: Int) {
+        sports.find { it.id == id }?.let {
+            it.name = name
+            it.type = if(type) SportType.SOLO else SportType.TEAM
+            it.gender = if(gender) Gender.MALE else Gender.FEMALE
+            it.participantCount = count
+        }
+    }
 }

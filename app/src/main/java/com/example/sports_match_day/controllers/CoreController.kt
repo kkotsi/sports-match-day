@@ -201,6 +201,18 @@ class CoreControllerImpl(
         return localRepository.addSport(name, type, gender, count)
     }
 
+    override suspend fun updateSport(
+        id: Int,
+        name: String,
+        type: Boolean,
+        gender: Boolean,
+        count: Int
+    ): Boolean {
+        localRepository.updateSport(id, name, type, gender, count)
+        memoryRepository.updateSport(id, name, type, gender, count)
+        return true
+    }
+
     override suspend fun updateMatch(
         id: Int,
         city: String,
@@ -273,6 +285,11 @@ interface CoreController {
 
     suspend fun addSport(
         name: String, type: Boolean, gender: Boolean,
+        count: Int
+    ): Boolean
+
+    suspend fun updateSport(
+        id: Int, name: String, type: Boolean, gender: Boolean,
         count: Int
     ): Boolean
 

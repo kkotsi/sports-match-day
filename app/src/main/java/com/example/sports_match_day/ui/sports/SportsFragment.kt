@@ -118,12 +118,21 @@ class SportsFragment : BaseFragment() {
         }
     }
 
+    private fun editSport(sportId: Int){
+        val navController =
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = SportsFragmentDirections.actionNavSportsToNavSportsAdd(sportId)
+        navController.navigate(action)
+    }
+
     private fun recyclerSetup() {
         view?.let {
             recyclerSports = it.findViewById(R.id.recycler_sports)
             recyclerSports.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = SportsAdapter()
+            adapter = SportsAdapter{ sport ->
+                editSport(sport.id)
+            }
 
             recyclerSports.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ExampleLoadStateAdapter { adapter.refresh() },
