@@ -1,13 +1,16 @@
-package com.example.sports_match_day.ui.squads.add
+package com.example.sports_match_day.ui.squads.manage
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.athletes.add.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.squads.SquadsFragment
@@ -18,9 +21,10 @@ import java.util.*
 /**
  * Created by Kristo on 14-Mar-21
  */
-class SquadsAddFragment: BaseFragment() {
+class SquadsManageFragment : BaseFragment() {
+    private val args: SquadsManageFragmentArgs by navArgs()
 
-    private val viewModel: SquadsAddViewModel by viewModel()
+    private val viewModel: SquadsManageViewModel by viewModel()
     private var citiesEditTextView: AutoCompleteTextView? = null
     private var countriesEditTextView: AutoCompleteTextView? = null
     private var nameEditTextView: AutoCompleteTextView? = null
@@ -44,6 +48,8 @@ class SquadsAddFragment: BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setupForEdit()
         setupObservers()
         setupBirthday()
         setupEditTextCountry()
@@ -54,13 +60,19 @@ class SquadsAddFragment: BaseFragment() {
         setupSportsSpinner()
     }
 
-    private fun setupStadiumEditText(){
-        stadiumEditTextView = view?.findViewById(R.id.editText_name)
+    private fun setupForEdit() {
+        if (args.squadId > -1) {
+            viewModel.loadSquad(args.squadId)
+        }
+    }
+
+    private fun setupStadiumEditText() {
+        stadiumEditTextView = view?.findViewById(R.id.editText_stadium)
         stadiumEditTextView?.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
                 val stadium = stadiumEditTextView?.editableText.toString()
                 if (stadium.isBlank()) {
-                    stadiumEditTextView?.error =  getString(R.string.error_blank)
+                    stadiumEditTextView?.error = getString(R.string.error_blank)
                 } else {
                     stadiumEditTextView?.error = null
                 }
@@ -78,7 +90,7 @@ class SquadsAddFragment: BaseFragment() {
             if (!hasFocus) {
                 val country = nameEditTextView?.editableText.toString()
                 if (country.isBlank()) {
-                    nameEditTextView?.error =  getString(R.string.error_blank)
+                    nameEditTextView?.error = getString(R.string.error_blank)
                 } else {
                     nameEditTextView?.error = null
                 }
@@ -101,14 +113,26 @@ class SquadsAddFragment: BaseFragment() {
             val country = countriesEditTextView?.text?.toString()?.trim() ?: ""
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
             val stadium = stadiumEditTextView?.text?.toString()?.trim() ?: ""
-            val sportId = sportsSpinner?.selectedItem as Int
+            val sport = sportsSpinner?.selectedItem as Sport
 
-            if(validateData())
-                viewModel.addSquad(name, city, country, stadium, sportId, birthday)
+            if (validateData())
+                if (viewModel.squad.value == null) {
+                    viewModel.addSquad(name, city, country, stadium, sport.id, birthday)
+                } else {
+                    viewModel.updateSquad(
+                        args.squadId,
+                        name,
+                        city,
+                        country,
+                        stadium,
+                        sport,
+                        birthday
+                    )
+                }
         }
     }
 
-    private fun validateData(): Boolean{
+    private fun validateData(): Boolean {
         var pass = true
 
         val city = citiesEditTextView?.text?.toString() ?: ""
@@ -116,32 +140,32 @@ class SquadsAddFragment: BaseFragment() {
         val name = nameEditTextView?.text?.toString() ?: ""
         val stadium = stadiumEditTextView?.text?.toString() ?: ""
 
-        if(citiesEditTextView?.error != null){
+        if (citiesEditTextView?.error != null) {
             pass = false
         }
-        if(countriesEditTextView?.error != null){
+        if (countriesEditTextView?.error != null) {
             pass = false
         }
-        if(nameEditTextView?.error != null){
+        if (nameEditTextView?.error != null) {
             pass = false
         }
-        if(stadiumEditTextView?.error != null){
+        if (stadiumEditTextView?.error != null) {
             pass = false
         }
 
-        if(stadium.isBlank()){
+        if (stadium.isBlank()) {
             stadiumEditTextView?.error = getString(R.string.error_blank)
             pass = false
         }
-        if(city.isBlank()){
+        if (city.isBlank()) {
             citiesEditTextView?.error = getString(R.string.error_blank)
             pass = false
         }
-        if(country.isBlank()){
+        if (country.isBlank()) {
             countriesEditTextView?.error = getString(R.string.error_blank)
             pass = false
         }
-        if(name.isBlank()){
+        if (name.isBlank()) {
             nameEditTextView?.error = getString(R.string.error_blank)
             pass = false
         }
@@ -158,12 +182,12 @@ class SquadsAddFragment: BaseFragment() {
         val years = mutableListOf<String>()
         val months = resources.getString(R.string.months).split(",")
 
-        repeat(100) {
+        repeat(150) {
             years.add("${yearNow - it}")
         }
 
-        yearsSpinner?.adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, years)
-        monthsSpinner?.adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, months)
+        yearsSpinner?.adapter = DateAdapter(requireContext(), R.layout.item_spinner, years)
+        monthsSpinner?.adapter = DateAdapter(requireContext(), R.layout.item_spinner_text, months)
 
         yearsSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -180,7 +204,7 @@ class SquadsAddFragment: BaseFragment() {
                     1
                 )
                 daysSpinner?.adapter =
-                    ArrayAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
+                    DateAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -200,33 +224,67 @@ class SquadsAddFragment: BaseFragment() {
                     1
                 )
                 daysSpinner?.adapter =
-                    ArrayAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
+                    DateAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
     }
 
-    private fun setupSportsSpinner(){
+    private fun setupSportsSpinner() {
         sportsSpinner = view?.findViewById(R.id.spinner_sport)
         viewModel.getSports()
     }
 
     private fun setupObservers() {
         loader = view?.findViewById(R.id.progress_loading)
+
+        viewModel.squad.observe(viewLifecycleOwner, {
+
+            viewModel.sports.value?.indexOf(it.sport)?.let {
+                sportsSpinner?.setSelection(it)
+            }
+
+            nameEditTextView?.setText(
+                it.name,
+                TextView.BufferType.EDITABLE
+            )
+            citiesEditTextView?.setText(
+                it.city,
+                TextView.BufferType.EDITABLE
+            )
+            countriesEditTextView?.setText(
+                it.country.displayCountry,
+                TextView.BufferType.EDITABLE
+            )
+            stadiumEditTextView?.setText(
+                it.stadium,
+                TextView.BufferType.EDITABLE
+            )
+            val year = (yearsSpinner?.adapter as DateAdapter).getItemPosition(
+                "${it.birthday.year}"
+            )
+            val day =
+                (daysSpinner?.adapter as DateAdapter).getItemPosition("${it.birthday.dayOfMonth}")
+
+            yearsSpinner?.setSelection(year)
+            monthsSpinner?.setSelection(it.birthday.monthValue - 1)
+            daysSpinner?.setSelection(day)
+        })
+
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if (it)
-                loader?.visibility = View.VISIBLE
-            else
-                loader?.visibility = View.INVISIBLE
+            loader?.isVisible = it
         })
 
         viewModel.saveSuccessful.observe(viewLifecycleOwner, {
-            if(it) {
+            if (it) {
                 val navController =
                     Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
                 //This will trigger the SquadsFragment to refresh.
-                navController.previousBackStackEntry?.savedStateHandle?.set(SquadsFragment.SQUADS_REFRESH_KEY, true)
+                navController.previousBackStackEntry?.savedStateHandle?.set(
+                    SquadsFragment.SQUADS_REFRESH_KEY,
+                    true
+                )
                 navController.navigateUp()
             }
         })
@@ -237,6 +295,9 @@ class SquadsAddFragment: BaseFragment() {
 
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner?.adapter = SportsAdapter(requireContext(), it)
+            viewModel.squad.value?.let { squad ->
+                sportsSpinner?.setSelection(it.indexOf(squad.sport))
+            }
         })
     }
 
@@ -266,7 +327,7 @@ class SquadsAddFragment: BaseFragment() {
 
         val countries = mutableListOf<String>()
         Locale.getAvailableLocales().forEach {
-            if(!countries.contains(it.displayCountry)){
+            if (!countries.contains(it.displayCountry)) {
                 countries.add(it.displayCountry)
             }
         }

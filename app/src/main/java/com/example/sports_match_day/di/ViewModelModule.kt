@@ -9,7 +9,7 @@ import com.example.sports_match_day.ui.home.manage.MatchesManageViewModel
 import com.example.sports_match_day.ui.sports.SportsViewModel
 import com.example.sports_match_day.ui.sports.manage.SportsManageViewModel
 import com.example.sports_match_day.ui.squads.SquadsViewModel
-import com.example.sports_match_day.ui.squads.add.SquadsAddViewModel
+import com.example.sports_match_day.ui.squads.manage.SquadsManageViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -27,7 +27,7 @@ val viewModelModule = module {
     viewModel { AthletesAddViewModel(get()) }
 
     viewModel { SquadsViewModel(get()) }
-    viewModel { SquadsAddViewModel(get()) }
+    viewModel { SquadsManageViewModel(get()) }
 
     viewModel { SportsViewModel(get()) }
     viewModel { SportsManageViewModel(get()) }

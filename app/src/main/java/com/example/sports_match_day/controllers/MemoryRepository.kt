@@ -1,6 +1,7 @@
 package com.example.sports_match_day.controllers
 
 import com.example.sports_match_day.model.*
+import com.example.sports_match_day.utils.doToAll
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -35,11 +36,43 @@ class MemoryRepository() {
     }
 
     fun updateSport(id: Int, name: String, type: Boolean, gender: Boolean, count: Int) {
+        val mType = if(type) SportType.SOLO else SportType.TEAM
+        val mGender = if(gender) Gender.MALE else Gender.FEMALE
+
         sports.find { it.id == id }?.let {
             it.name = name
-            it.type = if(type) SportType.SOLO else SportType.TEAM
-            it.gender = if(gender) Gender.MALE else Gender.FEMALE
+            it.type = mType
+            it.gender = mGender
             it.participantCount = count
+        }
+
+        squads.doToAll({
+            it.sport?.id == id
+        }){ squad ->
+            squad.sport?.name = name
+            squad.sport?.type = mType
+            squad.sport?.gender = mGender
+            squad.sport?.participantCount = count
+        }
+
+        athletes.doToAll({
+            it.sport.id == id
+        }){ squad ->
+            squad.sport.name = name
+            squad.sport.type = mType
+            squad.sport.gender = mGender
+            squad.sport.participantCount = count
+        }
+    }
+
+    fun updateSquad(id: Int, name: String, city: String, countryLocale: Locale, stadium: String, sport: Sport, birthday: LocalDateTime) {
+        squads.find { it.id == id }?.let {
+            it.name = name
+            it.city = city
+            it.country = countryLocale
+            it.stadium = stadium
+            it.sport = sport
+            it.birthday = birthday
         }
     }
 }

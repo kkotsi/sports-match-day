@@ -118,12 +118,21 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
+    private fun editSquad(squadId: Int){
+        val navController =
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = SquadsFragmentDirections.actionNavSquadsToNavSquadsAdd(squadId)
+        navController.navigate(action)
+    }
+
     private fun recyclerSetup() {
         view?.let {
             recyclerSquads = it.findViewById(R.id.recycler_squads)
             recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = SquadsAdapter()
+            adapter = SquadsAdapter(){ squad ->
+                editSquad(squad.id)
+            }
 
             recyclerSquads.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ExampleLoadStateAdapter { adapter.refresh() },

@@ -35,7 +35,6 @@ class SportsManageFragment : BaseFragment() {
     private var typeTextHelp: MaterialCardView? = null
     private var participantTextHelp: MaterialCardView? = null
 
-    private var sportId = -1
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +45,6 @@ class SportsManageFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sportId = args.sportId
         setupObservers()
         setupGenderToggle()
         setupSaveButton()
@@ -58,8 +56,8 @@ class SportsManageFragment : BaseFragment() {
     }
 
     private fun setUpForEdit() {
-        if(sportId > -1) {
-            viewModel.loadSport(sportId)
+        if(args.sportId > -1) {
+            viewModel.loadSport(args.sportId)
             toggleGender?.isEnabled = false
             toggleGender?.alpha = 0.5f
             toggleType?.isEnabled = false
@@ -186,7 +184,7 @@ class SportsManageFragment : BaseFragment() {
                 if(viewModel.sport.value == null) {
                     viewModel.addSport(name, type, gender, count.toInt())
                 }else{
-                    viewModel.updateSport(sportId, name, type, gender, count.toInt())
+                    viewModel.updateSport(args.sportId, name, type, gender, count.toInt())
                 }
         }
     }

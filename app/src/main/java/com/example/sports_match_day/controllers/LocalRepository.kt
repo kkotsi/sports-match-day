@@ -22,19 +22,19 @@ class LocalRepositoryImpl(
 ) : LocalRepository, KoinComponent {
 
     override fun getAthletes(): Pager<Int, Athlete> {
-        return Pager(PagingConfig(pageSize = AthletesDataSource.PAGE_SIZE, prefetchDistance = 4)){
+        return Pager(PagingConfig(pageSize = AthletesDataSource.PAGE_SIZE, prefetchDistance = 4)) {
             get<AthletesDataSource>()
         }
     }
 
-    override fun getSports(): Pager<Int,Sport> {
-        return Pager(PagingConfig(pageSize = SportsDataSource.PAGE_SIZE, prefetchDistance = 4)){
+    override fun getSports(): Pager<Int, Sport> {
+        return Pager(PagingConfig(pageSize = SportsDataSource.PAGE_SIZE, prefetchDistance = 4)) {
             get<SportsDataSource>()
         }
     }
 
-    override fun getSquads(): Pager<Int,Squad> {
-        return Pager(PagingConfig(pageSize = SquadsDataSource.PAGE_SIZE, prefetchDistance = 4)){
+    override fun getSquads(): Pager<Int, Squad> {
+        return Pager(PagingConfig(pageSize = SquadsDataSource.PAGE_SIZE, prefetchDistance = 4)) {
             get<SquadsDataSource>()
         }
     }
@@ -91,7 +91,8 @@ class LocalRepositoryImpl(
         val count = sportsDatabase.athletesDao().getCount()
         if (memoryRepository.athletes.size < count) {
             return decoupleAdapter.toAthletes(
-                sportsDatabase.athletesDao().getAthletes(sportId)).toMutableList()
+                sportsDatabase.athletesDao().getAthletes(sportId)
+            ).toMutableList()
         }
         return memoryRepository.athletes.filter { it.sport.id == sportId }.toMutableList()
     }
@@ -115,7 +116,8 @@ class LocalRepositoryImpl(
         val count = sportsDatabase.squadsDao().getCount()
         if (memoryRepository.squads.size < count) {
             return decoupleAdapter.toSquads(
-                    sportsDatabase.squadsDao().getSquads(sportId)).toMutableList()
+                sportsDatabase.squadsDao().getSquads(sportId)
+            ).toMutableList()
         }
         return memoryRepository.squads.filter { it.sport?.id == sportId }.toMutableList()
     }
@@ -215,8 +217,29 @@ class LocalRepositoryImpl(
         gender: Boolean,
         count: Int
     ) {
-        val sport = com.example.sports_match_day.room.entities.Sport(id,name,type,gender,count)
+        val sport = com.example.sports_match_day.room.entities.Sport(id, name, type, gender, count)
         sportsDatabase.sportsDao().updateSport(sport)
+    }
+
+    override suspend fun updateSquad(
+        id: Int,
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        birthday: Long
+    ) {
+        val squad = com.example.sports_match_day.room.entities.Squad(
+            id,
+            name,
+            city,
+            country,
+            stadium,
+            sportId,
+            birthday
+        )
+        sportsDatabase.squadsDao().updateSquad(squad)
     }
 }
 
@@ -268,4 +291,13 @@ interface LocalRepository {
     ): Boolean
 
     suspend fun updateSport(id: Int, name: String, type: Boolean, gender: Boolean, count: Int)
+    suspend fun updateSquad(
+        id: Int,
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sportId: Int,
+        birthday: Long
+    )
 }

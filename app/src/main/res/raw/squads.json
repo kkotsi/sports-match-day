@@ -30,7 +30,7 @@
     "id": 4,
     "name": "Tottenham",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -66,7 +66,7 @@
     "id": 8,
     "name": "Tottenham1",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -75,7 +75,7 @@
     "id": 9,
     "name": "Tottenham2",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -111,7 +111,7 @@
     "id": 13,
     "name": "Tottenham3",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -129,7 +129,7 @@
     "id": 15,
     "name": "Tottenham51",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -165,7 +165,7 @@
     "id": 19,
     "name": "Tottenham",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -201,7 +201,7 @@
     "id": 23,
     "name": "Tottenham1",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -210,7 +210,7 @@
     "id": 24,
     "name": "Tottenham2",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -246,7 +246,7 @@
     "id": 28,
     "name": "Tottenham3",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800
@@ -264,7 +264,7 @@
     "id": 30,
     "name": "Tottenham51",
     "stadium": "Tottenham Hotspur Stadium",
-    "city": "London}",
+    "city": "London",
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800

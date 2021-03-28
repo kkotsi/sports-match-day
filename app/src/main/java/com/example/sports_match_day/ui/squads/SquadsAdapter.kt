@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class SquadsAdapter :
+class SquadsAdapter(private val onSelect: (Squad) -> Unit):
     PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -29,6 +29,10 @@ class SquadsAdapter :
 
         fun bind(item: Squad) {
             textName.text = item.name
+
+            view.findViewById<View>(R.id.container_squad)?.setOnClickListener {
+                onSelect(item)
+            }
 
             val url = FlagManager.getFlagURL(item.country.toString())
 

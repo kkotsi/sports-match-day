@@ -10,8 +10,8 @@
         android:layout_width="126dp"
         android:layout_height="122dp"
         android:layout_marginTop="50dp"
-        android:src="@drawable/team_logo"
         android:contentDescription="@string/description_simple_bgg"
+        android:src="@drawable/team_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/editText_name"
         app:layout_constraintTop_toTopOf="parent" />
@@ -89,6 +89,7 @@
         android:layout_marginTop="100dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/border_rounded"
+        android:minHeight="45dp"
         app:layout_constraintEnd_toStartOf="@+id/container_spinner_month"
         app:layout_constraintStart_toStartOf="@+id/editText_stadium"
         app:layout_constraintTop_toBottomOf="@+id/editText_stadium">
@@ -109,6 +110,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:background="@drawable/border_rounded"
+        android:minHeight="45dp"
         app:layout_constraintEnd_toStartOf="@+id/container_spinner_year"
         app:layout_constraintStart_toEndOf="@+id/container_spinner_day"
         app:layout_constraintTop_toTopOf="@+id/container_spinner_day">
@@ -126,6 +128,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="5dp"
         android:background="@drawable/border_rounded"
+        android:minHeight="45dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/container_spinner_month"
         app:layout_constraintTop_toTopOf="@+id/container_spinner_month">
@@ -151,6 +154,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:background="@drawable/border_rounded"
+        android:minHeight="45dp"
         app:layout_constraintStart_toStartOf="@+id/editText_stadium"
         app:layout_constraintTop_toBottomOf="@+id/container_spinner_day">
 

@@ -223,8 +223,31 @@ class CoreControllerImpl(
         participants: List<Participant>
     ): Boolean {
         remoteRepository.updateMatch(id, city, country, stadium, sport.id, date, participants)
-        val countryLocale = Locale("",country)
+        val countryLocale = Locale("", country)
         memoryRepository.updateMatch(id, city, countryLocale, stadium, sport, date, participants)
+        return true
+    }
+
+    override suspend fun updateSquad(
+        id: Int,
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sport: Sport,
+        birthday: LocalDateTime
+    ): Boolean {
+        localRepository.updateSquad(
+            id,
+            name,
+            city,
+            country,
+            stadium,
+            sport.id,
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+        )
+        val countryLocale = Locale("", country)
+        memoryRepository.updateSquad(id,name, city, countryLocale, stadium, sport, birthday)
         return true
     }
 }
@@ -300,5 +323,16 @@ interface CoreController {
         stadium: String,
         sport: Sport,
         date: LocalDateTime,
-        participants: List<Participant>): Boolean
+        participants: List<Participant>
+    ): Boolean
+
+    suspend fun updateSquad(
+        id: Int,
+        name: String,
+        city: String,
+        country: String,
+        stadium: String,
+        sport: Sport,
+        birthday: LocalDateTime
+    ): Boolean
 }
