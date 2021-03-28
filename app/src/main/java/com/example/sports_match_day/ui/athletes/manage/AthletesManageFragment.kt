@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.athletes.add
+package com.example.sports_match_day.ui.athletes.manage
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.athletes.AthletesFragment
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.example.sports_match_day.ui.squads.manage.DateAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -17,9 +20,10 @@ import java.util.*
 /**
  * Created by Kristo on 12-Mar-21
  */
-class AthletesAddFragment : BaseFragment() {
+class AthletesManageFragment : BaseFragment() {
+    private val args: AthletesManageFragmentArgs by navArgs()
 
-    private val viewModel: AthletesAddViewModel by viewModel()
+    private val viewModel: AthletesManageViewModel by viewModel()
     private lateinit var citiesEditTextView: AutoCompleteTextView
     private lateinit var countriesEditTextView: AutoCompleteTextView
     private lateinit var nameEditTextView: AutoCompleteTextView
@@ -51,6 +55,13 @@ class AthletesAddFragment : BaseFragment() {
         setupSaveButton()
         setupNameEditText()
         setupSportsSpinner()
+        setupForEdit()
+    }
+
+    private fun setupForEdit(){
+        if(args.athleteId > -1){
+            viewModel.loadAthlete(args.athleteId)
+        }
     }
 
     private fun setupNameEditText() {
@@ -85,10 +96,14 @@ class AthletesAddFragment : BaseFragment() {
             val city = citiesEditTextView.text.toString().trim()
             val country = countriesEditTextView.text.toString().trim()
             val name = nameEditTextView.text.toString().trim()
-            val sportId = (sportsSpinner.selectedItem as Sport).id
+            val sport = (sportsSpinner.selectedItem as Sport)
 
-            if(validateData())
-                viewModel.addAthlete(name, city, country, gender, sportId, birthday)
+            if(validateData()) {
+                if (viewModel.athlete.value == null)
+                    viewModel.addAthlete(name, city, country, gender, sport.id, birthday)
+                else
+                    viewModel.updateAthlete(args.athleteId, name, city, country, gender, sport, birthday)
+            }
         }
     }
 
@@ -149,8 +164,8 @@ class AthletesAddFragment : BaseFragment() {
             years.add("${yearNow - it}")
         }
 
-        yearsSpinner.adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, years)
-        monthsSpinner.adapter = ArrayAdapter(requireContext(), R.layout.item_spinner, months)
+        yearsSpinner.adapter = DateAdapter(requireContext(), R.layout.item_spinner, years)
+        monthsSpinner.adapter = DateAdapter(requireContext(), R.layout.item_spinner, months)
 
         yearsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -167,7 +182,7 @@ class AthletesAddFragment : BaseFragment() {
                     1
                 )
                 daysSpinner.adapter =
-                    ArrayAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
+                    DateAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -187,7 +202,7 @@ class AthletesAddFragment : BaseFragment() {
                     1
                 )
                 daysSpinner.adapter =
-                    ArrayAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
+                    DateAdapter(requireContext(), R.layout.item_spinner, viewModel.getDays(year))
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -201,6 +216,46 @@ class AthletesAddFragment : BaseFragment() {
 
     private fun setupObservers() {
         loader = requireView().findViewById(R.id.progress_loading)
+
+
+        viewModel.athlete.observe(viewLifecycleOwner,{
+
+            viewModel.sports.value?.indexOf(it.sport)?.let {
+                sportsSpinner.setSelection(it)
+            }
+
+            nameEditTextView.setText(
+                it.name,
+                TextView.BufferType.EDITABLE
+            )
+            citiesEditTextView.setText(
+                it.city,
+                TextView.BufferType.EDITABLE
+            )
+            countriesEditTextView.setText(
+                it.country.displayCountry,
+                TextView.BufferType.EDITABLE
+            )
+
+            toggleGender.isChecked = it.gender == Gender.MALE
+
+            if(it.gender == Gender.MALE) {
+                imagePerson.setImageResource(R.drawable.male)
+            }else{
+                imagePerson.setImageResource(R.drawable.female)
+            }
+
+            val year = (yearsSpinner.adapter as DateAdapter).getItemPosition(
+                "${it.birthday.year}"
+            )
+            val day =
+                (daysSpinner.adapter as DateAdapter).getItemPosition("${it.birthday.dayOfMonth}")
+
+            yearsSpinner.setSelection(year)
+            monthsSpinner.setSelection(it.birthday.monthValue - 1)
+            daysSpinner.setSelection(day)
+        })
+
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
             if (it)
                 loader.visibility = View.VISIBLE
@@ -225,6 +280,10 @@ class AthletesAddFragment : BaseFragment() {
 
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner.adapter = SportsAdapter(requireContext(), it)
+
+            viewModel.athlete.value?.let { squad ->
+                sportsSpinner.setSelection(it.indexOf(squad.sport))
+            }
         })
     }
 

@@ -247,7 +247,30 @@ class CoreControllerImpl(
             birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
         )
         val countryLocale = Locale("", country)
-        memoryRepository.updateSquad(id,name, city, countryLocale, stadium, sport, birthday)
+        memoryRepository.updateSquad(id, name, city, countryLocale, stadium, sport, birthday)
+        return true
+    }
+
+    override suspend fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        countryCode: String,
+        gender: Boolean,
+        sport: Sport,
+        birthday: LocalDateTime
+    ): Boolean? {
+        localRepository.updateAthlete(
+            id,
+            name,
+            city,
+            countryCode,
+            gender,
+            sport.id,
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+        )
+        val countryLocale = Locale("", countryCode)
+        memoryRepository.updateAthlete(id, name, city, countryLocale, gender, sport, birthday)
         return true
     }
 }
@@ -335,4 +358,14 @@ interface CoreController {
         sport: Sport,
         birthday: LocalDateTime
     ): Boolean
+
+    suspend fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        countryCode: String,
+        gender: Boolean,
+        sport: Sport,
+        birthday: LocalDateTime
+    ): Boolean?
 }

@@ -11,7 +11,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Sport
-import com.example.sports_match_day.ui.athletes.add.SportsAdapter
+import com.example.sports_match_day.ui.athletes.manage.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.squads.SquadsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -115,10 +115,10 @@ class SquadsManageFragment : BaseFragment() {
             val stadium = stadiumEditTextView?.text?.toString()?.trim() ?: ""
             val sport = sportsSpinner?.selectedItem as Sport
 
-            if (validateData())
-                if (viewModel.squad.value == null) {
+            if (validateData()) {
+                if (viewModel.squad.value == null)
                     viewModel.addSquad(name, city, country, stadium, sport.id, birthday)
-                } else {
+                else
                     viewModel.updateSquad(
                         args.squadId,
                         name,
@@ -128,7 +128,7 @@ class SquadsManageFragment : BaseFragment() {
                         sport,
                         birthday
                     )
-                }
+            }
         }
     }
 

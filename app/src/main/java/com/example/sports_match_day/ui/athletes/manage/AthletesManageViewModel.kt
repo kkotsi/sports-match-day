@@ -1,10 +1,11 @@
-package com.example.sports_match_day.ui.athletes.add
+package com.example.sports_match_day.ui.athletes.manage
 
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
+import com.example.sports_match_day.model.Athlete
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
@@ -13,9 +14,10 @@ import java.util.*
 /**
  * Created by Kristo on 12-Mar-21
  */
-class AthletesAddViewModel(private val coreController: CoreController) : ScopedViewModel() {
+class AthletesManageViewModel(private val coreController: CoreController) : ScopedViewModel() {
     val saveSuccessful = MutableLiveData<Boolean>()
     val sports = MutableLiveData<List<Sport>>()
+    val athlete = MutableLiveData<Athlete>()
 
     fun checkCity(context: Context, name: String, checked: (Address?) -> Unit) {
         if (name.isBlank()) return
@@ -32,6 +34,12 @@ class AthletesAddViewModel(private val coreController: CoreController) : ScopedV
         }.run()
     }
 
+    fun loadAthlete(sportId: Int) {
+        launchWithLoad({
+            athlete.value = coreController.getAthlete(sportId)
+        }) { }
+    }
+
     fun getDays(year: LocalDateTime): List<String> {
         val numberOfDays = year.month.length(year.toLocalDate().isLeapYear)
         val days = mutableListOf<String>()
@@ -45,6 +53,24 @@ class AthletesAddViewModel(private val coreController: CoreController) : ScopedV
         launchWithLoad({
             sports.value = coreController.getAllSports()
         }) { }
+    }
+
+    fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        country: String,
+        gender: Boolean,
+        sport: Sport,
+        birthday: LocalDateTime
+    ) {
+        launchWithLoad({
+            val countryCode =
+                Locale.getISOCountries().find { Locale("", it).displayCountry == country }
+                    ?: throw NullPointerException("")
+            saveSuccessful.value =
+                coreController.updateAthlete(id, name, city, countryCode, gender, sport, birthday)
+        }) {}
     }
 
     fun addAthlete(

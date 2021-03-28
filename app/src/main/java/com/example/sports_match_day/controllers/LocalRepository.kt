@@ -241,6 +241,27 @@ class LocalRepositoryImpl(
         )
         sportsDatabase.squadsDao().updateSquad(squad)
     }
+
+    override suspend fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        countryCode: String,
+        gender: Boolean,
+        sportId: Int,
+        birthday: Long
+    ) {
+        val athlete = com.example.sports_match_day.room.entities.Athlete(
+            id,
+            name,
+            city,
+            countryCode,
+            sportId,
+            birthday,
+            gender
+        )
+        sportsDatabase.athletesDao().updateAthlete(athlete)
+    }
 }
 
 interface LocalRepository {
@@ -300,4 +321,6 @@ interface LocalRepository {
         sportId: Int,
         birthday: Long
     )
+
+    suspend fun updateAthlete(id: Int, name: String, city: String, countryCode: String, gender: Boolean, sportId: Int, birthday: Long)
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -28,7 +29,6 @@ class AthletesFragment : BaseFragment() {
     private val viewModel: AthletesViewModel by viewModel()
     private lateinit var recyclerAthletes: RecyclerView
     private lateinit var textTotal: TextView
-    private lateinit var buttonAdd: FloatingActionButton
     private lateinit var loader: ProgressBar
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: AthletesAdapter
@@ -127,12 +127,21 @@ class AthletesFragment : BaseFragment() {
         }
     }
 
+    private fun editAthlete(athleteId: Int){
+        val navController =
+            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val action = AthletesFragmentDirections.actionNavAthletesToNavAthletesAdd(athleteId)
+        navController.navigate(action)
+    }
+
     private fun recyclerSetup() {
         view?.let {
             recyclerAthletes = it.findViewById(R.id.recycler_athletes)
             recyclerAthletes.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = AthletesAdapter()
+            adapter = AthletesAdapter(){
+                editAthlete(it.id)
+            }
 
             recyclerAthletes.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ExampleLoadStateAdapter { adapter.refresh() },

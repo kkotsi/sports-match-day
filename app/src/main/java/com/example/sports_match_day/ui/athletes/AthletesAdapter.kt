@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class AthletesAdapter:
+class AthletesAdapter(private val onSelect: (Athlete) -> Unit):
 PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -31,6 +31,10 @@ PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
 
         fun bind(item: Athlete) {
             textName.text = item.name
+
+            view.findViewById<View>(R.id.container_athlete)?.setOnClickListener {
+                onSelect(item)
+            }
 
             if(item.gender == Gender.MALE){
                 imageGender.setImageResource(R.drawable.ic_male)

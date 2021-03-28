@@ -41,14 +41,26 @@
             android:id="@+id/action_nav_athletes_to_nav_athletes_add"
             app:destination="@id/nav_athletes_add"
             app:enterAnim="@android:anim/slide_in_left"
-            app:exitAnim="@anim/fui_slide_out_left" />
+            app:exitAnim="@anim/fui_slide_out_left">
+
+            <argument
+                android:name="athleteId"
+                android:defaultValue="-1"
+                app:argType="integer" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/nav_athletes_add"
-        android:name="com.example.sports_match_day.ui.athletes.add.AthletesAddFragment"
+        android:name="com.example.sports_match_day.ui.athletes.manage.AthletesManageFragment"
         android:label="@string/menu_add"
-        tools:layout="@layout/fragment_add_athlete" />
+        tools:layout="@layout/fragment_add_athlete">
+
+        <argument
+            android:name="athleteId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_squads"
@@ -69,7 +81,7 @@
         android:id="@+id/nav_squads_add"
         android:name="com.example.sports_match_day.ui.squads.manage.SquadsManageFragment"
         android:label="@string/menu_add"
-        tools:layout="@layout/fragment_add_squad" >
+        tools:layout="@layout/fragment_add_squad">
         <argument
             android:name="squadId"
             android:defaultValue="-1"

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.*
-import com.example.sports_match_day.ui.athletes.add.SportsAdapter
+import com.example.sports_match_day.ui.athletes.manage.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.base.observeOnce
 import com.example.sports_match_day.ui.home.HomeFragment

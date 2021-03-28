@@ -75,4 +75,16 @@ class MemoryRepository() {
             it.birthday = birthday
         }
     }
+
+    fun updateAthlete(id: Int, name: String, city: String, countryLocale: Locale, gender: Boolean, sport: Sport, birthday: LocalDateTime) {
+        athletes.find { it.id == id }?.let {
+            val mGender = if(gender) Gender.MALE else Gender.FEMALE
+            it.name = name
+            it.city = city
+            it.country = countryLocale
+            it.gender = mGender
+            it.sport = sport
+            it.birthday = birthday
+        }
+    }
 }
