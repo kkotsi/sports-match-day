@@ -14,5 +14,6 @@ class Squad(
     var city: String,
     var country: Locale,
     var sport: Sport?,
-    var birthday: LocalDateTime
+    var birthday: LocalDateTime,
+    var gender: Gender
 ): Contestant(name, id)

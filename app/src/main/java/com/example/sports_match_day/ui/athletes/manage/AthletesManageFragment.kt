@@ -139,14 +139,19 @@ class AthletesManageFragment : BaseFragment() {
         return pass
     }
 
+
     private fun setupGenderToggle() {
         toggleGender = requireView().findViewById(R.id.toggle_gender)
         imagePerson = requireView().findViewById(R.id.image_person)
         toggleGender.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked)
+            if (isChecked) {
                 imagePerson.setImageResource(R.drawable.male)
-            else
+                viewModel.getSports(Gender.MALE)
+            }
+            else {
                 imagePerson.setImageResource(R.drawable.female)
+                viewModel.getSports(Gender.FEMALE)
+            }
         }
     }
 
@@ -211,18 +216,16 @@ class AthletesManageFragment : BaseFragment() {
 
     private fun setupSportsSpinner(){
         sportsSpinner = requireView().findViewById(R.id.spinner_sport)
-        viewModel.getSports()
+        if(args.athleteId < 0)
+            viewModel.getSports(Gender.FEMALE)
     }
 
     private fun setupObservers() {
         loader = requireView().findViewById(R.id.progress_loading)
 
-
         viewModel.athlete.observe(viewLifecycleOwner,{
 
-            viewModel.sports.value?.indexOf(it.sport)?.let {
-                sportsSpinner.setSelection(it)
-            }
+            viewModel.getSports(it.gender)
 
             nameEditTextView.setText(
                 it.name,
@@ -281,8 +284,8 @@ class AthletesManageFragment : BaseFragment() {
         viewModel.sports.observe(viewLifecycleOwner, {
             sportsSpinner.adapter = SportsAdapter(requireContext(), it)
 
-            viewModel.athlete.value?.let { squad ->
-                sportsSpinner.setSelection(it.indexOf(squad.sport))
+            viewModel.athlete.value?.let { athlete ->
+                sportsSpinner.setSelection(it.indexOf(athlete.sport))
             }
         })
     }

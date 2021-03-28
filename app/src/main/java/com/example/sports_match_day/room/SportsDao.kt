@@ -15,6 +15,9 @@ interface SportsDao {
     @Query("SELECT * FROM sports LIMIT :count OFFSET :mOffset")
     suspend fun getSports(count: Int, mOffset: Int): List<Sport>
 
+    @Query("SELECT * FROM sports WHERE sports.gender = :gender AND sports.type = :type")
+    suspend fun getSports(type: Boolean, gender: Boolean): List<Sport>
+
     @Query("SELECT * FROM sports WHERE sports.id = :id")
     suspend fun getSport(id: Int): Sport
 

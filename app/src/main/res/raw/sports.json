@@ -17,124 +17,12 @@
     "id": 3,
     "name": "100m Dash",
     "type": true,
-    "gender": true,
-    "participantsCount": 3
+    "gender": false,
+    "participantsCount": 4
   },
   {
     "id": 4,
     "name": "Volley",
-    "type": false,
-    "gender": false,
-    "participantsCount": 2
-  },
-  {
-    "id": 5,
-    "name": "Football1",
-    "type": false,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 6,
-    "name": "Ping Pong1",
-    "type": true,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 7,
-    "name": "100m Dash1",
-    "type": true,
-    "gender": true,
-    "participantsCount": 3
-  },
-  {
-    "id": 8,
-    "name": "Volley1",
-    "type": false,
-    "gender": false,
-    "participantsCount": 2
-  },
-  {
-    "id": 9,
-    "name": "Football2",
-    "type": false,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 10,
-    "name": "Ping Pong2",
-    "type": true,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 11,
-    "name": "100m Dash2",
-    "type": true,
-    "gender": true,
-    "participantsCount": 3
-  },
-  {
-    "id": 12,
-    "name": "Volley2",
-    "type": false,
-    "gender": false,
-    "participantsCount": 2
-  },
-  {
-    "id": 13,
-    "name": "Football3",
-    "type": false,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 14,
-    "name": "Ping Pong3",
-    "type": true,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 15,
-    "name": "100m Dash3",
-    "type": true,
-    "gender": true,
-    "participantsCount": 3
-  },
-  {
-    "id": 16,
-    "name": "Volley4",
-    "type": false,
-    "gender": false,
-    "participantsCount": 2
-  },
-  {
-    "id": 17,
-    "name": "Football4",
-    "type": false,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 18,
-    "name": "Ping Pong4",
-    "type": true,
-    "gender": true,
-    "participantsCount": 2
-  },
-  {
-    "id": 19,
-    "name": "100m Dash4",
-    "type": true,
-    "gender": true,
-    "participantsCount": 3
-  },
-  {
-    "id": 20,
-    "name": "Volley3",
     "type": false,
     "gender": false,
     "participantsCount": 2

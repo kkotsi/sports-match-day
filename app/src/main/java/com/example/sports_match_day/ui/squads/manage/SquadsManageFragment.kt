@@ -10,6 +10,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.athletes.manage.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
@@ -29,6 +30,7 @@ class SquadsManageFragment : BaseFragment() {
     private var countriesEditTextView: AutoCompleteTextView? = null
     private var nameEditTextView: AutoCompleteTextView? = null
     private var stadiumEditTextView: AutoCompleteTextView? = null
+    private var toggleGender: ToggleButton? = null
     private var nameTextView: TextView? = null
     private var buttonSave: Button? = null
     private var loader: ProgressBar? = null
@@ -58,6 +60,19 @@ class SquadsManageFragment : BaseFragment() {
         setupNameEditText()
         setupStadiumEditText()
         setupSportsSpinner()
+        setupGender()
+    }
+
+    private fun setupGender(){
+        toggleGender = view?.findViewById(R.id.toggle_gender)
+        toggleGender?.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                viewModel.getSports(Gender.MALE)
+            }
+            else {
+                viewModel.getSports(Gender.FEMALE)
+            }
+        }
     }
 
     private fun setupForEdit() {
@@ -114,10 +129,11 @@ class SquadsManageFragment : BaseFragment() {
             val name = nameEditTextView?.text?.toString()?.trim() ?: ""
             val stadium = stadiumEditTextView?.text?.toString()?.trim() ?: ""
             val sport = sportsSpinner?.selectedItem as Sport
+            val gender = toggleGender?.isChecked ?: false
 
             if (validateData()) {
                 if (viewModel.squad.value == null)
-                    viewModel.addSquad(name, city, country, stadium, sport.id, birthday)
+                    viewModel.addSquad(name, city, country, stadium, sport.id, birthday, gender)
                 else
                     viewModel.updateSquad(
                         args.squadId,
@@ -126,7 +142,8 @@ class SquadsManageFragment : BaseFragment() {
                         country,
                         stadium,
                         sport,
-                        birthday
+                        birthday,
+                        gender
                     )
             }
         }
@@ -233,13 +250,18 @@ class SquadsManageFragment : BaseFragment() {
 
     private fun setupSportsSpinner() {
         sportsSpinner = view?.findViewById(R.id.spinner_sport)
-        viewModel.getSports()
+        if(args.squadId < 0)
+            viewModel.getSports(Gender.FEMALE)
     }
 
     private fun setupObservers() {
         loader = view?.findViewById(R.id.progress_loading)
 
         viewModel.squad.observe(viewLifecycleOwner, {
+
+            viewModel.getSports(it.gender)
+
+            toggleGender?.isChecked = it.gender == Gender.MALE
 
             viewModel.sports.value?.indexOf(it.sport)?.let {
                 sportsSpinner?.setSelection(it)

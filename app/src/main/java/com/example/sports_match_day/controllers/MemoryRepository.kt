@@ -65,7 +65,8 @@ class MemoryRepository() {
         }
     }
 
-    fun updateSquad(id: Int, name: String, city: String, countryLocale: Locale, stadium: String, sport: Sport, birthday: LocalDateTime) {
+    fun updateSquad(id: Int, name: String, city: String, countryLocale: Locale, stadium: String, sport: Sport, birthday: LocalDateTime, gender: Boolean) {
+        val mGender = if(gender) Gender.MALE else Gender.FEMALE
         squads.find { it.id == id }?.let {
             it.name = name
             it.city = city
@@ -73,6 +74,7 @@ class MemoryRepository() {
             it.stadium = stadium
             it.sport = sport
             it.birthday = birthday
+            it.gender = mGender
         }
     }
 

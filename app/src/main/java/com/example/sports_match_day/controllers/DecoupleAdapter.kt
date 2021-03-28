@@ -76,11 +76,8 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                 SportType.TEAM
             }
 
-            val gender: Gender = if (sport.gender) {
-                Gender.MALE
-            } else {
-                Gender.FEMALE
-            }
+            val gender: Gender = if (sport.gender) Gender.MALE else Gender.FEMALE
+
             return Sport(sport.id, sport.name, type, gender, sport.participantsCount)
         }
         return null
@@ -131,6 +128,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val coreController = get<CoreController>()
             val sport = coreController.getSport(squad.sportId) ?: return null
 
+            val gender = if (squad.gender) Gender.MALE else Gender.FEMALE
             return Squad(
                 squad.id,
                 squad.name,
@@ -138,7 +136,8 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                 squad.city,
                 country,
                 sport,
-                birthday
+                birthday,
+                gender
             )
         }
         return null

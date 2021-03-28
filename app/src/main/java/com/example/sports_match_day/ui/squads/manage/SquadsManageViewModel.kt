@@ -5,7 +5,9 @@ import android.location.Address
 import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
+import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
+import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
@@ -34,9 +36,9 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
         }.run()
     }
 
-    fun getSports() {
+    fun getSports(gender: Gender) {
         launchWithLoad({
-            sports.value = coreController.getAllSports()
+            sports.value = coreController.getAllSports(SportType.TEAM, gender)
         }) { }
     }
 
@@ -55,14 +57,15 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: LocalDateTime
+        birthday: LocalDateTime,
+        gender: Boolean
     ) {
         launchWithLoad({
             val countryCode =
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addSquad(name, city, countryCode, stadium, sportId, birthday)
+                coreController.addSquad(name, city, countryCode, stadium, sportId, birthday, gender)
         }) {
             print(it)
         }
@@ -81,7 +84,8 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
         country: String,
         stadium: String,
         sport: Sport,
-        birthday: LocalDateTime
+        birthday: LocalDateTime,
+        gender: Boolean
     ) {
         launchWithLoad({
 
@@ -89,7 +93,7 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday)
+                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday, gender)
         }) {}
     }
 }

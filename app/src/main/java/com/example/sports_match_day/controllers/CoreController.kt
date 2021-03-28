@@ -103,8 +103,12 @@ class CoreControllerImpl(
         return localRepository.getAllSports()
     }
 
-    override suspend fun getMatch(matchId: Int): Match? {
-        return remoteRepository.getMatch(matchId)
+    override suspend fun getAllSports(sportType: SportType, gender: Gender): MutableList<Sport> {
+        return localRepository.getAllSports(sportType, gender)
+    }
+
+    override suspend fun getMatch(id: Int): Match? {
+        return remoteRepository.getMatch(id)
     }
 
     override suspend fun getSquad(id: Int): Squad? {
@@ -182,7 +186,7 @@ class CoreControllerImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: LocalDateTime
+        birthday: LocalDateTime, gender: Boolean
     ): Boolean {
         return localRepository.addSquad(
             name,
@@ -190,7 +194,7 @@ class CoreControllerImpl(
             country,
             stadium,
             sportId,
-            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(), gender
         )
     }
 
@@ -235,7 +239,7 @@ class CoreControllerImpl(
         country: String,
         stadium: String,
         sport: Sport,
-        birthday: LocalDateTime
+        birthday: LocalDateTime, gender: Boolean
     ): Boolean {
         localRepository.updateSquad(
             id,
@@ -244,10 +248,10 @@ class CoreControllerImpl(
             country,
             stadium,
             sport.id,
-            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(), gender
         )
         val countryLocale = Locale("", country)
-        memoryRepository.updateSquad(id, name, city, countryLocale, stadium, sport, birthday)
+        memoryRepository.updateSquad(id, name, city, countryLocale, stadium, sport, birthday, gender)
         return true
     }
 
@@ -259,7 +263,7 @@ class CoreControllerImpl(
         gender: Boolean,
         sport: Sport,
         birthday: LocalDateTime
-    ): Boolean? {
+    ): Boolean {
         localRepository.updateAthlete(
             id,
             name,
@@ -291,8 +295,9 @@ interface CoreController {
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
     suspend fun getAllSports(): MutableList<Sport>
+    suspend fun getAllSports(sportType: SportType, gender: Gender): MutableList<Sport>
 
-    suspend fun getMatch(matchId: Int): Match?
+    suspend fun getMatch(id: Int): Match?
     suspend fun getAthlete(id: Int): Athlete?
     suspend fun getSquad(id: Int): Squad?
     suspend fun getSport(id: Int): Sport?
@@ -326,7 +331,7 @@ interface CoreController {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: LocalDateTime
+        birthday: LocalDateTime, gender: Boolean
     ): Boolean
 
     suspend fun addSport(
@@ -356,7 +361,7 @@ interface CoreController {
         country: String,
         stadium: String,
         sport: Sport,
-        birthday: LocalDateTime
+        birthday: LocalDateTime, gender: Boolean
     ): Boolean
 
     suspend fun updateAthlete(

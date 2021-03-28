@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "squads")
-data class Squad (
+data class Squad(
     @PrimaryKey(autoGenerate = true)
     var id: Int,
     @ColumnInfo
@@ -23,5 +23,7 @@ data class Squad (
     @ColumnInfo
     var sportId: Int,
     @ColumnInfo
-    var birthday: Long
+    var birthday: Long,
+    @ColumnInfo
+    var gender: Boolean
 )

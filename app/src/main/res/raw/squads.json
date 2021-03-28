@@ -6,7 +6,8 @@
     "city": "Madrid",
     "country": "es",
     "sportId": 1,
-    "birthday": -2140383600
+    "birthday": -2140383600,
+    "gender": true
   },
   {
     "id": 2,
@@ -15,7 +16,8 @@
     "city": "Valencia",
     "country": "es",
     "sportId": 1,
-    "birthday": -1602889200
+    "birthday": -1602889200,
+    "gender": true
   },
   {
     "id": 3,
@@ -24,7 +26,8 @@
     "city": "London",
     "country": "gb",
     "sportId": 4,
-    "birthday": -2627118000
+    "birthday": -2627118000,
+    "gender": false
   },
   {
     "id": 4,
@@ -33,240 +36,7 @@
     "city": "London",
     "country": "gb",
     "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 5,
-    "name": "Real Madrid1",
-    "stadium": "Santiago Bernabeu",
-    "city": "Madrid",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -2140383600
-  },
-  {
-    "id": 6,
-    "name": "Valencia1",
-    "stadium": "Mestalla",
-    "city": "Valencia",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -1602889200
-  },
-  {
-    "id": 7,
-    "name": "Arsenal1",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 8,
-    "name": "Tottenham1",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 9,
-    "name": "Tottenham2",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 10,
-    "name": "Real Madrid2",
-    "stadium": "Santiago Bernabeu",
-    "city": "Madrid",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -2140383600
-  },
-  {
-    "id": 11,
-    "name": "Valencia2",
-    "stadium": "Mestalla",
-    "city": "Valencia",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -1602889200
-  },
-  {
-    "id": 12,
-    "name": "Arsenal2",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 13,
-    "name": "Tottenham3",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 14,
-    "name": "Arsenal21",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 15,
-    "name": "Tottenham51",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 16,
-    "name": "Real Madrid",
-    "stadium": "Santiago Bernabeu",
-    "city": "Madrid",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -2140383600
-  },
-  {
-    "id": 17,
-    "name": "Valencia",
-    "stadium": "Mestalla",
-    "city": "Valencia",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -1602889200
-  },
-  {
-    "id": 18,
-    "name": "Arsenal",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 19,
-    "name": "Tottenham",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 20,
-    "name": "Real Madrid1",
-    "stadium": "Santiago Bernabeu",
-    "city": "Madrid",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -2140383600
-  },
-  {
-    "id": 21,
-    "name": "Valencia1",
-    "stadium": "Mestalla",
-    "city": "Valencia",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -1602889200
-  },
-  {
-    "id": 22,
-    "name": "Arsenal1",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 23,
-    "name": "Tottenham1",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 24,
-    "name": "Tottenham2",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 25,
-    "name": "Real Madrid2",
-    "stadium": "Santiago Bernabeu",
-    "city": "Madrid",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -2140383600
-  },
-  {
-    "id": 26,
-    "name": "Valencia2",
-    "stadium": "Mestalla",
-    "city": "Valencia",
-    "country": "es",
-    "sportId": 1,
-    "birthday": -1602889200
-  },
-  {
-    "id": 27,
-    "name": "Arsenal2",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 28,
-    "name": "Tottenham3",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
-  },
-  {
-    "id": 29,
-    "name": "Arsenal21",
-    "stadium": "Emirates",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2627118000
-  },
-  {
-    "id": 30,
-    "name": "Tottenham51",
-    "stadium": "Tottenham Hotspur Stadium",
-    "city": "London",
-    "country": "gb",
-    "sportId": 4,
-    "birthday": -2755594800
+    "birthday": -2755594800,
+    "gender": false
   }
 ]

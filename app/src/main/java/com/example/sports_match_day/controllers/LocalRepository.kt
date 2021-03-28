@@ -5,10 +5,9 @@ import androidx.paging.PagingConfig
 import com.example.sports_match_day.controllers.paging.AthletesDataSource
 import com.example.sports_match_day.controllers.paging.SportsDataSource
 import com.example.sports_match_day.controllers.paging.SquadsDataSource
-import com.example.sports_match_day.model.Athlete
-import com.example.sports_match_day.model.Sport
-import com.example.sports_match_day.model.Squad
+import com.example.sports_match_day.model.*
 import com.example.sports_match_day.room.SportsDatabase
+import com.example.sports_match_day.utils.findAll
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
@@ -152,6 +151,20 @@ class LocalRepositoryImpl(
         return memoryRepository.sports
     }
 
+    override suspend fun getAllSports(sportType: SportType, gender: Gender): MutableList<Sport> {
+        val count = sportsDatabase.sportsDao().getCount()
+        if (memoryRepository.sports.size < count) {
+            val sports = decoupleAdapter.toSports(
+                sportsDatabase.sportsDao()
+                    .getSports(sportType == SportType.SOLO, gender == Gender.MALE)
+            ).toMutableList()
+            print("ok")
+            return sports
+        }
+        return memoryRepository.sports.findAll { it.gender == gender && it.type == sportType }
+            .toMutableList()
+    }
+
     override suspend fun addAthlete(
         name: String,
         city: String,
@@ -179,7 +192,7 @@ class LocalRepositoryImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long
+        birthday: Long, gender: Boolean
     ): Boolean {
         val squad = com.example.sports_match_day.room.entities.Squad(
             0,
@@ -188,7 +201,8 @@ class LocalRepositoryImpl(
             city,
             country,
             sportId,
-            birthday
+            birthday,
+            gender
         )
         sportsDatabase.squadsDao().insertSquad(squad)
         return true
@@ -228,7 +242,7 @@ class LocalRepositoryImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long
+        birthday: Long, gender: Boolean
     ) {
         val squad = com.example.sports_match_day.room.entities.Squad(
             id,
@@ -237,7 +251,8 @@ class LocalRepositoryImpl(
             country,
             stadium,
             sportId,
-            birthday
+            birthday,
+            gender
         )
         sportsDatabase.squadsDao().updateSquad(squad)
     }
@@ -287,6 +302,7 @@ interface LocalRepository {
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
     suspend fun getAllSports(): MutableList<Sport>
+    suspend fun getAllSports(sportType: SportType, gender: Gender): MutableList<Sport>
 
     suspend fun addAthlete(
         name: String,
@@ -303,7 +319,7 @@ interface LocalRepository {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long
+        birthday: Long, gender: Boolean
     ): Boolean
 
     suspend fun addSport(
@@ -319,8 +335,16 @@ interface LocalRepository {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long
+        birthday: Long, gender: Boolean
     )
 
-    suspend fun updateAthlete(id: Int, name: String, city: String, countryCode: String, gender: Boolean, sportId: Int, birthday: Long)
+    suspend fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        countryCode: String,
+        gender: Boolean,
+        sportId: Int,
+        birthday: Long
+    )
 }

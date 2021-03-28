@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import com.example.sports_match_day.R
+import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
 
 
@@ -20,6 +21,10 @@ class SportsAdapter(var context: Context, var sports: List<Sport>): BaseAdapter(
 
         fun bind(sport: Sport){
             textName.text = sport.name
+            if(sport.gender == Gender.MALE)
+                textName.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.ic_male,0)
+            else
+                textName.setCompoundDrawablesWithIntrinsicBounds(0,0, R.drawable.ic_female,0)
         }
     }
 

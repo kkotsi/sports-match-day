@@ -39,11 +39,13 @@ class ContestantsAdapter(var participants: MutableList<Participant>) :
                     imageContestant.setImageResource(R.drawable.female)
             }
 
-            val format = DecimalFormat("0.#")
-            editTextParticipantScore.setText(
-                format.format(participant.score).toString(),
-                TextView.BufferType.EDITABLE
-            )
+            if(participant.score >= 0) {
+                val format = DecimalFormat("0.#")
+                editTextParticipantScore.setText(
+                    format.format(participant.score).toString(),
+                    TextView.BufferType.EDITABLE
+                )
+            }
         }
     }
 

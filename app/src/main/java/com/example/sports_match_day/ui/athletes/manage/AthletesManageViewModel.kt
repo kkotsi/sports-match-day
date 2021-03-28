@@ -6,7 +6,9 @@ import android.location.Geocoder
 import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.Athlete
+import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
+import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.ui.base.ScopedViewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -49,9 +51,9 @@ class AthletesManageViewModel(private val coreController: CoreController) : Scop
         return days
     }
 
-    fun getSports() {
+    fun getSports(gender: Gender) {
         launchWithLoad({
-            sports.value = coreController.getAllSports()
+            sports.value = coreController.getAllSports(SportType.SOLO,gender)
         }) { }
     }
 
