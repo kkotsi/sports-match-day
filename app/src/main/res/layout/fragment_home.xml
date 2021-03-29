@@ -59,6 +59,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_matches_total"
                 tools:itemCount="5"
                 tools:listitem="@layout/item_match" />
+
+            <ImageView
+                android:id="@+id/imageHelp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="25dp"
+                android:src="@drawable/ic_hand"
+                android:elevation="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_matches_total" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

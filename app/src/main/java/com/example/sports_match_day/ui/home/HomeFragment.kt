@@ -59,12 +59,9 @@ class HomeFragment : BaseFragment() {
 
     private fun setupAddButton() {
         binding.fabAdd.setOnClickListener {
-            it.setOnClickListener {
-
-                val navController =
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                navController.navigate(R.id.action_nav_home_to_nav_match_add)
-            }
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            navController.navigate(R.id.action_nav_home_to_nav_match_add)
         }
     }
 
@@ -79,13 +76,13 @@ class HomeFragment : BaseFragment() {
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
-                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
                 if (loadStates.refresh is LoadState.Error) {
                     showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
                 } else if (loadStates.refresh is LoadState.NotLoading) {
                     setUpEvent()
                 }
+                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
             }
         }
 
