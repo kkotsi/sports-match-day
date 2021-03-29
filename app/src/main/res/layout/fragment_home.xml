@@ -66,6 +66,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="25dp"
                 android:src="@drawable/ic_hand"
+                android:visibility="gone"
                 android:elevation="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

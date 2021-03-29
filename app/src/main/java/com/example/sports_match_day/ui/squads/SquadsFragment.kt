@@ -1,5 +1,7 @@
 package com.example.sports_match_day.ui.squads
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -114,12 +116,34 @@ class SquadsFragment : BaseFragment() {
         navController.navigate(action)
     }
 
+    private fun searchCity(city: String) {
+        viewModel.getCity(requireContext(),city){
+            val gmmIntentUri = if(it != null) {
+                 Uri.parse("geo:${it.latitude},${it.longitude}")
+            }else{
+                Uri.parse("geo:0,0?q=$city")
+            }
+            val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
+    }
+
+    private fun searchStadium(stadium: String) {
+        val gmmIntentUri = Uri.parse("geo:0,0?q=$stadium stadium")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
+    }
+
     private fun recyclerSetup() {
         view?.let {
             binding.recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = SquadsAdapter { squad ->
+            adapter = SquadsAdapter({ squad ->
                 editSquad(squad.id)
+            }, { searchStadium(it) }) {
+                searchCity(it)
             }
 
             binding.recyclerSquads.adapter = adapter.withLoadStateHeaderAndFooter(

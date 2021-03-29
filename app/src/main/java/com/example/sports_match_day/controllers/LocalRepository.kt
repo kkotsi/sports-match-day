@@ -154,12 +154,10 @@ class LocalRepositoryImpl(
     override suspend fun getAllSports(sportType: SportType, gender: Gender): MutableList<Sport> {
         val count = sportsDatabase.sportsDao().getCount()
         if (memoryRepository.sports.size < count) {
-            val sports = decoupleAdapter.toSports(
+            return decoupleAdapter.toSports(
                 sportsDatabase.sportsDao()
                     .getSports(sportType == SportType.SOLO, gender == Gender.MALE)
             ).toMutableList()
-            print("ok")
-            return sports
         }
         return memoryRepository.sports.findAll { it.gender == gender && it.type == sportType }
             .toMutableList()

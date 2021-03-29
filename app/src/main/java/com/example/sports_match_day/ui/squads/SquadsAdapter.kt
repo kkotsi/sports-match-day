@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class SquadsAdapter(private val onSelect: (Squad) -> Unit):
+class SquadsAdapter(private val onSelect: (Squad) -> Unit, private val searchStadiumInMap: (String) -> Unit, private val searchCityInMap: (String) -> Unit):
     PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -34,7 +34,7 @@ class SquadsAdapter(private val onSelect: (Squad) -> Unit):
                 onSelect(item)
             }
 
-            val url = FlagManager.getFlagURL(item.country.toString())
+            val url = FlagManager.getFlagURL(item.getCountryCode())
 
             Picasso
                 .with(view.context)
@@ -42,7 +42,13 @@ class SquadsAdapter(private val onSelect: (Squad) -> Unit):
                 .into(imageCountry)
 
             textCity.text = item.city
+            textCity.setOnClickListener {
+                searchCityInMap(item.city)
+            }
             textStadium.text = item.stadium
+            textStadium.setOnClickListener {
+                searchStadiumInMap(item.stadium)
+            }
             textSport.text = item.sport?.name ?: ""
             textBirthday.text = item.birthday.year.toString()
         }

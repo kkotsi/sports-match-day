@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_squad"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/container_squad">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:textSize="20sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@+id/image_person"
                 app:layout_constraintTop_toTopOf="parent"
@@ -66,41 +66,88 @@
                 app:riv_mutate_background="true"
                 app:riv_tile_mode="repeat" />
 
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/ic_location"
+                app:layout_constraintBottom_toBottomOf="@+id/text_city"
+                app:layout_constraintEnd_toStartOf="@+id/text_city"
+                app:layout_constraintTop_toTopOf="@+id/text_city"
+                app:tint="@color/colorBlack" />
+
             <TextView
                 android:id="@+id/text_city"
-                android:layout_width="wrap_content"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
                 android:textColor="@color/colorLink"
-                app:layout_constraintStart_toStartOf="@+id/text_squad"
-                app:layout_constraintTop_toBottomOf="@+id/text_squad"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_sport"
                 tools:text="Thessaloniki" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="5dp"
+                android:src="@drawable/stadium"
+                app:layout_constraintBottom_toBottomOf="@+id/text_stadium"
+                app:layout_constraintEnd_toStartOf="@+id/text_stadium"
+                app:layout_constraintTop_toTopOf="@+id/text_stadium" />
 
             <TextView
                 android:id="@+id/text_stadium"
-                android:layout_width="wrap_content"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="0dp"
-                app:layout_constraintStart_toStartOf="@+id/text_city"
+                android:layout_marginTop="20dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textColor="@color/colorLink"
+                app:layout_constraintEnd_toEndOf="@+id/text_city"
                 app:layout_constraintTop_toBottomOf="@+id/text_city"
-                tools:text="Santiago Bernabeu" />
+                tools:text="Santiago Bernabeu fasifo" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginStart="5dp"
+                android:src="@drawable/ic_sports"
+                app:tint="@color/colorBlack"
+                app:layout_constraintBottom_toBottomOf="@+id/text_sport"
+                app:layout_constraintStart_toEndOf="@+id/image_person"
+                app:layout_constraintTop_toTopOf="@+id/text_sport" />
 
             <TextView
                 android:id="@+id/text_sport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                app:layout_constraintStart_toStartOf="@+id/text_stadium"
-                app:layout_constraintTop_toBottomOf="@+id/text_stadium"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toEndOf="@+id/imageView4"
+                app:layout_constraintTop_toBottomOf="@+id/text_squad"
                 tools:text="Football" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_birthday"
+                app:layout_constraintBottom_toBottomOf="@+id/text_birthday"
+                app:layout_constraintStart_toStartOf="@+id/imageView4"
+                app:layout_constraintTop_toTopOf="@+id/text_birthday"
+                app:tint="@color/colorBlack" />
 
             <TextView
                 android:id="@+id/text_birthday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@+id/text_sport"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toEndOf="@+id/imageView5"
                 app:layout_constraintTop_toBottomOf="@+id/text_sport"
                 tools:text="15-5-1990" />
         </androidx.constraintlayout.widget.ConstraintLayout>

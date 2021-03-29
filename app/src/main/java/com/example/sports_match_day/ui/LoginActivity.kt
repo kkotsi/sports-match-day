@@ -65,7 +65,7 @@ class LoginActivity : AppCompatActivity() {
                 // Successfully signed in
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
-                finishActivity(0)
+                this@LoginActivity.finish()
             } else {
                 PopupManager.simplePopupMessage(this, "Couldn't login... \n ${response?.error?.message}")
             }
