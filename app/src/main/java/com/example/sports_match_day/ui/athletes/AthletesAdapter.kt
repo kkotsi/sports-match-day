@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class AthletesAdapter(private val onSelect: (Athlete) -> Unit):
+class AthletesAdapter(private val onSelect: (Athlete) -> Unit, private val searchCityInMap: (String) -> Unit):
 PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -52,6 +52,9 @@ PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
                 .into(imageCountry)
 
             textCity.text = item.city
+            textCity.setOnClickListener {
+                searchCityInMap(item.city)
+            }
             textSport.text = item.sport.name
             textBirthday.text = item.birthday.toString().substring(0, 10)
         }
