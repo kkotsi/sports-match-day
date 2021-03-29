@@ -43,28 +43,28 @@
                 android:id="@+id/text_location"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="2dp"
                 android:includeFontPadding="false"
                 android:textSize="10sp"
-                android:visibility="gone"
-                app:layout_constraintStart_toEndOf="@+id/text_sport"
-                app:layout_constraintTop_toTopOf="parent"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:textColor="@color/colorLink"
+                app:layout_constraintStart_toStartOf="@+id/text_sport"
+                app:layout_constraintTop_toBottomOf="@+id/text_sport"
                 tools:ignore="SmallSp"
-                tools:text="Madrid, \nStadium: Mestalla" />
+                tools:text="Madrid, Mestalla" />
 
             <TextView
                 android:id="@+id/text_first_squad"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:ellipsize="marquee"
                 android:maxWidth="200dp"
                 android:singleLine="true"
                 android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="@+id/image_country"
-                app:layout_constraintTop_toBottomOf="@+id/text_sport"
+                app:layout_constraintTop_toBottomOf="@+id/text_location"
                 tools:text="Real Madrid" />
 
             <TextView
@@ -75,24 +75,21 @@
                 android:ellipsize="marquee"
                 android:singleLine="true"
                 android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/text_more"
+                app:layout_constraintBottom_toTopOf="@+id/image_more"
                 app:layout_constraintStart_toStartOf="@+id/text_first_squad"
                 app:layout_constraintTop_toBottomOf="@+id/text_first_squad"
+                app:layout_constraintVertical_bias="0.0"
                 tools:text="Valencia" />
 
-            <TextView
-                android:id="@+id/text_more"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
+            <ImageView
+                android:id="@+id/image_more"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
                 android:layout_marginBottom="5dp"
-                android:ellipsize="marquee"
-                android:singleLine="true"
-                android:text="@string/more_options"
-                android:visibility="gone"
+                android:src="@drawable/ic_more"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/text_first_squad"
-                app:layout_constraintTop_toBottomOf="@+id/text_sec_squad"
-                tools:text="..." />
+                app:layout_constraintTop_toBottomOf="@+id/text_sec_squad"/>
 
             <TextView
                 android:id="@+id/text_first_score"

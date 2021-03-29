@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +14,6 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.SportType
-import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.utils.FlagManager
 import com.squareup.picasso.Picasso
 import org.threeten.bp.format.DateTimeFormatter
@@ -24,7 +24,8 @@ import java.text.DecimalFormat
  * Created by Kristo on 07-Mar-21
  */
 class MatchAdapter(
-    private val selectMatch: (Match) -> Unit
+    private val selectMatch: (Match) -> Unit,
+    private val searchStadiumInMap: (String) -> Unit
 ) : PagingDataAdapter<Match, MatchAdapter.MyViewHolder>(diff()) {
 
     private var lastSelected: MyViewHolder? = null
@@ -37,7 +38,7 @@ class MatchAdapter(
         private val scoreFirst: TextView = view.findViewById(R.id.text_first_score)
         private val scoreSecond: TextView = view.findViewById(R.id.text_sec_score)
         private val date: TextView = view.findViewById(R.id.text_date)
-        private val moreText: TextView = view.findViewById(R.id.text_more)
+        private val moreImage: ImageView = view.findViewById(R.id.image_more)
         private val locationText: TextView = view.findViewById(R.id.text_location)
         private val genderImage: ImageView = view.findViewById(R.id.image_sport_gender)
         private val typeImage: ImageView = view.findViewById(R.id.image_sport_type)
@@ -68,7 +69,6 @@ class MatchAdapter(
 
             textSport.text = match.sport?.name ?: ""
 
-
             if (match.participants.size > 1) {
 
                 participantFirst.text = match.participants[0].contestant?.name ?: ""
@@ -91,29 +91,26 @@ class MatchAdapter(
             val formatter = DateTimeFormatter.ofPattern("dd/MMM/yy\nhh:mm")
             date.text = match.date.format(formatter)
 
-            var location = match.city
-
             match.sport?.let {
                 if (it.gender == Gender.MALE) {
                     genderImage.setImageResource(R.drawable.ic_male)
                 } else {
                     genderImage.setImageResource(R.drawable.ic_female)
                 }
-
                 if (it.type == SportType.SOLO) {
                     typeImage.setImageResource(R.drawable.ic_person)
                 } else {
-                    location += " \n" + itemView.context.resources.getString(R.string.stadium) + ": " + (match.participants[0].contestant as? Squad)?.stadium
                     typeImage.setImageResource(R.drawable.ic_group)
                 }
             }
 
-            if (match.participants.size > 2)
-                moreText.visibility = View.VISIBLE
-            else
-                moreText.visibility = View.GONE
+            moreImage.isVisible = match.participants.size > 2
 
+            val location = "${match.city}, ${match.stadium}"
             locationText.text = location
+            locationText.setOnClickListener {
+                searchStadiumInMap(match.stadium)
+            }
         }
     }
 

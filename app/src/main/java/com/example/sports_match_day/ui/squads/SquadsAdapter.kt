@@ -16,7 +16,11 @@ import com.squareup.picasso.Picasso
 /**
  * Created by Kristo on 10-Mar-21
  */
-class SquadsAdapter(private val onSelect: (Squad) -> Unit, private val searchStadiumInMap: (String) -> Unit, private val searchCityInMap: (String) -> Unit):
+class SquadsAdapter(
+    private val onSelect: (Squad) -> Unit,
+    private val searchStadiumInMap: (String) -> Unit,
+    private val searchCityInMap: (String) -> Unit
+) :
     PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {

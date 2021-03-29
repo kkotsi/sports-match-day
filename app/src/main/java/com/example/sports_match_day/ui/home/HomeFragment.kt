@@ -1,5 +1,7 @@
 package com.example.sports_match_day.ui.home
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -151,16 +153,25 @@ class HomeFragment : BaseFragment() {
         navController.navigate(action)
     }
 
+    private fun searchCity(stadium: String) {
+        val uri = Uri.parse("geo:0,0?q=$stadium stadium")
+        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
+    }
+
     private fun recyclerSetup() {
         binding.recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter = MatchAdapter { match ->
+        adapter = MatchAdapter({ match ->
             if (match.id == selectedMatchId) {
                 editMatch()
             } else {
                 selectDate(match.date)
             }
             selectedMatchId = match.id
+        }) {
+            searchCity(it)
         }
 
         binding.recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(
