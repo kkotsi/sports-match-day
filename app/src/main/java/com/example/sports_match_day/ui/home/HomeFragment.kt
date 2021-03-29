@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -12,13 +11,11 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.applandeo.materialcalendarview.CalendarView
 import com.applandeo.materialcalendarview.EventDay
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentHomeBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
@@ -31,26 +28,28 @@ import java.util.*
 class HomeFragment : BaseFragment() {
 
     private val viewModel: HomeViewModel by viewModel()
-    private lateinit var recyclerMatches: RecyclerView
-    private lateinit var calendarView: CalendarView
-    private lateinit var textTotal: TextView
-    private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: MatchAdapter
-    private lateinit var addButton: FloatingActionButton
-
     private var selectedMatchId: Int = -1
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+    ): View {
+        _binding = FragmentHomeBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupTotalText()
         recyclerSetup()
         setupCalendar()
         setupAddButton()
@@ -59,9 +58,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupAddButton() {
-        addButton = requireView().findViewById(R.id.fab_add)
-
-        addButton.setOnClickListener{
+        binding.fabAdd.setOnClickListener {
             it.setOnClickListener {
 
                 val navController =
@@ -72,24 +69,17 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
-            refreshLayout = it
-        }
-
-        refreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
         }
     }
 
     private fun setupObservers() {
-        viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            refreshLayout.isRefreshing = it
-        })
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
-                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
                 if (loadStates.refresh is LoadState.Error) {
                     showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
@@ -120,7 +110,7 @@ class HomeFragment : BaseFragment() {
 
             // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
             navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
-                HomeFragment.HOME_REFRESH_KEY
+                HOME_REFRESH_KEY
             )?.observe(
                 viewLifecycleOwner
             ) {
@@ -129,33 +119,22 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-
-    private fun setupTotalText() {
-        view?.findViewById<TextView>(R.id.text_matches_total)?.let {
-            textTotal = it
-        }
-    }
-
     private fun setupCalendar() {
-        view?.let { v ->
-            calendarView = v.findViewById(R.id.calendarView)
-
-            //Set current date
-            val calendar: Calendar = Calendar.getInstance()
-            calendar.set(
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(
-                    Calendar.DATE
-                )
+        //Set current date
+        val calendar: Calendar = Calendar.getInstance()
+        calendar.set(
+            calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(
+                Calendar.DATE
             )
+        )
 
-            calendarView.setDate(calendar)
-        }
+        binding.calendarView.setDate(calendar)
     }
 
     private fun setUpEvent() {
         val events = mutableListOf<EventDay>()
 
-        calendarView.setEvents(mutableListOf())
+        binding.calendarView.setEvents(mutableListOf())
         viewModel.getEventDates().forEach { date ->
             val calendar: Calendar = Calendar.getInstance()
             calendar.set(Calendar.YEAR, date.year)
@@ -165,10 +144,10 @@ class HomeFragment : BaseFragment() {
             events.add(EventDay(calendar, R.drawable.event))
         }
 
-        calendarView.setEvents(events)
+        binding.calendarView.setEvents(events)
     }
 
-    private fun editMatch(){
+    private fun editMatch() {
         val navController =
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = HomeFragmentDirections.actionNavHomeToNavMatchAdd(selectedMatchId)
@@ -176,60 +155,58 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun recyclerSetup() {
-        view?.let {
-            recyclerMatches = it.findViewById(R.id.recycler_matches)
-            recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerMatches.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = MatchAdapter { match ->
-                if(match.id == selectedMatchId){
-                    editMatch()
-                }else {
-                    selectDate(match.date)
-                }
-                selectedMatchId = match.id
+        adapter = MatchAdapter { match ->
+            if (match.id == selectedMatchId) {
+                editMatch()
+            } else {
+                selectDate(match.date)
             }
-
-            recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(
-                header = ExampleLoadStateAdapter { adapter.refresh() },
-                footer = ExampleLoadStateAdapter { adapter.refresh() }
-            )
-
-            recyclerMatches.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if(newState == RecyclerView.SCROLL_STATE_IDLE){
-                        addButton.show()
-                    }
-                    super.onScrollStateChanged(recyclerView, newState)
-                }
-
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy != 0 && addButton.isShown)
-                        addButton.hide()
-                }
-            })
-
-            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.absoluteAdapterPosition
-                    viewModel.removeMatch(
-                        adapter.getMatch(
-                            position
-                        )
-                    )
-                }
-            }
-            val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-            itemTouchHelper.attachToRecyclerView(recyclerMatches)
+            selectedMatchId = match.id
         }
+
+        binding.recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ExampleLoadStateAdapter { adapter.refresh() },
+            footer = ExampleLoadStateAdapter { adapter.refresh() }
+        )
+
+        binding.recyclerMatches.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.fabAdd.show()
+                }
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0 && binding.fabAdd.isShown)
+                    binding.fabAdd.hide()
+            }
+        })
+
+        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                val position = viewHolder.absoluteAdapterPosition
+                viewModel.removeMatch(
+                    adapter.getMatch(
+                        position
+                    )
+                )
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerMatches)
+
     }
 
     private fun selectDate(date: LocalDateTime) {
@@ -239,12 +216,12 @@ class HomeFragment : BaseFragment() {
         calendar.set(Calendar.MONTH, date.month.value - 1)
         calendar.set(Calendar.DATE, date.dayOfMonth)
 
-        calendarView.setDate(calendar)
+        binding.calendarView.setDate(calendar)
     }
 
     private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =
+        binding.textMatchesTotal.text =
             String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
 

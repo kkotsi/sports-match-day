@@ -4,20 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.Navigation.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentAthletesBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,75 +21,59 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  * Created by Kristo on 05-Mar-21
  */
 class AthletesFragment : BaseFragment() {
+    private var _binding: FragmentAthletesBinding? = null
+    private val binding get() = _binding!!
 
     private val viewModel: AthletesViewModel by viewModel()
-    private lateinit var recyclerAthletes: RecyclerView
-    private lateinit var textTotal: TextView
-    private lateinit var loader: ProgressBar
-    private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: AthletesAdapter
-    private lateinit var addButton: FloatingActionButton
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_athletes, container, false)
+    ): View {
+        _binding = FragmentAthletesBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setupAddButton()
-        setupLoader()
-        setupTotalText()
         recyclerSetup()
         setupRefreshLayout()
         setupObservers()
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
-            refreshLayout = it
-        }
-
-        refreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
         }
     }
 
     private fun setupAddButton() {
-        addButton = requireView().findViewById(R.id.fab_add)
-
-        addButton.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(R.id.action_nav_athletes_to_nav_athletes_add)
-        }
-    }
-
-    private fun setupLoader() {
-        view?.findViewById<ProgressBar>(R.id.progress_loading)?.let {
-            loader = it
-        }
-    }
-
-    private fun setupTotalText() {
-        view?.findViewById<TextView>(R.id.text_total)?.let {
-            textTotal = it
         }
     }
 
     private fun setupObservers() {
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            refreshLayout.isRefreshing = it
+            binding.swipeRefreshLayout.isRefreshing = it
         })
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
-                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
                 if (loadStates.refresh is LoadState.Error) {
                     showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
@@ -128,37 +108,35 @@ class AthletesFragment : BaseFragment() {
     }
 
     private fun editAthlete(athleteId: Int){
-        val navController =
-            Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+        val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = AthletesFragmentDirections.actionNavAthletesToNavAthletesAdd(athleteId)
         navController.navigate(action)
     }
 
     private fun recyclerSetup() {
         view?.let {
-            recyclerAthletes = it.findViewById(R.id.recycler_athletes)
-            recyclerAthletes.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerAthletes.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = AthletesAdapter(){
+            adapter = AthletesAdapter{
                 editAthlete(it.id)
             }
 
-            recyclerAthletes.adapter = adapter.withLoadStateHeaderAndFooter(
+            binding.recyclerAthletes.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ExampleLoadStateAdapter { adapter.refresh() },
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
 
-            recyclerAthletes.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            binding.recyclerAthletes.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        addButton.show()
+                        binding.fabAdd.show()
                     }
                     super.onScrollStateChanged(recyclerView, newState)
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy != 0 && addButton.isShown)
-                        addButton.hide()
+                    if (dy != 0 && binding.fabAdd.isShown)
+                        binding.fabAdd.hide()
                 }
             })
             val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
@@ -177,13 +155,13 @@ class AthletesFragment : BaseFragment() {
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-            itemTouchHelper.attachToRecyclerView(recyclerAthletes)
+            itemTouchHelper.attachToRecyclerView(binding.recyclerAthletes)
         }
     }
 
     private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =
+        binding.textTotal.text =
             String.format(requireContext().resources.getString(R.string.total_athletes), "$total")
     }
 

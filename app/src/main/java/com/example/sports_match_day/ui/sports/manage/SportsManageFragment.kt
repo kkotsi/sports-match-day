@@ -4,18 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentAddSportBinding
 import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.OnTouchListener
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.sports.SportsFragment
-import com.google.android.material.card.MaterialCardView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -23,34 +23,30 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class SportsManageFragment : BaseFragment() {
     private val args: SportsManageFragmentArgs by navArgs()
-
     private val viewModel: SportsManageViewModel by viewModel()
-    private var nameEditTextView: AutoCompleteTextView? = null
-    private var participantsCountEditTextView: AutoCompleteTextView? = null
-    private var toggleGender: ToggleButton? = null
-    private var toggleType: ToggleButton? = null
-    private var buttonSave: Button? = null
-    private var loader: ProgressBar? = null
-    private var genderTextHelp: MaterialCardView? = null
-    private var typeTextHelp: MaterialCardView? = null
-    private var participantTextHelp: MaterialCardView? = null
+
+    private var _binding: FragmentAddSportBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_sport, container, false)
+    ): View {
+        _binding = FragmentAddSportBinding.inflate(layoutInflater)
+        return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupObservers()
-        setupGenderToggle()
         setupSaveButton()
         setupNameEditText()
         setupParticipantCountEditText()
-        setupTypeToggle()
         setupHelpButton()
         setUpForEdit()
     }
@@ -58,34 +54,32 @@ class SportsManageFragment : BaseFragment() {
     private fun setUpForEdit() {
         if(args.sportId > -1) {
             viewModel.loadSport(args.sportId)
-            toggleGender?.isEnabled = false
-            toggleGender?.alpha = 0.5f
-            toggleType?.isEnabled = false
-            toggleType?.alpha = 0.5f
-            participantsCountEditTextView?.isEnabled = false
+            binding.toggleGender.isEnabled = false
+            binding.toggleGender.alpha = 0.5f
+            binding.toggleType.isEnabled = false
+            binding.toggleType.alpha = 0.5f
+            binding.editTextParticipantsCount.isEnabled = false
         }
     }
 
     private fun setupObservers() {
-        loader = view?.findViewById(R.id.progress_loading)
-
         viewModel.sport.observe(viewLifecycleOwner, {
 
-            nameEditTextView?.setText(
+            binding.editTextName.setText(
                 it.name,
                 TextView.BufferType.EDITABLE
             )
-            toggleType?.isChecked = it.type == SportType.SOLO
-            toggleGender?.isChecked = it.gender == Gender.MALE
+            binding.toggleType.isChecked = it.type == SportType.SOLO
+            binding.toggleGender.isChecked = it.gender == Gender.MALE
 
-            participantsCountEditTextView?.setText(
+            binding.editTextParticipantsCount.setText(
                 "${it.participantCount}",
                 TextView.BufferType.EDITABLE
             )
         })
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            loader?.isVisible = it
+            binding.progressLoading.isVisible = it
         })
 
         viewModel.saveSuccessful.observe(viewLifecycleOwner, {
@@ -104,81 +98,56 @@ class SportsManageFragment : BaseFragment() {
     }
 
     private fun setupParticipantCountEditText(){
-        participantsCountEditTextView = view?.findViewById(R.id.editText_participants_count)
-        participantsCountEditTextView?.setOnFocusChangeListener { _, hasFocus ->
+        binding.editTextParticipantsCount.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val country = participantsCountEditTextView?.editableText.toString()
+                val country = binding.editTextParticipantsCount.editableText.toString()
                 if (country.isBlank()) {
-                    participantsCountEditTextView?.error =  getString(R.string.error_blank)
+                    binding.editTextParticipantsCount.error =  getString(R.string.error_blank)
                 } else {
-                    participantsCountEditTextView?.error = null
+                    binding.editTextParticipantsCount.error = null
                 }
             }
         }
     }
 
     private fun setupHelpButton(){
-        //Gender
-        val genderHelp = view?.findViewById<ImageButton>(R.id.button_help_gender)
-        genderTextHelp = view?.findViewById<MaterialCardView>(R.id.container_gender_help)
-        genderTextHelp?.setOnFocusChangeListener { _, hasFocus ->
-            if(!hasFocus)
-                genderTextHelp?.visibility = View.GONE
-        }
+        with(binding) {
+            //Gender
+            buttonHelpGender.setOnClickListener {
+                containerGenderHelp.visibility = View.VISIBLE
+            }
 
-        genderHelp?.setOnClickListener {
-            genderTextHelp?.visibility = View.VISIBLE
-            genderTextHelp?.requestFocus()
-        }
+            //Type
+            buttonHelpType.setOnClickListener {
+                containerTypeHelp.visibility = View.VISIBLE
+            }
 
-        //Type
-        val typeHelp = view?.findViewById<ImageButton>(R.id.button_help_type)
-        typeTextHelp = view?.findViewById<MaterialCardView>(R.id.container_type_help)
-        typeTextHelp?.setOnFocusChangeListener { _, hasFocus ->
-            if(!hasFocus)
-                typeTextHelp?.visibility = View.GONE
-        }
-
-        typeHelp?.setOnClickListener {
-            typeTextHelp?.visibility = View.VISIBLE
-            typeTextHelp?.requestFocus()
-        }
-
-        //Count
-        val participantHelp = view?.findViewById<ImageButton>(R.id.button_help_count)
-        participantTextHelp = view?.findViewById(R.id.container_participants_help)
-        participantTextHelp?.setOnFocusChangeListener { _, hasFocus ->
-            if(!hasFocus)
-                participantTextHelp?.visibility = View.GONE
-        }
-
-        participantHelp?.setOnClickListener {
-            participantTextHelp?.visibility = View.VISIBLE
-            participantTextHelp?.requestFocus()
+            //Count
+            buttonHelpCount.setOnClickListener {
+                containerParticipantsHelp.visibility = View.VISIBLE
+            }
         }
     }
     private fun setupNameEditText() {
-        nameEditTextView = view?.findViewById(R.id.editText_name)
-        nameEditTextView?.setOnFocusChangeListener { _, hasFocus ->
+        binding.editTextName.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val name = nameEditTextView?.editableText.toString()
+                val name = binding.editTextName.editableText.toString()
                 if (name.isBlank()) {
-                    nameEditTextView?.error =  getString(R.string.error_blank)
+                    binding.editTextName.error =  getString(R.string.error_blank)
                 } else {
-                    nameEditTextView?.error = null
+                    binding.editTextName.error = null
                 }
             }
         }
     }
 
     private fun setupSaveButton() {
-        buttonSave = view?.findViewById(R.id.button_save)
-        buttonSave?.setOnClickListener {
-            val gender = toggleGender?.isChecked ?: false
-            val type = toggleType?.isChecked ?: false
+        binding.buttonSave.setOnClickListener {
+            val gender = binding.toggleGender.isChecked
+            val type = binding.toggleType.isChecked
 
-            val count = participantsCountEditTextView?.text?.toString()?.trim() ?: "0"
-            val name = nameEditTextView?.text?.toString()?.trim() ?: ""
+            val count = binding.editTextParticipantsCount.text.toString().trim()
+            val name = binding.editTextName.text.toString().trim()
 
             if(validateData())
                 if(viewModel.sport.value == null) {
@@ -192,36 +161,28 @@ class SportsManageFragment : BaseFragment() {
     private fun validateData(): Boolean{
         var pass = true
 
-        val name = nameEditTextView?.text?.toString() ?: ""
+        val name = binding.editTextName.text.toString()
 
-        if(nameEditTextView?.error != null){
+        if(binding.editTextName.error != null){
             pass = false
         }
 
         if(name.isBlank()){
-            nameEditTextView?.error = getString(R.string.error_blank)
+            binding.editTextName.error = getString(R.string.error_blank)
             pass = false
         }
 
-        val count = participantsCountEditTextView?.text?.toString() ?: ""
+        val count = binding.editTextParticipantsCount.text.toString()
 
-        if(participantsCountEditTextView?.error != null){
+        if(binding.editTextParticipantsCount.error != null){
             pass = false
         }
 
         if(count.isBlank()){
-            participantsCountEditTextView?.error = getString(R.string.error_blank)
+            binding.editTextParticipantsCount.error = getString(R.string.error_blank)
             pass = false
         }
         return pass
-    }
-
-    private fun setupTypeToggle() {
-        toggleType = view?.findViewById(R.id.toggle_type)
-    }
-
-    private fun setupGenderToggle() {
-        toggleGender = view?.findViewById(R.id.toggle_gender)
     }
 
     override fun onResume() {
@@ -229,9 +190,9 @@ class SportsManageFragment : BaseFragment() {
 
         (requireActivity() as MainActivity).onTouchListener = object: OnTouchListener{
             override fun onTouch() {
-                typeTextHelp?.visibility = View.GONE
-                genderTextHelp?.visibility = View.GONE
-                participantTextHelp?.visibility = View.GONE
+                binding.containerTypeHelp.visibility = View.GONE
+                binding.containerGenderHelp.visibility = View.GONE
+                binding.containerParticipantsHelp.visibility = View.GONE
             }
         }
     }

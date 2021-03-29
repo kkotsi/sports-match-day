@@ -1,22 +1,19 @@
 package com.example.sports_match_day.ui.squads
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentSquadsBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -26,23 +23,28 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SquadsFragment : BaseFragment() {
 
     private val viewModel: SquadsViewModel by viewModel()
-    private lateinit var recyclerSquads: RecyclerView
-    private lateinit var textTotal: TextView
-    private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: SquadsAdapter
-    private lateinit var addButton: FloatingActionButton
+
+    private var _binding: FragmentSquadsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_squads, container, false)
+    ): View {
+        _binding = FragmentSquadsBinding.inflate(layoutInflater)
+        return binding.root
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupTotalText()
         recyclerSetup()
         setupAddButton()
         setupRefreshLayout()
@@ -50,40 +52,28 @@ class SquadsFragment : BaseFragment() {
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
-            refreshLayout = it
-        }
-
-        refreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
         }
     }
 
     private fun setupAddButton() {
-        addButton = requireView().findViewById(R.id.fab_add)
-
-        addButton.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(R.id.action_nav_squads_to_nav_squads_add)
         }
     }
 
-    private fun setupTotalText() {
-        view?.findViewById<TextView>(R.id.text_squads_total)?.let {
-            textTotal = it
-        }
-    }
-
     private fun setupObservers() {
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            refreshLayout.isRefreshing = it
+            binding.swipeRefreshLayout.isRefreshing = it
         })
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
-                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
                 if (loadStates.refresh is LoadState.Error) {
                     showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
@@ -105,7 +95,6 @@ class SquadsFragment : BaseFragment() {
             adapter.refresh()
         })
 
-
         val navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
 
         // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
@@ -118,7 +107,7 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
-    private fun editSquad(squadId: Int){
+    private fun editSquad(squadId: Int) {
         val navController =
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = SquadsFragmentDirections.actionNavSquadsToNavSquadsAdd(squadId)
@@ -127,29 +116,28 @@ class SquadsFragment : BaseFragment() {
 
     private fun recyclerSetup() {
         view?.let {
-            recyclerSquads = it.findViewById(R.id.recycler_squads)
-            recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
+            binding.recyclerSquads.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = SquadsAdapter(){ squad ->
+            adapter = SquadsAdapter { squad ->
                 editSquad(squad.id)
             }
 
-            recyclerSquads.adapter = adapter.withLoadStateHeaderAndFooter(
+            binding.recyclerSquads.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = ExampleLoadStateAdapter { adapter.refresh() },
                 footer = ExampleLoadStateAdapter { adapter.refresh() }
             )
 
-            recyclerSquads.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            binding.recyclerSquads.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        addButton.show()
+                        binding.fabAdd.show()
                     }
                     super.onScrollStateChanged(recyclerView, newState)
                 }
 
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy != 0 && addButton.isShown)
-                        addButton.hide()
+                    if (dy != 0 && binding.fabAdd.isShown)
+                        binding.fabAdd.hide()
                 }
             })
 
@@ -169,13 +157,13 @@ class SquadsFragment : BaseFragment() {
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-            itemTouchHelper.attachToRecyclerView(recyclerSquads)
+            itemTouchHelper.attachToRecyclerView(binding.recyclerSquads)
         }
     }
 
     private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =
+        binding.textSquadsTotal.text =
             String.format(requireContext().resources.getString(R.string.total_squads), "$total")
     }
 

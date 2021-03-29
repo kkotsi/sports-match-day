@@ -4,18 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentSportsBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -25,24 +23,27 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class SportsFragment : BaseFragment() {
 
     private val viewModel: SportsViewModel by viewModel()
-    private lateinit var recyclerSports: RecyclerView
-    private lateinit var textTotal: TextView
-    private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var adapter: SportsAdapter
-    private lateinit var addButton: FloatingActionButton
+
+    private var _binding: FragmentSportsBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_sports, container, false)
+    ): View {
+        _binding = FragmentSportsBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        setupTotalText()
         recyclerSetup()
         setupAddButton()
         setupRefreshLayout()
@@ -50,41 +51,29 @@ class SportsFragment : BaseFragment() {
     }
 
     private fun setupRefreshLayout() {
-        view?.findViewById<SwipeRefreshLayout>(R.id.swipe_refresh_layout)?.let {
-            refreshLayout = it
-        }
-
-        refreshLayout.setOnRefreshListener {
+        binding.swipeRefreshLayout.setOnRefreshListener {
             adapter.refresh()
         }
     }
 
     private fun setupAddButton() {
-        addButton = requireView().findViewById(R.id.fab_add)
-
-        addButton.setOnClickListener {
+        binding.fabAdd.setOnClickListener {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             navController.navigate(R.id.action_nav_sports_to_nav_sports_add)
         }
     }
 
-    private fun setupTotalText() {
-        view?.findViewById<TextView>(R.id.text_total)?.let {
-            textTotal = it
-        }
-    }
-
     private fun setupObservers() {
 
         viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            refreshLayout.isRefreshing = it
+            binding.swipeRefreshLayout.isRefreshing = it
         })
 
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
-                refreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
+                binding.swipeRefreshLayout.isRefreshing = (loadStates.refresh is LoadState.Loading)
 
                 if (loadStates.refresh is LoadState.Error) {
                     showErrorPopup((loadStates.refresh as? LoadState.Error)?.error ?: Throwable())
@@ -118,7 +107,7 @@ class SportsFragment : BaseFragment() {
         }
     }
 
-    private fun editSport(sportId: Int){
+    private fun editSport(sportId: Int) {
         val navController =
             Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = SportsFragmentDirections.actionNavSportsToNavSportsAdd(sportId)
@@ -126,56 +115,54 @@ class SportsFragment : BaseFragment() {
     }
 
     private fun recyclerSetup() {
-        view?.let {
-            recyclerSports = it.findViewById(R.id.recycler_sports)
-            recyclerSports.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerSports.layoutManager = LinearLayoutManager(requireContext())
 
-            adapter = SportsAdapter{ sport ->
-                editSport(sport.id)
-            }
-
-            recyclerSports.adapter = adapter.withLoadStateHeaderAndFooter(
-                header = ExampleLoadStateAdapter { adapter.refresh() },
-                footer = ExampleLoadStateAdapter { adapter.refresh() }
-            )
-
-            recyclerSports.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        addButton.show()
-                    }
-                    super.onScrollStateChanged(recyclerView, newState)
-                }
-
-                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                    if (dy != 0 && addButton.isShown)
-                        addButton.hide()
-                }
-            })
-
-            val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
-                ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    return false
-                }
-
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
-                    val position = viewHolder.absoluteAdapterPosition
-                    viewModel.removeSport(adapter.getSport(position))
-                }
-            }
-            val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-            itemTouchHelper.attachToRecyclerView(recyclerSports)
+        adapter = SportsAdapter { sport ->
+            editSport(sport.id)
         }
+
+        binding.recyclerSports.adapter = adapter.withLoadStateHeaderAndFooter(
+            header = ExampleLoadStateAdapter { adapter.refresh() },
+            footer = ExampleLoadStateAdapter { adapter.refresh() }
+        )
+
+        binding.recyclerSports.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    binding.fabAdd.show()
+                }
+                super.onScrollStateChanged(recyclerView, newState)
+            }
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0 && binding.fabAdd.isShown)
+                    binding.fabAdd.hide()
+            }
+        })
+
+        val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
+            ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
+                val position = viewHolder.absoluteAdapterPosition
+                viewModel.removeSport(adapter.getSport(position))
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
+        itemTouchHelper.attachToRecyclerView(binding.recyclerSports)
+
     }
 
     private fun refreshCount() {
         val total = adapter.itemCount
-        textTotal.text =
+        binding.textTotal.text =
             String.format(requireContext().resources.getString(R.string.total_sports), "$total")
     }
 

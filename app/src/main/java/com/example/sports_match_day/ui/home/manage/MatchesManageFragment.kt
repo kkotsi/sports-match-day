@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
+import com.example.sports_match_day.databinding.FragmentAddMatchesBinding
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.ui.athletes.manage.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
@@ -30,39 +32,33 @@ class MatchesManageFragment : BaseFragment() {
     private val args: MatchesManageFragmentArgs by navArgs()
 
     private val viewModel: MatchesManageViewModel by viewModel()
-    private lateinit var citiesEditTextView: AutoCompleteTextView
-    private lateinit var countriesEditTextView: AutoCompleteTextView
-    private lateinit var datePickerButton: Button
-    private lateinit var timePickerButton: Button
-    private lateinit var buttonSave: Button
-    private lateinit var loader: ProgressBar
-    private lateinit var recyclerParticipants: RecyclerView
-    private lateinit var sportsSpinner: Spinner
-    private lateinit var stadiumEditTextView: AutoCompleteTextView
-    private lateinit var errorTextView: TextView
 
     lateinit var adapter: ContestantsAdapter
     lateinit var footer: AddContestantAdapter
     private var previousSport: Sport? = null
     private var matchDate = LocalDateTime.now()
-    private var matchId = -1
+
+    private var _binding: FragmentAddMatchesBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_add_matches, container, false)
+    ): View {
+        _binding = FragmentAddMatchesBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //HomeFragmentDirections.actionNavHomeToNavMatchAdd(1L)
-        //val matchId = args
-        matchId = args.matchId
         setUpForEdit()
-        setUpErrorTextView()
         setupDatePickerButton()
         setupEditTextCountry()
         setupEditTextCity()
@@ -75,176 +71,181 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun setUpForEdit() {
-        if(matchId > -1) {
-            viewModel.loadMatch(matchId)
+        if (args.matchId > -1) {
+            viewModel.loadMatch(args.matchId)
         }
     }
 
-    private fun setUpErrorTextView() {
-        errorTextView = requireView().findViewById(R.id.text_error)
-    }
-
     private fun setupTimePickerButton() {
-        timePickerButton = requireView().findViewById(R.id.button_time_picker)
-        timePickerButton.setOnClickListener {
+        binding.buttonTimePicker.setOnClickListener {
             PopupManager.timePickerPopup(requireContext()) { hour, minute ->
                 matchDate = matchDate.withHour(hour).withMinute(minute)
                 val formatter = DateTimeFormatter.ofPattern("HH:mm")
-                timePickerButton.text = matchDate.format(formatter)
+                binding.buttonTimePicker.text = matchDate.format(formatter)
             }
         }
     }
 
     private fun validateData(): Boolean {
         var pass = true
+        with(binding) {
+            val city = editTextCity.text.toString()
+            val country = editTextCountry.text.toString()
+            val stadium = editTextStadium.text.toString()
 
-        val city = citiesEditTextView.text.toString()
-        val country = countriesEditTextView.text.toString()
-        val stadium = stadiumEditTextView.text.toString()
-
-        if (citiesEditTextView.error != null) {
-            pass = false
-        }
-        if (countriesEditTextView.error != null) {
-            pass = false
-        }
-        if (stadiumEditTextView.error != null) {
-            pass = false
-        }
-
-        if (stadium.isBlank()) {
-            stadiumEditTextView.error = getString(R.string.error_blank)
-            pass = false
-        }
-        if (city.isBlank()) {
-            citiesEditTextView.error = getString(R.string.error_blank)
-            pass = false
-        }
-        if (country.isBlank()) {
-            countriesEditTextView.error = getString(R.string.error_blank)
-            pass = false
-        }
-
-        if (previousSport == null) {
-            errorTextView.text = getString(R.string.error_no_sport)
-        } else {
-            if (adapter.participants.size != previousSport?.participantCount) {
+            if (editTextCity.error != null) {
                 pass = false
-                errorTextView.text =
-                    String.format(
-                        requireContext().resources.getString(R.string.error_not_enough_participants),
-                        "${previousSport?.participantCount}"
-                    )
+            }
+            if (editTextCountry.error != null) {
+                pass = false
+            }
+            if (editTextStadium.error != null) {
+                pass = false
             }
 
-            if (adapter.participants.groupingBy { it.contestant?.id }.eachCount()
-                    .filter { it.value > 1 }.isNotEmpty()
-            ) {
+            if (stadium.isBlank()) {
+                editTextStadium.error = getString(R.string.error_blank)
                 pass = false
-                errorTextView.text = getString(R.string.error_duplicate_participant)
+            }
+            if (city.isBlank()) {
+                editTextCity.error = getString(R.string.error_blank)
+                pass = false
+            }
+            if (country.isBlank()) {
+                editTextCountry.error = getString(R.string.error_blank)
+                pass = false
+            }
+
+            if (previousSport == null) {
+                textError.text = getString(R.string.error_no_sport)
+            } else {
+                if (adapter.participants.size != previousSport?.participantCount) {
+                    pass = false
+                    textError.text =
+                        String.format(
+                            requireContext().resources.getString(R.string.error_not_enough_participants),
+                            "${previousSport?.participantCount}"
+                        )
+                }
+
+                if (adapter.participants.groupingBy { it.contestant?.id }.eachCount()
+                        .filter { it.value > 1 }.isNotEmpty()
+                ) {
+                    pass = false
+                    textError.text = getString(R.string.error_duplicate_participant)
+                }
             }
         }
-
         return pass
     }
 
     private fun setupObservers() {
-        loader = requireView().findViewById(R.id.progress_loading)
-
-        viewModel.match.observe(viewLifecycleOwner, {
-            previousSport = it.sport
-            viewModel.sports.value?.indexOf(it.sport)?.let{
-                sportsSpinner.setSelection(it)
-            }
-            stadiumEditTextView.setText(
-                it.stadium,
-                TextView.BufferType.EDITABLE
-            )
-            citiesEditTextView.setText(
-                it.city,
-                TextView.BufferType.EDITABLE
-            )
-            countriesEditTextView.setText(
-                it.country.displayCountry,
-                TextView.BufferType.EDITABLE
-            )
-            matchDate = it.date
-            adapter.participants.clear()
-            adapter.participants.addAll(it.participants)
-
-            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
-            datePickerButton.text = matchDate.format(formatter)
-
-            val formatter1 = DateTimeFormatter.ofPattern("HH:mm")
-            timePickerButton.text = matchDate.format(formatter1)
-
-            adapter.notifyDataSetChanged()
-            footer.refresh(adapter.itemCount, previousSport)
-        })
-
-        viewModel.isDataLoading.observe(viewLifecycleOwner, {
-            if (it)
-                loader.visibility = View.VISIBLE
-            else
-                loader.visibility = View.INVISIBLE
-        })
-
-        viewModel.saveSuccessful.observe(viewLifecycleOwner, {
-            if (it) {
-                val navController =
-                    Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
-                //This will trigger the SportsFragment to refresh.
-                navController.previousBackStackEntry?.savedStateHandle?.set(
-                    HomeFragment.HOME_REFRESH_KEY,
-                    true
+        with(binding) {
+            viewModel.match.observe(viewLifecycleOwner, {
+                previousSport = it.sport
+                viewModel.sports.value?.indexOf(it.sport)?.let { position ->
+                    spinnerSport.setSelection(position)
+                }
+                editTextStadium.setText(
+                    it.stadium,
+                    TextView.BufferType.EDITABLE
                 )
-                navController.navigateUp()
-            }
-        })
+                editTextCity.setText(
+                    it.city,
+                    TextView.BufferType.EDITABLE
+                )
+                editTextCountry.setText(
+                    it.country.displayCountry,
+                    TextView.BufferType.EDITABLE
+                )
+                matchDate = it.date
+                adapter.participants.clear()
+                adapter.participants.addAll(it.participants)
 
-        viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
-            showErrorPopup(it)
-        })
+                val formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy")
+                buttonDatePicker.text = matchDate.format(formatter)
 
-        viewModel.sports.observe(viewLifecycleOwner, {
-            sportsSpinner.adapter = SportsAdapter(requireContext(), it)
-            viewModel.match.value?.let { match ->
-                sportsSpinner.setSelection(it.indexOf(match.sport))
-            }
-        })
+                val formatter1 = DateTimeFormatter.ofPattern("HH:mm")
+                buttonTimePicker.text = matchDate.format(formatter1)
+
+                adapter.notifyDataSetChanged()
+                footer.refresh(adapter.itemCount, previousSport)
+            })
+
+            viewModel.isDataLoading.observe(viewLifecycleOwner, {
+                progressLoading.isVisible = it
+            })
+
+            viewModel.saveSuccessful.observe(viewLifecycleOwner, {
+                if (it) {
+                    val navController =
+                        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+                    //This will trigger the SportsFragment to refresh.
+                    navController.previousBackStackEntry?.savedStateHandle?.set(
+                        HomeFragment.HOME_REFRESH_KEY,
+                        true
+                    )
+                    navController.navigateUp()
+                }
+            })
+
+            viewModel.apiErrorMessage.observe(viewLifecycleOwner, {
+                showErrorPopup(it)
+            })
+
+            viewModel.sports.observe(viewLifecycleOwner, {
+                spinnerSport.adapter = SportsAdapter(requireContext(), it)
+                viewModel.match.value?.let { match ->
+                    spinnerSport.setSelection(it.indexOf(match.sport))
+                }
+            })
+        }
     }
 
     private fun setupSaveButton() {
-        buttonSave = requireView().findViewById(R.id.button_save)
-        buttonSave.setOnClickListener {
+        binding.buttonSave.setOnClickListener {
             if (viewModel.isDataLoading.value == true) return@setOnClickListener
 
             if (validateData()) {
-                val sport = sportsSpinner.selectedItem as Sport
-                val city = citiesEditTextView.text.toString()
-                val country = countriesEditTextView.text.toString()
-                val stadium = stadiumEditTextView.text.toString()
+                val sport = binding.spinnerSport.selectedItem as Sport
+                val city = binding.editTextCity.text.toString()
+                val country = binding.editTextCountry.text.toString()
+                val stadium = binding.editTextStadium.text.toString()
                 val participants = adapter.participants
 
-                if(viewModel.match.value != null) {
-                    viewModel.updateMatch(matchId,matchDate,city,country,stadium,sport,participants)
-                }else
-                    viewModel.addMatch(sport, city, country, stadium, matchDate, adapter.participants)
+                if (viewModel.match.value != null) {
+                    viewModel.updateMatch(
+                        args.matchId,
+                        matchDate,
+                        city,
+                        country,
+                        stadium,
+                        sport,
+                        participants
+                    )
+                } else
+                    viewModel.addMatch(
+                        sport,
+                        city,
+                        country,
+                        stadium,
+                        matchDate,
+                        adapter.participants
+                    )
             }
         }
     }
 
     private fun setupParticipantsRecycler() {
-        recyclerParticipants = requireActivity().findViewById(R.id.recycles_participants)
 
-        recyclerParticipants.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclesParticipants.layoutManager = LinearLayoutManager(requireContext())
 
         val participants = mutableListOf<Participant>()
 
         adapter = ContestantsAdapter(participants)
         val header = AddContestantAdapter(false) {}
         footer = AddContestantAdapter(true) {
-            errorTextView.text = ""
+            binding.textError.text = ""
             viewModel.contestants.observeOnce(viewLifecycleOwner, {
                 val contestants = mutableListOf<String>()
                 it.forEach { contestant ->
@@ -280,7 +281,7 @@ class MatchesManageFragment : BaseFragment() {
             if (viewModel.contestants.value == null) viewModel.getContestants(previousSport)
 
         }
-        recyclerParticipants.adapter = ConcatAdapter(header, adapter, footer)
+        binding.recyclesParticipants.adapter = ConcatAdapter(header, adapter, footer)
 
         val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object :
             ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
@@ -300,20 +301,19 @@ class MatchesManageFragment : BaseFragment() {
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(recyclerParticipants)
+        itemTouchHelper.attachToRecyclerView(binding.recyclesParticipants)
 
     }
 
     private fun setupSportsSpinner() {
-        sportsSpinner = requireView().findViewById(R.id.spinner_sport)
-        sportsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        binding.spinnerSport.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
             ) {
-                val selectedSport = sportsSpinner.selectedItem as Sport
+                val selectedSport = binding.spinnerSport.selectedItem as Sport
                 if (selectedSport.id != previousSport?.id) {
                     refreshData()
                     selectSport(selectedSport)
@@ -326,34 +326,36 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun refreshData() {
-        //If the Sport is a team sport, auto-fill the stadium
-        if (previousSport?.type == SportType.TEAM && adapter.participants.isNotEmpty()) {
-            val firstSquad = adapter.participants.first().contestant as Squad
-            stadiumEditTextView.setText(
-                firstSquad.stadium,
-                TextView.BufferType.EDITABLE
-            )
-            citiesEditTextView.setText(
-                firstSquad.city,
-                TextView.BufferType.EDITABLE
-            )
-            countriesEditTextView.setText(
-                firstSquad.country.displayCountry,
-                TextView.BufferType.EDITABLE
-            )
-        } else {
-            stadiumEditTextView.setText(
-                "",
-                TextView.BufferType.EDITABLE
-            )
-            citiesEditTextView.setText(
-                "",
-                TextView.BufferType.EDITABLE
-            )
-            countriesEditTextView.setText(
-                "",
-                TextView.BufferType.EDITABLE
-            )
+        with(binding) {
+            //If the Sport is a team sport, auto-fill the stadium
+            if (previousSport?.type == SportType.TEAM && adapter.participants.isNotEmpty()) {
+                val firstSquad = adapter.participants.first().contestant as Squad
+                editTextStadium.setText(
+                    firstSquad.stadium,
+                    TextView.BufferType.EDITABLE
+                )
+                editTextCity.setText(
+                    firstSquad.city,
+                    TextView.BufferType.EDITABLE
+                )
+                editTextCountry.setText(
+                    firstSquad.country.displayCountry,
+                    TextView.BufferType.EDITABLE
+                )
+            } else {
+                editTextStadium.setText(
+                    "",
+                    TextView.BufferType.EDITABLE
+                )
+                editTextCity.setText(
+                    "",
+                    TextView.BufferType.EDITABLE
+                )
+                editTextCountry.setText(
+                    "",
+                    TextView.BufferType.EDITABLE
+                )
+            }
         }
     }
 
@@ -368,17 +370,15 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun setupEditTextCity() {
-        citiesEditTextView = requireView().findViewById(R.id.editText_city)
-
-        citiesEditTextView.setOnFocusChangeListener { _, hasFocus ->
+        binding.editTextCity.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val city = citiesEditTextView.editableText.toString()
+                val city = binding.editTextCity.editableText.toString()
                 viewModel.checkCity(requireContext(), city) {
                     if (it == null) {
-                        citiesEditTextView.error = getString(R.string.error_empty_city)
+                        binding.editTextCity.error = getString(R.string.error_empty_city)
                     } else {
-                        citiesEditTextView.error = null
-                        citiesEditTextView.setText(
+                        binding.editTextCity.error = null
+                        binding.editTextCity.setText(
                             it.locality ?: it.adminArea,
                             TextView.BufferType.EDITABLE
                         )
@@ -389,21 +389,19 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun setupStadiumEditText() {
-        stadiumEditTextView = requireView().findViewById(R.id.editText_stadium)
-        stadiumEditTextView.setOnFocusChangeListener { _, hasFocus ->
+        binding.editTextStadium.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val stadium = stadiumEditTextView.editableText.toString()
+                val stadium = binding.editTextStadium.editableText.toString()
                 if (stadium.isBlank()) {
-                    stadiumEditTextView.error = getString(R.string.error_blank)
+                    binding.editTextStadium.error = getString(R.string.error_blank)
                 } else {
-                    stadiumEditTextView.error = null
+                    binding.editTextStadium.error = null
                 }
             }
         }
     }
 
     private fun setupEditTextCountry() {
-        countriesEditTextView = requireView().findViewById(R.id.editText_country)
 
         val countries = mutableListOf<String>()
         Locale.getAvailableLocales().forEach {
@@ -412,13 +410,13 @@ class MatchesManageFragment : BaseFragment() {
             }
         }
 
-        countriesEditTextView.setOnFocusChangeListener { _, hasFocus ->
+        binding.editTextCountry.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {
-                val country = countriesEditTextView.editableText.toString()
+                val country = binding.editTextCountry.editableText.toString()
                 if (!countries.contains(country)) {
-                    countriesEditTextView.error = getString(R.string.error_empty_country)
+                    binding.editTextCountry.error = getString(R.string.error_empty_country)
                 } else {
-                    countriesEditTextView.error = null
+                    binding.editTextCountry.error = null
                 }
             }
         }
@@ -428,19 +426,18 @@ class MatchesManageFragment : BaseFragment() {
             android.R.layout.simple_list_item_1,
             countries
         ).also { adapter ->
-            countriesEditTextView.setAdapter(adapter)
+            binding.editTextCountry.setAdapter(adapter)
         }
     }
 
     private fun setupDatePickerButton() {
-        datePickerButton = requireView().findViewById(R.id.button_date_picker)
-        datePickerButton.setOnClickListener {
+        binding.buttonDatePicker.setOnClickListener {
             PopupManager.datePickerPopup(requireContext()) {
                 matchDate = matchDate.withYear(it.year).withMonth(it.monthValue)
                     .withDayOfMonth(it.dayOfMonth)
-                datePickerButton.text = it.toString().substring(0, 10)
+                binding.buttonDatePicker.text = it.toString().substring(0, 10)
             }
         }
-        datePickerButton.text = LocalDateTime.now().toString().substring(0, 10)
+        binding.buttonDatePicker.text = LocalDateTime.now().toString().substring(0, 10)
     }
 }
