@@ -194,7 +194,8 @@ class CoreControllerImpl(
             country,
             stadium,
             sportId,
-            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(), gender
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            gender
         )
     }
 
@@ -251,7 +252,16 @@ class CoreControllerImpl(
             birthday.atZone(ZoneId.systemDefault()).toEpochSecond(), gender
         )
         val countryLocale = Locale("", country)
-        memoryRepository.updateSquad(id, name, city, countryLocale, stadium, sport, birthday, gender)
+        memoryRepository.updateSquad(
+            id,
+            name,
+            city,
+            countryLocale,
+            stadium,
+            sport,
+            birthday,
+            gender
+        )
         return true
     }
 

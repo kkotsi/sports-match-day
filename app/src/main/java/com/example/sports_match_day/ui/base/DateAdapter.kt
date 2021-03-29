@@ -1,4 +1,4 @@
-package com.example.sports_match_day.ui.squads.manage
+package com.example.sports_match_day.ui.base
 
 import android.content.Context
 import android.view.LayoutInflater

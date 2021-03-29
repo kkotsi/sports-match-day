@@ -15,8 +15,9 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.databinding.FragmentAddSquadBinding
 import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Sport
-import com.example.sports_match_day.ui.athletes.manage.SportsAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.example.sports_match_day.ui.base.DateAdapter
+import com.example.sports_match_day.ui.base.SportsAdapter
 import com.example.sports_match_day.ui.squads.SquadsFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
