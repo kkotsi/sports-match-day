@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation.findNavController
 import androidx.paging.LoadState
@@ -97,15 +98,19 @@ class AthletesFragment : BaseFragment() {
             adapter.refresh()
         })
 
-        val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
 
-        // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
-        navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
-            ATHLETES_REFRESH_KEY
-        )?.observe(
-            viewLifecycleOwner
-        ) {
-            adapter.refresh()
+        //If the activity has been created the NavController will not be found, thus an exception will be thrown.
+        if (requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
+
+            // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+            navController.currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
+                ATHLETES_REFRESH_KEY
+            )?.observe(
+                viewLifecycleOwner
+            ) {
+                adapter.refresh()
+            }
         }
     }
 

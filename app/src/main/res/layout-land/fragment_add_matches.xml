@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+   <!-- <ImageView
         android:id="@+id/image_match"
         android:layout_width="300dp"
         android:layout_height="300dp"
@@ -14,7 +14,7 @@
         android:visibility="visible"
         android:contentDescription="@string/description_simple_bgg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />-->
 
     <Button
         android:id="@+id/button_date_picker"
@@ -46,7 +46,7 @@
         android:text="15:00"
         android:textColor="@color/colorPrimary"
         app:drawableTint="@color/colorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editText_city"
         app:layout_constraintStart_toEndOf="@+id/button_date_picker"
         app:layout_constraintTop_toTopOf="@+id/button_date_picker"
         app:strokeColor="@color/colorGrey"
@@ -58,17 +58,18 @@
         style="@style/RoundedEditText"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="220dp"
+        android:background="@drawable/bg_border"
         android:hint="@string/city"
         android:imeOptions="actionNext"
+        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/container_spinner_sport"
-        app:layout_constraintTop_toBottomOf="@+id/container_spinner_sport" />
+        app:layout_constraintTop_toTopOf="@+id/container_spinner_sport" />
 
     <FrameLayout
         android:id="@+id/container_spinner_sport"
@@ -76,6 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
+        android:minHeight="45dp"
         android:background="@drawable/bg_border"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_date_picker">
@@ -96,15 +98,16 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_border"
         android:hint="@string/country"
         android:imeOptions="actionDone"
+        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
-        app:layout_constraintStart_toStartOf="@+id/editText_city"
-        app:layout_constraintTop_toBottomOf="@+id/editText_city" />
+        app:layout_constraintStart_toStartOf="@+id/container_spinner_sport"
+        app:layout_constraintTop_toBottomOf="@+id/container_spinner_sport" />
 
     <AutoCompleteTextView
         android:id="@+id/editText_stadium"
@@ -113,22 +116,23 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:autofillHints="Greece,Spain,France"
+        android:background="@drawable/bg_border"
         android:hint="@string/stadium"
         android:imeOptions="actionDone"
+        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
         app:layout_constraintStart_toStartOf="@+id/editText_city"
-        app:layout_constraintTop_toBottomOf="@+id/editText_country" />
+        app:layout_constraintTop_toBottomOf="@+id/editText_city" />
 
     <TextView
         android:id="@+id/text_participants"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/participants"
-        app:layout_constraintStart_toStartOf="@id/editText_stadium"
-        app:layout_constraintTop_toBottomOf="@+id/image_match" />
+        app:layout_constraintBottom_toTopOf="@+id/recycles_participants"
+        app:layout_constraintStart_toStartOf="@+id/recycles_participants" />
 
     <ProgressBar
         android:id="@id/progress_loading"
@@ -136,22 +140,23 @@
         android:layout_height="wrap_content"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/recycles_participants"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recycles_participants" />
+        app:layout_constraintEnd_toEndOf="@+id/button_save"
+        app:layout_constraintStart_toStartOf="@+id/button_save"
+        app:layout_constraintTop_toBottomOf="@+id/button_save" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycles_participants"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="5dp"
         android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_save"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_participants"
-        tools:itemCount="0"
+        app:layout_constraintStart_toEndOf="@+id/editText_stadium"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:itemCount="2"
         tools:listitem="@layout/item_contestant" />
 
     <TextView
@@ -168,14 +173,15 @@
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_marginBottom="50dp"
         android:backgroundTint="@color/colorPrimary"
         android:drawableStart="@drawable/ic_save"
+        android:minWidth="100dp"
         android:padding="5dp"
         android:text="@string/save"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/editText_stadium"
+        app:layout_constraintStart_toStartOf="@+id/editText_country"
+        app:layout_constraintTop_toBottomOf="@+id/editText_stadium" />
 </androidx.constraintlayout.widget.ConstraintLayout>

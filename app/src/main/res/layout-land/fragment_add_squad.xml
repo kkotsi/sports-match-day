@@ -10,10 +10,10 @@
         android:layout_width="126dp"
         android:layout_height="122dp"
         android:layout_marginTop="50dp"
+        android:layout_marginEnd="50dp"
         android:contentDescription="@string/description_simple_bgg"
         android:src="@drawable/team_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/editText_name"
         app:layout_constraintTop_toTopOf="parent" />
 
     <AutoCompleteTextView
@@ -49,15 +49,15 @@
         style="@style/RoundedEditText"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
         android:autofillHints="Greece,Spain,France"
         android:hint="@string/country"
         android:imeOptions="actionNext"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintStart_toStartOf="@+id/editText_city"
-        app:layout_constraintTop_toBottomOf="@+id/editText_city" />
+        app:layout_constraintStart_toEndOf="@+id/editText_name"
+        app:layout_constraintTop_toTopOf="@+id/editText_name" />
 
     <AutoCompleteTextView
         android:id="@+id/editText_stadium"
@@ -71,19 +71,21 @@
         android:inputType="textAutoComplete|textAutoCorrect"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        app:layout_constraintStart_toStartOf="@+id/editText_city"
+        app:layout_constraintStart_toStartOf="@+id/editText_country"
         app:layout_constraintTop_toBottomOf="@+id/editText_country" />
 
     <ToggleButton
         android:id="@+id/toggle_gender"
         android:layout_width="101dp"
         android:layout_height="36dp"
+        android:layout_marginTop="104dp"
         android:layout_marginEnd="5dp"
         android:background="@drawable/bg_toggle_gender"
         android:checked="false"
         android:textOff=""
         android:textOn=""
         app:layout_constraintEnd_toEndOf="@+id/image_squad"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="@+id/image_squad"
         app:layout_constraintTop_toTopOf="@+id/editText_stadium" />
 
@@ -99,12 +101,12 @@
         android:id="@+id/container_spinner_day"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/border_rounded"
         android:minHeight="45dp"
         app:layout_constraintEnd_toStartOf="@+id/container_spinner_month"
-        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintStart_toStartOf="@+id/editText_city"
         app:layout_constraintTop_toBottomOf="@+id/editText_stadium">
 
         <Spinner
@@ -139,10 +141,9 @@
         android:id="@+id/container_spinner_year"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
         android:background="@drawable/border_rounded"
         android:minHeight="45dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editText_stadium"
         app:layout_constraintStart_toEndOf="@+id/container_spinner_month"
         app:layout_constraintTop_toTopOf="@+id/container_spinner_month">
 
@@ -168,7 +169,7 @@
         android:layout_marginTop="50dp"
         android:background="@drawable/border_rounded"
         android:minHeight="45dp"
-        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintStart_toStartOf="@+id/container_spinner_day"
         app:layout_constraintTop_toBottomOf="@+id/container_spinner_day">
 
         <Spinner
@@ -178,7 +179,7 @@
             app:layout_constraintEnd_toStartOf="@+id/spinner_month"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editText_country"
-            tools:listitem="@layout/item_spinner" />
+            tools:listitem="@layout/item_spinner_text" />
     </FrameLayout>
 
     <ProgressBar
