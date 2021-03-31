@@ -7,4 +7,6 @@ import com.example.sports_match_day.BuildConfig
  */
 object PreferencesKeys {
     const val SETUP_SAMPLE_DATA = BuildConfig.APPLICATION_ID + ".SETUP_SAMPLE_DATA"
+    const val DEBUG_ON = BuildConfig.APPLICATION_ID + ".DEBUG_ON"
+    const val LANGUAGE = BuildConfig.APPLICATION_ID + ".LANGUAGE"
 }

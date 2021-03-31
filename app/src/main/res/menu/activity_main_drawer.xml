@@ -29,18 +29,13 @@
             </group>
         </menu>
     </item>
-    <item android:title="@string/settings">
+    <item android:title="@string/menu_settings">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_settings"
                     android:icon="@drawable/ic_settings"
-                    android:title="@string/settings" />
-                <!--<item
-                    android:id="@+id/nav_exit"
-                    android:icon="@drawable/ic_exit"
-                    android:title="@string/exit" /> -->
-
+                    android:title="@string/menu_settings" />
             </group>
         </menu>
     </item>

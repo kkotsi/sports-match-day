@@ -53,7 +53,7 @@
     <fragment
         android:id="@+id/nav_athletes_add"
         android:name="com.example.sports_match_day.ui.athletes.manage.AthletesManageFragment"
-        android:label="@string/menu_add"
+        android:label="@string/menu_manage"
         tools:layout="@layout/fragment_add_athlete">
 
         <argument
@@ -80,7 +80,7 @@
     <fragment
         android:id="@+id/nav_squads_add"
         android:name="com.example.sports_match_day.ui.squads.manage.SquadsManageFragment"
-        android:label="@string/menu_add"
+        android:label="@string/menu_manage"
         tools:layout="@layout/fragment_add_squad">
         <argument
             android:name="squadId"
@@ -114,5 +114,12 @@
             android:name="sportId"
             android:defaultValue="-1"
             app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.sports_match_day.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings">
     </fragment>
 </navigation>

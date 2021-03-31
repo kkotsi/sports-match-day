@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
@@ -18,6 +19,8 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.databinding.FragmentHomeBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
@@ -228,6 +231,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun refreshCount() {
+        binding.textMatchesTotal.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
         val total = adapter.itemCount
         binding.textMatchesTotal.text =
             String.format(requireContext().resources.getString(R.string.total_squads), "$total")

@@ -44,7 +44,7 @@ PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
                 imagePerson.setImageResource(R.drawable.female)
             }
 
-            val url = FlagManager.getFlagURL(item.country.toString())
+            val url = FlagManager.getFlagURL(item.getCountryCode())
 
             Picasso
                 .with(view.context)

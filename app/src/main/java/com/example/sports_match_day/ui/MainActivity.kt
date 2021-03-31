@@ -3,7 +3,6 @@ package com.example.sports_match_day.ui
 import android.os.Bundle
 import android.view.Menu
 import android.view.MotionEvent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -12,13 +11,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.sports_match_day.R
+import com.example.sports_match_day.ui.base.BaseActivity
 import com.google.android.material.navigation.NavigationView
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Created by Kristo on 05-Mar-21
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private val viewModel: MainActivityViewModel by viewModel()
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_athletes, R.id.nav_sports, R.id.nav_sports
+                R.id.nav_home, R.id.nav_athletes, R.id.nav_sports, R.id.nav_sports, R.id.nav_settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

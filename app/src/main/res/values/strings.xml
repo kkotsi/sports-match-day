@@ -1,12 +1,10 @@
 <resources>
-    <string name="app_name">Sports Match Day</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string translatable="false" name="app_name">Sports Match Day</string>
+    <string translatable="false" name="navigation_drawer_open">Open navigation drawer</string>
+    <string translatable="false" name="navigation_drawer_close">Close navigation drawer</string>
+    <string translatable="false" name="nav_header_title">Android Studio</string>
+    <string translatable="false" name="nav_header_subtitle">android.studio@android.com</string>
+    <string translatable="false" name="nav_header_desc">Navigation header</string>
 
     <string name="total_athletes">Currently showing %1$s athletes</string>
     <string name="total_squads">Currently showing %1$s squads</string>
@@ -16,12 +14,10 @@
     <string name="menu_athletes">Athletes</string>
     <string name="menu_squads">Squads</string>
     <string name="menu_sports">Sports</string>
-    <string name="menu_add">Add</string>
+    <string name="menu_manage">Manage</string>
+    <string name="menu_settings">Settings</string>
 
-    <string name="more_options">…</string>
-    <string name="athletes">Athletes</string>
     <string name="manage">Manage</string>
-    <string name="settings">Settings</string>
     <string name="exit">Exit</string>
     <string name="name">Name</string>
     <string name="city">City</string>
@@ -57,13 +53,15 @@
     <string name="error_no_sport">You must select a sport!</string>
     <string name="error_duplicate_participant">A participant exists twice!</string>
 
-    <string name="description_simple_bgg">A simple background image</string>
-    <string name="description_athlete">The image of the athlete</string>
-    <string name="description_squad">The image of the squad</string>
-    <string name="fob_add">Add new item relevant to the screen</string>
-    <string name="description_squad_athlete">The image of the athlete or the squad in the current event.</string>
-    <string name="description_type">The type of sport (Team or Individual)</string>
-    <string name="description_gender">The gender of the sport or the individual.</string>
-    <string name="description_sport_icon">The icon of the sport</string>
+    <string translatable="false" name="description_simple_bgg">A simple background image</string>
+    <string translatable="false" name="description_athlete">The image of the athlete</string>
+    <string translatable="false" name="description_squad">The image of the squad</string>
+    <string translatable="false" name="fob_add">Add new item relevant to the screen</string>
+    <string translatable="false" name="description_squad_athlete">The image of the athlete or the squad in the current event.</string>
+    <string translatable="false" name="description_type">The type of sport (Team or Individual)</string>
+    <string translatable="false" name="description_gender">The gender of the sport or the individual.</string>
+    <string translatable="false" name="description_sport_icon">The icon of the sport</string>
+    <string translatable="false" name="debug_off">Debug Off</string>
+    <string translatable="false" name="debug_on">Debug On</string>
 
 </resources>
