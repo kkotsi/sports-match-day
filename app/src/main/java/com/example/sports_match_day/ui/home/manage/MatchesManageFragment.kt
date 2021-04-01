@@ -295,9 +295,12 @@ class MatchesManageFragment : BaseFragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val position = viewHolder.absoluteAdapterPosition
-                adapter.participants.removeAt(position)
-                adapter.notifyItemRemoved(position)
-                footer.refresh(adapter.itemCount, previousSport)
+                if(adapter.participants.size > 0) {
+                    adapter.participants.removeAt(position)
+                    adapter.notifyItemRemoved(position)
+                }else{
+                    adapter.notifyDataSetChanged()
+                }
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)

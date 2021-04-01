@@ -13,7 +13,7 @@
     <string name="city">Πόλη</string>
     <string name="country">Χώρα</string>
     <string name="birthday">Ημερομηνία γέννησης</string>
-    <string name="months">Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec</string>
+    <string name="months">Ιαν,Φεβ,Μαρ,Απρ,Μαι,Ιουν,Ιουλ,Αυγ,Σεπ,Οκτ,Νοεμ,Δεκ</string>
     <string name="save">Αποθήκευεση</string>
     <string name="sport">Άθλημα</string>
     <string name="stadium">Γήπεδο</string>
@@ -31,9 +31,9 @@
     <string name="squad">Ομάδα</string>
     <string name="solo">Άτομο</string>
 
-    <string name="total_athletes">Εφμάνιση %1$s αθλητές</string>
-    <string name="total_squads">Εφμάνιση %1$s ομάδες</string>
-    <string name="total_sports">Εφμάνιση %1$s αθλήματα</string>
+    <string name="total_athletes">Εφμάνιση %1$s αθλητών</string>
+    <string name="total_squads">Εφμάνιση %1$s ομάδων</string>
+    <string name="total_sports">Εφμάνιση %1$s αθλημάτων</string>
 
     <string name="help_gender">Μόνο αθλητές με το συγκεκριμένο φύλο μπορούν να συμμετέχουν σε αυτό το άθλημα. Δεν γίνεται να το αλλάξεις αργότερα.</string>
     <string name="help_type">Μόνο ομάδες ή μόνο άτομα μπορούν να συμμετέχουν. Δεν γίνεται να το αλλάξεις αργότερα.</string>

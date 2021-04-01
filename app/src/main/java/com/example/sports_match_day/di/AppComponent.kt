@@ -9,5 +9,6 @@ val appComponent: List<Module> =
     listOf(
         roomModule,
         controllerModule,
-        viewModelModule
+        viewModelModule,
+        firebaseModule
     )
