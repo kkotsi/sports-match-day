@@ -28,7 +28,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun getMatches(count: Int, offsetId: Int?): List<Match>? {
-        //Exclude the match with id == offsetId by added 1.0
+        //Exclude the match with id == offsetId by adding 1.0
         val offset = offsetId?.plus(1) ?: 0
         val dataSnapshot = FirebaseDatabase.getInstance().reference
             .child("matches")
@@ -183,13 +183,17 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         firebaseMatch["id"] = id
 
         val mapParticipants = HashMap<String, Any>()
+
+        //This will fix the weird firebase order.
+        var count = participants.size
         participants.forEach {
             val map = hashMapOf<String, Any>()
             val partId = it.contestant!!.id
             map["participantId"] = partId
             map["score"] = it.score
 
-            mapParticipants["participant$partId"] = map
+            mapParticipants["participant$count"] = map
+            count--
         }
 
         firebaseMatch["participants"] = mapParticipants

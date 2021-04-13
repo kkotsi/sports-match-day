@@ -7,11 +7,11 @@
     "sportId": 1,
     "stadium": "Santiago Bernabeu",
     "participants": {
-      "participant1": {
+      "participant2": {
         "participantId": 1,
         "score": 2.0
       },
-      "participant2": {
+      "participant1": {
         "participantId": 2,
         "score": 0.0
       }
@@ -25,11 +25,11 @@
     "sportId": 2,
     "stadium": "Dignity Health Sports Park",
     "participants": {
-      "participant1": {
+      "participant2": {
         "participantId": 1,
         "score": 0.0
       },
-      "participant2": {
+      "participant1": {
         "participantId": 2,
         "score": 0.0
       }
@@ -43,19 +43,19 @@
     "sportId": 3,
     "stadium": "Olympic Stadium",
     "participants": {
-      "participant3": {
+      "participant4": {
         "participantId": 3,
         "score": -1.0
       },
-      "participant7": {
+      "participant3": {
         "participantId": 7,
         "score": -1.0
       },
-      "participant8": {
+      "participant2": {
         "participantId": 8,
         "score": -1.0
       },
-      "participant9": {
+      "participant1": {
         "participantId": 9,
         "score": -1.0
       }
@@ -69,11 +69,11 @@
     "sportId": 4,
     "stadium": "Emirates",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 3,
         "score": 2.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 4,
         "score": 0
       }
@@ -87,11 +87,11 @@
     "sportId": 1,
     "stadium": "Camp Nou",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 5,
         "score": 2.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 6,
         "score": 0
       }
@@ -105,11 +105,11 @@
     "sportId": 1,
     "stadium": "Wanda Metropolitano",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 7,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 9,
         "score": 1.0
       }
@@ -123,11 +123,11 @@
     "sportId": 1,
     "stadium": "Ramón Sánchez Pizjuán",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 9,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 10,
         "score": 0
       }
@@ -141,11 +141,11 @@
     "sportId": 1,
     "stadium": "Nuevo Estadio de Los Cármenes",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 11,
         "score": 1.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 12,
         "score": 1.0
       }
@@ -159,11 +159,11 @@
     "sportId": 1,
     "stadium": "Estadi Ciutat de València",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 13,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 14,
         "score": 4.0
       }
@@ -177,11 +177,11 @@
     "sportId": 1,
     "stadium": "José Zorrilla",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 15,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 16,
         "score": 3.0
       }
@@ -195,11 +195,11 @@
     "sportId": 1,
     "stadium": "Estadio El Alcoraz",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 17,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 18,
         "score": 2.0
       }
@@ -213,11 +213,11 @@
     "sportId": 1,
     "stadium": "Mendizorrotza",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 19,
         "score": 1.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 20,
         "score": 2.0
       }
@@ -231,11 +231,11 @@
     "sportId": 1,
     "stadium": "Estadio de Balaídos",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 21,
         "score": 0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 22,
         "score": 1.0
       }
@@ -249,11 +249,11 @@
     "sportId": 1,
     "stadium": "Coliseum Alfonso Pérez",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 23,
         "score": 0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 1,
         "score": 0
       }
@@ -267,11 +267,11 @@
     "sportId": 1,
     "stadium": "Mestalla",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 2,
         "score": 5.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 5,
         "score": 4.0
       }
@@ -285,11 +285,11 @@
     "sportId": 1,
     "stadium": "Estadio de Balaídos",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 21,
         "score": 0.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 6,
         "score": 0.0
       }
@@ -303,11 +303,11 @@
     "sportId": 1,
     "stadium": "Benito Villamarín",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 20,
         "score": 2.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 7,
         "score": 2.0
       }
@@ -321,11 +321,11 @@
     "sportId": 1,
     "stadium": "Mendizorrotza",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 19,
         "score": 1.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 5,
         "score": 1.0
       }
@@ -339,11 +339,11 @@
     "sportId": 1,
     "stadium": "Ipurua Municipal",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 18,
         "score": 1.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 9,
         "score": 4.0
       }
@@ -357,11 +357,11 @@
     "sportId": 1,
     "stadium": "Estadio El Alcoraz",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 17,
         "score": 3.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 10,
         "score": 7.0
       }
@@ -375,11 +375,11 @@
     "sportId": 1,
     "stadium": "Manuel Martínez Valero",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 16,
         "score": 0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 11,
         "score": 2.0
       }
@@ -393,11 +393,11 @@
     "sportId": 1,
     "stadium": "José Zorrilla",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 15,
         "score": 0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 12,
         "score": 0
       }
@@ -411,11 +411,11 @@
     "sportId": 1,
     "stadium": "Nuevo Estadio Ramon de Carranza",
     "participants": {
-      "participant3": {
+      "participant2": {
         "participantId": 14,
         "score": 1.0
       },
-      "participant4": {
+      "participant1": {
         "participantId": 13,
         "score": 2.0
       }
@@ -429,19 +429,19 @@
     "sportId": 3,
     "stadium": "Kaftanzoglio",
     "participants": {
-      "participant3": {
+      "participant4": {
         "participantId": 3,
         "score": 14.5
       },
-      "participant7": {
+      "participant3": {
         "participantId": 7,
         "score": 16.0
       },
-      "participant8": {
+      "participant2": {
         "participantId": 8,
         "score": 15.0
       },
-      "participant9": {
+      "participant1": {
         "participantId": 9,
         "score": 14.0
       }
