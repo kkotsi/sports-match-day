@@ -56,16 +56,26 @@ class MemoryRepository() {
         }
 
         athletes.doToAll({
-            it.sport.id == id
+            it.sport?.id == id
         }){ squad ->
-            squad.sport.name = name
-            squad.sport.type = mType
-            squad.sport.gender = mGender
-            squad.sport.participantCount = count
+            squad.sport?.name = name
+            squad.sport?.type = mType
+            squad.sport?.gender = mGender
+            squad.sport?.participantCount = count
         }
     }
 
-    fun updateSquad(id: Int, name: String, city: String, countryLocale: Locale, stadium: String, sport: Sport, birthday: LocalDateTime, gender: Boolean) {
+    fun updateSquad(
+        id: Int,
+        name: String,
+        city: String,
+        countryLocale: Locale,
+        stadium: String,
+        sport: Sport,
+        birthday: LocalDateTime,
+        gender: Boolean,
+        matchIds: MutableList<Int>
+    ) {
         val mGender = if(gender) Gender.MALE else Gender.FEMALE
         squads.find { it.id == id }?.let {
             it.name = name
@@ -75,10 +85,20 @@ class MemoryRepository() {
             it.sport = sport
             it.birthday = birthday
             it.gender = mGender
+            it.matches = matchIds
         }
     }
 
-    fun updateAthlete(id: Int, name: String, city: String, countryLocale: Locale, gender: Boolean, sport: Sport, birthday: LocalDateTime) {
+    fun updateAthlete(
+        id: Int,
+        name: String,
+        city: String,
+        countryLocale: Locale,
+        gender: Boolean,
+        sport: Sport,
+        birthday: LocalDateTime,
+        matchIds: MutableList<Int>
+    ) {
         athletes.find { it.id == id }?.let {
             val mGender = if(gender) Gender.MALE else Gender.FEMALE
             it.name = name
@@ -87,6 +107,7 @@ class MemoryRepository() {
             it.gender = mGender
             it.sport = sport
             it.birthday = birthday
+            it.matches = matchIds
         }
     }
 }

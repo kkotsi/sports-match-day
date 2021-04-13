@@ -1,6 +1,9 @@
 package com.example.sports_match_day.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.example.sports_match_day.room.entities.Squad
 
 /**
@@ -24,14 +27,17 @@ interface SquadsDao {
     @Insert
     suspend fun insertSquad(squad: Squad)
 
-    @Delete
-    suspend fun deleteSquad(squad: Squad)
+    @Query("DELETE FROM squads WHERE sportId=:sportId")
+    suspend fun deleteSquadBySport(sportId: Int)
 
     @Query("DELETE FROM squads WHERE id=:id")
     suspend fun deleteSquad(id: Int)
 
     @Update
     suspend fun updateSquad(squad: Squad)
+
+    @Query("Update squads SET matches=:matches WHERE id=:squadId")
+    suspend fun updateSquadMatches(squadId: Int, matches: List<Int>)
 
     @Query("SELECT COUNT(id) FROM squads")
     suspend fun getCount(): Int

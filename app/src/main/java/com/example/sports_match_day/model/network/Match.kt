@@ -10,12 +10,12 @@ class Match(
     var country: String = "",
     var stadium: String = "",
     var sportId: Int = 0,
-    var participants: List<HashMap<String, Any>> = mutableListOf()
+    var participants: HashMap<String, HashMap<String, Any>> = hashMapOf()
 )
 
 class Participant(
     map: HashMap<String, Any>
 ) {
-    var id: Int = map["id"].toString().toInt()
+    var id: Int = map["participantId"].toString().toInt()
     var score: Double = map["score"].toString().toDouble()
 }

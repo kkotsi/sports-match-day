@@ -63,5 +63,11 @@
     <string translatable="false" name="description_sport_icon">The icon of the sport</string>
     <string translatable="false" name="debug_off">Debug Off</string>
     <string translatable="false" name="debug_on">Debug On</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="warning_delete_athletes">Do you want to also delete the matches that this athlete has participated?</string>
+    <string name="warning_delete_squads">Do you want to also delete the matches that this squad has participated?</string>
+    <string name="warning_delete_sports">Do you want to also delete the matches with this sport?</string>
+    <string name="warning_delete_athletes_squads"><![CDATA[Delete Athletes & Squads]]></string>
 
 </resources>

@@ -15,8 +15,9 @@ class Squad(
     var country: Locale,
     var sport: Sport?,
     var birthday: LocalDateTime,
-    var gender: Gender
-): Contestant(name, id){
+    var gender: Gender,
+    matches: MutableList<Int>
+): Contestant(name, id, matches){
     fun getCountryCode(): String{
         return country.toString().replaceFirst("_","")
     }

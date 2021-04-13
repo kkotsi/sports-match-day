@@ -44,4 +44,14 @@ class SquadsViewModel(private var coreController: CoreController) : ScopedViewMo
             }) {}
         }
     }
+
+    fun removeSquadAndMatches(squad: Squad?) {
+        squad?.let{
+            launchWithLoad({
+                val success = coreController.removeSquad(squad)
+                coreController.removeMatchBySquad(squad)
+                removeSuccessful.value = success
+            }) {}
+        }
+    }
 }

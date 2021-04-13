@@ -1,5 +1,7 @@
 package com.example.sports_match_day.ui.home.manage
 
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +41,30 @@ class ContestantsAdapter(var participants: MutableList<Participant>) :
                     imageContestant.setImageResource(R.drawable.female)
             }
 
-            if(participant.score >= 0) {
+            editTextParticipantScore.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                }
+
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
+                }
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (s?.isNotBlank() == true)
+                        participant.score = s.toString().toDouble()
+                }
+            })
+
+            if (participant.score >= 0) {
                 val format = DecimalFormat("0.#")
                 editTextParticipantScore.setText(
                     format.format(participant.score).toString(),

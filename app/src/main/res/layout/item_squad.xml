@@ -48,6 +48,21 @@
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Real Madrid" />
 
+            <TextView
+                android:id="@+id/text_matches_participated"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/text_squad"
+                app:layout_constraintEnd_toStartOf="@+id/image_country"
+                app:layout_constraintStart_toEndOf="@+id/text_squad"
+                app:layout_constraintTop_toTopOf="@+id/text_squad"
+                tools:text="[1, 7]" />
+
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/image_country"
                 android:layout_width="wrap_content"

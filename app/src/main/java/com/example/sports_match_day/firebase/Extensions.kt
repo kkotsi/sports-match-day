@@ -20,9 +20,11 @@ import kotlin.coroutines.resumeWithException
 suspend inline fun Query.awaitQueryValue() : DataSnapshot = suspendCancellableCoroutine { continuation ->
     addListenerForSingleValueEvent(object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
+            print("ok")
             continuation.resume(snapshot)
         }
         override fun onCancelled(error: DatabaseError) {
+            print("ok")
             continuation.resumeWithException(Throwable(error.message))
         }
     })

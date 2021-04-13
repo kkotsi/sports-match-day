@@ -10,9 +10,9 @@
         android:layout_width="300dp"
         android:layout_height="300dp"
         android:layout_marginTop="30dp"
+        android:contentDescription="@string/description_simple_bgg"
         android:src="@drawable/matches"
         android:visibility="visible"
-        android:contentDescription="@string/description_simple_bgg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -59,13 +59,14 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_border"
         android:hint="@string/city"
         android:imeOptions="actionNext"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
         android:visibility="visible"
         app:layout_constraintStart_toStartOf="@+id/container_spinner_sport"
         app:layout_constraintTop_toBottomOf="@+id/container_spinner_sport" />
@@ -77,6 +78,7 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_border"
+        android:minHeight="45dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_date_picker">
 
@@ -96,13 +98,14 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:background="@drawable/bg_border"
         android:hint="@string/country"
         android:imeOptions="actionDone"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
         app:layout_constraintStart_toStartOf="@+id/editText_city"
         app:layout_constraintTop_toBottomOf="@+id/editText_city" />
 
@@ -113,12 +116,13 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:autofillHints="Greece,Spain,France"
+        android:background="@drawable/bg_border"
         android:hint="@string/stadium"
         android:imeOptions="actionDone"
         android:inputType="textAutoComplete|textAutoCorrect"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
-        android:background="@drawable/bg_border"
         app:layout_constraintStart_toStartOf="@+id/editText_city"
         app:layout_constraintTop_toBottomOf="@+id/editText_country" />
 
@@ -168,10 +172,10 @@
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_marginBottom="50dp"
         android:backgroundTint="@color/colorPrimary"
         android:drawableStart="@drawable/ic_save"
+        android:minWidth="100dp"
         android:padding="5dp"
         android:text="@string/save"
         android:textColor="@android:color/white"

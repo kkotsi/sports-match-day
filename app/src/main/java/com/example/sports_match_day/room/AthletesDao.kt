@@ -24,11 +24,18 @@ interface AthletesDao {
     @Insert
     suspend fun insertAthlete(athlete: Athlete)
 
+    @Query("DELETE FROM athletes WHERE sportId=:sportId")
+    suspend fun deleteAthleteBySport(sportId: Int)
+
     @Query("DELETE FROM athletes WHERE id=:id")
     suspend fun deleteAthlete(id: Int)
 
     @Delete
     suspend fun deleteAthlete(athlete: Athlete)
+
+
+    @Query("Update athletes SET matches=:matches WHERE id=:athleteId")
+    suspend fun updateAthleteMatches(athleteId: Int, matches: List<Int>)
 
     @Update
     suspend fun updateAthlete(athlete: Athlete)

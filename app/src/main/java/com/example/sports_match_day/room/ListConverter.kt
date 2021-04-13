@@ -1,9 +1,6 @@
 package com.example.sports_match_day.room
 
 import androidx.room.TypeConverter
-import com.example.sports_match_day.room.entities.Athlete
-import com.example.sports_match_day.room.entities.Sport
-import com.example.sports_match_day.room.entities.Squad
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -14,32 +11,20 @@ import java.lang.reflect.Type
 class ListConverter {
 
     @TypeConverter
-    fun fromSquadList(squads: List<Squad>?): String? {
-        if (squads == null) {
+    fun fromMatches(matchIds: List<Int>?): String? {
+        if(matchIds == null)
             return null
-        }
         val gson = Gson()
-        val type: Type = object : TypeToken<List<Squad?>?>() {}.type
-        return gson.toJson(squads, type)
+        val type: Type = object : TypeToken<List<Int>>() {}.type
+        return gson.toJson(matchIds, type)
     }
 
     @TypeConverter
-    fun fromAthleteList(athletes: List<Athlete>?): String? {
-        if (athletes == null) {
-            return null
-        }
+    fun toMatches(matchIds: String?): MutableList<Int> {
+        if(matchIds == null || matchIds.isBlank())
+            return mutableListOf()
         val gson = Gson()
-        val type: Type = object : TypeToken<List<Athlete?>?>() {}.type
-        return gson.toJson(athletes, type)
-    }
-
-    @TypeConverter
-    fun fromSportList(sports: List<Sport>?): String? {
-        if (sports == null) {
-            return null
-        }
-        val gson = Gson()
-        val type: Type = object : TypeToken<List<Athlete?>?>() {}.type
-        return gson.toJson(sports, type)
+        val type: Type = object : TypeToken<List<Int>>() {}.type
+        return gson.fromJson(matchIds, type)
     }
 }

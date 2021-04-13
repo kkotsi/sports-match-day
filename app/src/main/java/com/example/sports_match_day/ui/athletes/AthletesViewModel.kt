@@ -43,4 +43,14 @@ class AthletesViewModel(private var coreController: CoreController) : ScopedView
             }) {}
         }
     }
+
+    fun removeAthleteAndMatches(athlete: Athlete?) {
+        athlete?.let{
+            launchWithLoad({
+                val success = coreController.removeAthlete(athlete)
+                coreController.removeMatchByAthlete(athlete)
+                removeSuccessful.value = success
+            }) {}
+        }
+    }
 }

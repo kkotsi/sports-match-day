@@ -119,8 +119,58 @@ class CoreControllerImpl(
         return localRepository.getSport(id)
     }
 
+    private suspend fun removeMatchFromParticipant(match: Match, matchIds: MutableList<Int>) {
+        if (match.participants.isEmpty())
+            return
+
+        val nonNullContestant = match.participants.find { it.contestant != null }
+        nonNullContestant?.let {
+            val isAthlete = nonNullContestant.contestant is Athlete
+            if (isAthlete) {
+                //update athlete
+                match.participants.forEach {
+                    (it.contestant as? Athlete)?.let {
+                        with(it) {
+                            matches.removeAll(matchIds)
+                            updateAthlete(
+                                id,
+                                name,
+                                city,
+                                getCountryCode(),
+                                gender == Gender.MALE,
+                                sport!!,
+                                birthday,
+                                matches
+                            )
+                        }
+                    }
+                }
+            } else {
+                match.participants.forEach {
+                    (it.contestant as? Squad)?.let {
+                        with(it) {
+                            matches.removeAll(matchIds)
+                            updateSquad(
+                                id,
+                                name,
+                                city,
+                                getCountryCode(),
+                                stadium,
+                                sport!!,
+                                birthday,
+                                gender == Gender.MALE,
+                                matches
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     override suspend fun removeMatch(match: Match): Boolean {
         remoteRepository.removeMatch(match)
+        removeMatchFromParticipant(match, mutableListOf(match.id))
         memoryRepository.matches.remove(match)
         return true
     }
@@ -140,8 +190,18 @@ class CoreControllerImpl(
         return localRepository.removeSport(sport)
     }
 
+    override suspend fun removeSquadBySport(sport: Sport): Boolean {
+        memoryRepository.squads.removeAll { it.sport?.id == sport.id }
+        return localRepository.removeSquadBySport(sport)
+    }
+
+    override suspend fun removeAthleteBySport(sport: Sport): Boolean {
+        memoryRepository.athletes.removeAll { it.sport?.id == sport.id }
+        return localRepository.removeAthleteBySport(sport)
+    }
+
     override suspend fun addMatch(
-        sportId: Int,
+        sport: Sport,
         city: String,
         country: String,
         stadium: String,
@@ -151,14 +211,48 @@ class CoreControllerImpl(
         participants.forEach {
             if (it.score < 0) it.score = Participant.UNSET_SCORE
         }
-        remoteRepository.addMatch(
+        val matchId = remoteRepository.addMatch(
             city,
             country,
-            sportId,
+            sport.id,
             stadium,
             date,
             participants
         )
+
+        if (sport.type == SportType.SOLO) {
+            //update athlete
+            participants.forEach {
+                val athlete = it.contestant as Athlete
+                athlete.matches.add(matchId)
+                updateAthlete(
+                    athlete.id,
+                    athlete.name,
+                    athlete.city,
+                    athlete.getCountryCode(),
+                    athlete.gender == Gender.MALE,
+                    athlete.sport!!,
+                    athlete.birthday,
+                    athlete.matches
+                )
+            }
+        } else {
+            participants.forEach {
+                val squad = it.contestant as Squad
+                squad.matches.add(matchId)
+                updateSquad(
+                    squad.id,
+                    squad.name,
+                    squad.city,
+                    squad.getCountryCode(),
+                    squad.stadium,
+                    squad.sport!!,
+                    squad.birthday,
+                    squad.gender == Gender.MALE,
+                    squad.matches
+                )
+            }
+        }
         return true
     }
 
@@ -240,7 +334,9 @@ class CoreControllerImpl(
         country: String,
         stadium: String,
         sport: Sport,
-        birthday: LocalDateTime, gender: Boolean
+        birthday: LocalDateTime,
+        gender: Boolean,
+        matchIds: MutableList<Int>
     ): Boolean {
         localRepository.updateSquad(
             id,
@@ -249,7 +345,9 @@ class CoreControllerImpl(
             country,
             stadium,
             sport.id,
-            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(), gender
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            gender,
+            matchIds
         )
         val countryLocale = Locale("", country)
         memoryRepository.updateSquad(
@@ -260,8 +358,54 @@ class CoreControllerImpl(
             stadium,
             sport,
             birthday,
-            gender
+            gender,
+            matchIds
         )
+        return true
+    }
+
+    override suspend fun removeMatchBySport(sport: Sport): Boolean {
+        memoryRepository.matches.removeAll { it.sport?.id == sport.id }
+        val matchesRemoved = remoteRepository.removeMatchBySport(sport.id)
+        val matchesRemovedIds = mutableListOf<Int>()
+        matchesRemoved.forEach {
+            matchesRemovedIds.add(it.id)
+        }
+        matchesRemoved.forEach {
+            removeMatchFromParticipant(it, matchesRemovedIds)
+        }
+        return true
+    }
+
+    override suspend fun removeMatchByAthlete(athlete: Athlete): Boolean {
+        memoryRepository.matches.removeAll { athlete.matches.contains(it.id) }
+        val matchesRemoved = remoteRepository.removeMatchByAthlete(athlete.matches)
+
+        val matchesRemovedIds = mutableListOf<Int>()
+        matchesRemoved.forEach {
+            matchesRemovedIds.add(it.id)
+        }
+
+        matchesRemoved.forEach {
+            removeMatchFromParticipant(it, matchesRemovedIds)
+        }
+
+        return true
+    }
+
+    override suspend fun removeMatchBySquad(squad: Squad): Boolean {
+        memoryRepository.matches.removeAll { squad.matches.contains(it.id) }
+        val matchesRemoved = remoteRepository.removeMatchBySquad(squad.matches)
+
+        val matchesRemovedIds = mutableListOf<Int>()
+        matchesRemoved.forEach {
+            matchesRemovedIds.add(it.id)
+        }
+
+        matchesRemoved.forEach {
+            removeMatchFromParticipant(it, matchesRemovedIds)
+        }
+
         return true
     }
 
@@ -272,7 +416,8 @@ class CoreControllerImpl(
         countryCode: String,
         gender: Boolean,
         sport: Sport,
-        birthday: LocalDateTime
+        birthday: LocalDateTime,
+        matchIds: MutableList<Int>
     ): Boolean {
         localRepository.updateAthlete(
             id,
@@ -281,10 +426,20 @@ class CoreControllerImpl(
             countryCode,
             gender,
             sport.id,
-            birthday.atZone(ZoneId.systemDefault()).toEpochSecond()
+            birthday.atZone(ZoneId.systemDefault()).toEpochSecond(),
+            matchIds
         )
         val countryLocale = Locale("", countryCode)
-        memoryRepository.updateAthlete(id, name, city, countryLocale, gender, sport, birthday)
+        memoryRepository.updateAthlete(
+            id,
+            name,
+            city,
+            countryLocale,
+            gender,
+            sport,
+            birthday,
+            matchIds
+        )
         return true
     }
 }
@@ -317,8 +472,15 @@ interface CoreController {
     suspend fun removeSquad(squad: Squad): Boolean
     suspend fun removeSport(sport: Sport): Boolean
 
+    suspend fun removeSquadBySport(sport: Sport): Boolean
+    suspend fun removeAthleteBySport(sport: Sport): Boolean
+    suspend fun removeMatchBySport(sport: Sport): Boolean
+
+    suspend fun removeMatchByAthlete(athlete: Athlete): Boolean
+    suspend fun removeMatchBySquad(squad: Squad): Boolean
+
     suspend fun addMatch(
-        sportId: Int,
+        sport: Sport,
         city: String,
         country: String,
         stadium: String,
@@ -371,7 +533,9 @@ interface CoreController {
         country: String,
         stadium: String,
         sport: Sport,
-        birthday: LocalDateTime, gender: Boolean
+        birthday: LocalDateTime,
+        gender: Boolean,
+        matchIds: MutableList<Int>
     ): Boolean
 
     suspend fun updateAthlete(
@@ -381,6 +545,7 @@ interface CoreController {
         countryCode: String,
         gender: Boolean,
         sport: Sport,
-        birthday: LocalDateTime
+        birthday: LocalDateTime,
+        matchIds: MutableList<Int>
     ): Boolean?
 }

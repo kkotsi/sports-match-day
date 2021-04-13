@@ -71,7 +71,7 @@ class AthletesManageViewModel(private val coreController: CoreController) : Scop
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.updateAthlete(id, name, city, countryCode, gender, sport, birthday)
+                coreController.updateAthlete(id, name, city, countryCode, gender, sport, birthday, athlete.value?.matches ?: mutableListOf())
         }) {}
     }
 

@@ -22,4 +22,26 @@ class SportsViewModel(private val coreController: CoreController) : ScopedViewMo
             }) {}
         }
     }
+
+    fun removeSportAndMatches(sport: Sport?) {
+        sport?.let {
+            launchWithLoad({
+                val success = coreController.removeSport(it)
+                coreController.removeMatchBySport(it)
+                removeSuccessful.value = success
+            }) {}
+        }
+    }
+
+    fun removeAthletesAndSquadsAndMatches(sport: Sport?){
+        sport?.let {
+            launchWithLoad({
+                val success = coreController.removeSport(it)
+                coreController.removeSquadBySport(it)
+                coreController.removeAthleteBySport(it)
+                coreController.removeMatchBySport(it)
+                removeSuccessful.value = success
+            }) {}
+        }
+    }
 }

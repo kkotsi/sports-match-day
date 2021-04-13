@@ -16,6 +16,7 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.databinding.FragmentSportsBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.example.sports_match_day.utils.PopupManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.flow.collectLatest
@@ -161,7 +162,26 @@ class SportsFragment : BaseFragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val position = viewHolder.absoluteAdapterPosition
-                viewModel.removeSport(adapter.getSport(position))
+
+                val message = getString(R.string.warning_delete_sports)
+                val yes: (Boolean) -> Unit = {
+                    val sport = adapter.getSport(position)
+                    viewModel.removeSportAndMatches(sport)
+                    if(it){
+                        viewModel.removeAthletesAndSquadsAndMatches(sport)
+                    }
+                }
+                val no : (Boolean) -> Unit = {
+                    val sport = adapter.getSport(position)
+                    viewModel.removeSport(sport)
+                    if(it){
+                        viewModel.removeAthletesAndSquadsAndMatches(sport)
+                    }
+                }
+
+                PopupManager.deleteSportPopupMessage(requireContext(), message, yes, no){
+                    binding.recyclerSports.adapter?.notifyItemChanged(position)
+                }
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)

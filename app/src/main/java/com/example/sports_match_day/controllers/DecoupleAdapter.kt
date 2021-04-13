@@ -1,8 +1,6 @@
 package com.example.sports_match_day.controllers
 
 import android.content.Context
-import android.location.Address
-import android.location.Geocoder
 import com.example.sports_match_day.model.*
 import org.koin.core.KoinComponent
 import org.koin.core.get
@@ -42,7 +40,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
             sport?.let {
                 match.participants.forEach {
-                    val participant = com.example.sports_match_day.model.network.Participant(it)
+                    val participant = com.example.sports_match_day.model.network.Participant(it.value)
                     val athleteOrSquad = if (sport.type == SportType.TEAM) {
                         coreController.getSquad(participant.id)
                     } else {
@@ -102,9 +100,9 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val gender = if (athlete.gender) Gender.MALE else Gender.FEMALE
 
             val coreController = get<CoreController>()
-            val sport = coreController.getSport(athlete.sportId) ?: return null
+            val sport = coreController.getSport(athlete.sportId)
 
-            return Athlete(athlete.id, athlete.name, athlete.city, country, sport, birthday, gender)
+            return Athlete(athlete.id, athlete.name, athlete.city, country, sport, birthday, gender, athlete.matches!!)
         }
         return null
     }
@@ -126,7 +124,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val country = countryConverter(squad.country)
 
             val coreController = get<CoreController>()
-            val sport = coreController.getSport(squad.sportId) ?: return null
+            val sport = coreController.getSport(squad.sportId)
 
             val gender = if (squad.gender) Gender.MALE else Gender.FEMALE
             return Squad(
@@ -137,7 +135,8 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                 country,
                 sport,
                 birthday,
-                gender
+                gender,
+                squad.matches!!
             )
         }
         return null
@@ -154,14 +153,14 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
         return Locale("",code)
     }
 
-    private fun locationConverter(location: String): Address? {
+    /*private fun locationConverter(location: String): Address? {
         val geoCoder = Geocoder(context, Locale.getDefault())
         val addresses = geoCoder.getFromLocationName(location, 1)
         if (addresses.size > 0)
             return addresses[0]
 
         return null
-    }
+    }*/
 
     private fun epochConverter(epoch: Long): LocalDateTime {
         return LocalDateTime.ofInstant(Instant.ofEpochSecond(epoch), ZoneId.systemDefault())

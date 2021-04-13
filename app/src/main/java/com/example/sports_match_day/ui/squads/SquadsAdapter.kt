@@ -5,12 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.utils.FlagManager
+import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.pixplicity.easyprefs.library.Prefs
 import com.squareup.picasso.Picasso
 
 /**
@@ -25,6 +28,7 @@ class SquadsAdapter(
 
     inner class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         private val textName: TextView = view.findViewById(R.id.text_squad)
+        private val textMatchesParticipated: TextView = view.findViewById(R.id.text_matches_participated)
         private val textCity: TextView = view.findViewById(R.id.text_city)
         private val textStadium: TextView = view.findViewById(R.id.text_stadium)
         private val textSport: TextView = view.findViewById(R.id.text_sport)
@@ -55,6 +59,10 @@ class SquadsAdapter(
             }
             textSport.text = item.sport?.name ?: ""
             textBirthday.text = item.birthday.year.toString()
+
+            val debugMatches = item.matches.toString()
+            textMatchesParticipated.text = debugMatches
+            textMatchesParticipated.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
         }
     }
 

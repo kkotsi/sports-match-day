@@ -1,6 +1,9 @@
 package com.example.sports_match_day.room
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
 import com.example.sports_match_day.room.entities.Sport
 
 /**
@@ -19,13 +22,10 @@ interface SportsDao {
     suspend fun getSports(type: Boolean, gender: Boolean): List<Sport>
 
     @Query("SELECT * FROM sports WHERE sports.id = :id")
-    suspend fun getSport(id: Int): Sport
+    suspend fun getSport(id: Int): Sport?
 
     @Insert
     suspend fun insertSport(sport: Sport)
-
-    @Delete
-    suspend fun deleteSport(sport: Sport)
 
     @Query("DELETE FROM sports WHERE id=:id")
     suspend fun deleteSport(id: Int)

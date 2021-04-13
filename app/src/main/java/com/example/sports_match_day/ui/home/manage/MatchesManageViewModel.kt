@@ -59,7 +59,7 @@ class MatchesManageViewModel(private val coreController: CoreController) : Scope
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addMatch(sport.id, city, countryCode, stadium, date, participants)
+                coreController.addMatch(sport, city, countryCode, stadium, date, participants)
         }) {}
     }
 

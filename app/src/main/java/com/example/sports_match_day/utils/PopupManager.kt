@@ -28,6 +28,63 @@ object PopupManager {
         return alertDialog
     }
 
+    fun deletePopupMessage(context: Context, message: String, yes: () -> Unit, no: ()-> Unit, cancel: () -> Unit): AlertDialog {
+        val mBuilder = AlertDialog.Builder(context)
+        val mView = View.inflate(context, R.layout.pop_up_delete, null)
+        val alertDialog = mBuilder.setView(mView).create()
+        alertDialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context,R.color.colorTransparent))
+
+        mView.findViewById<TextView>(R.id.text_message).text = message
+        mView.findViewById<Button>(R.id.button_yes).setOnClickListener {
+            alertDialog.dismiss()
+            yes()
+        }
+
+        mView.findViewById<Button>(R.id.button_no).setOnClickListener {
+            alertDialog.dismiss()
+            no()
+        }
+
+        mView.findViewById<Button>(R.id.button_cancel).setOnClickListener {
+            alertDialog.dismiss()
+            cancel()
+        }
+
+        alertDialog.show()
+        return alertDialog
+    }
+
+    fun deleteSportPopupMessage(context: Context, message: String, yes: (Boolean) -> Unit, no: (Boolean)-> Unit, cancel: () -> Unit): AlertDialog {
+        val mBuilder = AlertDialog.Builder(context)
+        val mView = View.inflate(context, R.layout.pop_up_delete, null)
+        val alertDialog = mBuilder.setView(mView).create()
+        alertDialog.window?.setBackgroundDrawable(ContextCompat.getDrawable(context,R.color.colorTransparent))
+
+        val checkBox = mView.findViewById<CheckBox>(R.id.checkBox)
+        checkBox.visibility = View.VISIBLE
+        mView.findViewById<TextView>(R.id.text_message).text = message
+
+        mView.findViewById<Button>(R.id.button_yes).setOnClickListener {
+            alertDialog.dismiss()
+            val deleteSquadsAthletes = checkBox.isChecked
+            yes(deleteSquadsAthletes)
+        }
+
+        mView.findViewById<Button>(R.id.button_no).setOnClickListener {
+            alertDialog.dismiss()
+            val deleteSquadsAthletes = checkBox.isChecked
+            no(deleteSquadsAthletes)
+        }
+
+        mView.findViewById<Button>(R.id.button_cancel).setOnClickListener {
+            alertDialog.dismiss()
+            cancel()
+        }
+
+        alertDialog.show()
+        return alertDialog
+    }
+
     fun datePickerPopup(context: Context, onDateSelect: (LocalDateTime) -> Unit): AlertDialog {
         val mBuilder = AlertDialog.Builder(context)
         val mView = View.inflate(context, R.layout.pop_up_date_picker, null)
@@ -50,7 +107,6 @@ object PopupManager {
         return alertDialog
     }
 
-    @Suppress("DEPRECATION")
     fun timePickerPopup(context: Context, onDateSelect: (Int, Int) -> Unit): AlertDialog {
         val mBuilder = AlertDialog.Builder(context)
         val mView = View.inflate(context, R.layout.pop_up_time_picker, null)

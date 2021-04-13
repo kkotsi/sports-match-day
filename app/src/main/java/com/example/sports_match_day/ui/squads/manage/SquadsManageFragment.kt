@@ -111,22 +111,23 @@ class SquadsManageFragment : BaseFragment() {
     private fun setupSaveButton() {
         with(binding) {
             buttonSave.setOnClickListener {
-                val birthday = LocalDateTime.of(
-                    spinnerYear.selectedItem.toString().toInt(),
-                    spinnerMonth.selectedItemPosition  + 1,
-                    spinnerDay.selectedItem?.toString()?.toInt() ?: 1,
-                    1,
-                    1
-                )
-
-                val city = editTextCity.text.toString().trim()
-                val country = editTextCountry.text.toString().trim()
-                val name = editTextName.text.toString().trim()
-                val stadium = editTextStadium.text.toString().trim()
-                val sport = spinnerSport.selectedItem as Sport
-                val gender = binding.toggleGender.isChecked
 
                 if (validateData()) {
+                    val birthday = LocalDateTime.of(
+                        spinnerYear.selectedItem.toString().toInt(),
+                        spinnerMonth.selectedItemPosition  + 1,
+                        spinnerDay.selectedItem?.toString()?.toInt() ?: 1,
+                        1,
+                        1
+                    )
+
+                    val city = editTextCity.text.toString().trim()
+                    val country = editTextCountry.text.toString().trim()
+                    val name = editTextName.text.toString().trim()
+                    val stadium = editTextStadium.text.toString().trim()
+                    val sport = spinnerSport.selectedItem as Sport
+                    val gender = binding.toggleGender.isChecked
+
                     if (viewModel.squad.value == null)
                         viewModel.addSquad(name, city, country, stadium, sport.id, birthday, gender)
                     else
@@ -166,7 +167,6 @@ class SquadsManageFragment : BaseFragment() {
             if (editTextStadium.error != null) {
                 pass = false
             }
-
             if (stadium.isBlank()) {
                 editTextStadium.error = getString(R.string.error_blank)
                 pass = false
@@ -181,6 +181,10 @@ class SquadsManageFragment : BaseFragment() {
             }
             if (name.isBlank()) {
                 editTextName.error = getString(R.string.error_blank)
+                pass = false
+            }
+            if(spinnerSport.selectedItem !is Sport){
+                binding.textError.text = getString(R.string.error_no_sport)
                 pass = false
             }
         }

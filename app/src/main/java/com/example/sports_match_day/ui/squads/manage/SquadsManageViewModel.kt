@@ -93,7 +93,7 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday, gender)
+                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday, gender, squad.value?.matches ?: mutableListOf())
         }) {}
     }
 }

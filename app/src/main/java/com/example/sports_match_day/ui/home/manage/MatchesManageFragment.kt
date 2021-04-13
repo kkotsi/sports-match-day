@@ -142,7 +142,7 @@ class MatchesManageFragment : BaseFragment() {
     private fun setupObservers() {
         with(binding) {
             viewModel.match.observe(viewLifecycleOwner, {
-                previousSport = it.sport
+                previousSport = it.sport ?: spinnerSport.selectedItem as? Sport
                 viewModel.sports.value?.indexOf(it.sport)?.let { position ->
                     spinnerSport.setSelection(position)
                 }
@@ -278,7 +278,8 @@ class MatchesManageFragment : BaseFragment() {
                 }
             })
 
-            if (viewModel.contestants.value == null) viewModel.getContestants(previousSport)
+            if (viewModel.contestants.value == null)
+                viewModel.getContestants(previousSport)
 
         }
         binding.recyclesParticipants.adapter = ConcatAdapter(header, adapter, footer)
@@ -295,10 +296,10 @@ class MatchesManageFragment : BaseFragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                 val position = viewHolder.absoluteAdapterPosition
-                if(adapter.participants.size > 0) {
+                if (adapter.participants.size > 0) {
                     adapter.participants.removeAt(position)
                     adapter.notifyItemRemoved(position)
-                }else{
+                } else {
                     adapter.notifyDataSetChanged()
                 }
             }
@@ -331,20 +332,25 @@ class MatchesManageFragment : BaseFragment() {
     private fun refreshData() {
         with(binding) {
             //If the Sport is a team sport, auto-fill the stadium
-            if (previousSport?.type == SportType.TEAM && adapter.participants.isNotEmpty()) {
-                val firstSquad = adapter.participants.first().contestant as Squad
-                editTextStadium.setText(
-                    firstSquad.stadium,
-                    TextView.BufferType.EDITABLE
-                )
-                editTextCity.setText(
-                    firstSquad.city,
-                    TextView.BufferType.EDITABLE
-                )
-                editTextCountry.setText(
-                    firstSquad.country.displayCountry,
-                    TextView.BufferType.EDITABLE
-                )
+            if (previousSport?.type == SportType.TEAM) {
+                if(adapter.participants.isNotEmpty()) {
+                    val firstSquad = adapter.participants.first().contestant as Squad
+                    if (editTextStadium.text.toString().isEmpty())
+                        editTextStadium.setText(
+                            firstSquad.stadium,
+                            TextView.BufferType.EDITABLE
+                        )
+                    if (editTextCity.text.toString().isEmpty())
+                        editTextCity.setText(
+                            firstSquad.city,
+                            TextView.BufferType.EDITABLE
+                        )
+                    if (editTextCountry.text.toString().isEmpty())
+                        editTextCountry.setText(
+                            firstSquad.country.displayCountry,
+                            TextView.BufferType.EDITABLE
+                        )
+                }
             } else {
                 editTextStadium.setText(
                     "",

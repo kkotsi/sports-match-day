@@ -31,6 +31,10 @@ class RemoteRepositoryImpl(
         return true
     }
 
+    override suspend fun removeMatchBySport(sportId: Int): MutableList<Match> {
+        return decoupleAdapter.toMatches(firebaseRepository.removeMatchesBySport(sportId) ?: mutableListOf())
+    }
+
     override suspend fun addMatch(
         city: String,
         country: String,
@@ -38,8 +42,8 @@ class RemoteRepositoryImpl(
         stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
-    ) {
-        firebaseRepository.addMatch(
+    ): Int {
+        return firebaseRepository.addMatch(
             city,
             country,
             sportId,
@@ -73,12 +77,21 @@ class RemoteRepositoryImpl(
         )
         return true
     }
+
+    override suspend fun removeMatchByAthlete(matchIds: List<Int>): List<Match>{
+        return decoupleAdapter.toMatches(firebaseRepository.removeMatchByAthlete(matchIds))
+    }
+
+    override suspend fun removeMatchBySquad(matchIds: List<Int>): List<Match> {
+        return decoupleAdapter.toMatches(firebaseRepository.removeMatchBySquad(matchIds))
+    }
 }
 
 interface RemoteRepository {
     fun getMatches(): Pager<Int, Match>
 
     suspend fun removeMatch(match: Match): Boolean
+    suspend fun removeMatchBySport(sportId: Int): MutableList<Match>
 
     suspend fun addMatch(
         city: String,
@@ -87,7 +100,7 @@ interface RemoteRepository {
         stadium: String,
         date: LocalDateTime,
         participants: List<Participant>
-    )
+    ): Int
 
     suspend fun getMatch(matchId: Int): Match?
 
@@ -100,4 +113,7 @@ interface RemoteRepository {
         date: LocalDateTime,
         participants: List<Participant>
     ): Boolean
+
+    suspend fun removeMatchByAthlete(matchIds: List<Int>): List<Match>
+    suspend fun removeMatchBySquad(matchIds: List<Int>): List<Match>
 }

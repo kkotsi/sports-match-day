@@ -60,8 +60,8 @@ class AthletesManageFragment : BaseFragment() {
         setupForEdit()
     }
 
-    private fun setupForEdit(){
-        if(args.athleteId > -1){
+    private fun setupForEdit() {
+        if (args.athleteId > -1) {
             viewModel.loadAthlete(args.athleteId)
         }
     }
@@ -71,7 +71,7 @@ class AthletesManageFragment : BaseFragment() {
             if (!hasFocus) {
                 val country = binding.editTextName.editableText.toString()
                 if (country.isBlank()) {
-                    binding.editTextName.error =  getString(R.string.error_blank)
+                    binding.editTextName.error = getString(R.string.error_blank)
                 } else {
                     binding.editTextName.error = null
                 }
@@ -82,21 +82,21 @@ class AthletesManageFragment : BaseFragment() {
     private fun setupSaveButton() {
         with(binding) {
             buttonSave.setOnClickListener {
-                val gender = toggleGender.isChecked
-                val birthday = LocalDateTime.of(
-                    spinnerYear.selectedItem?.toString()?.toInt() ?: 0,
-                    spinnerMonth.selectedItemPosition + 1,
-                    spinnerDay.selectedItem?.toString()?.toInt() ?: 1,
-                    1,
-                    1
-                )
-
-                val city = editTextCity.text.toString().trim()
-                val country = editTextCountry.text.toString().trim()
-                val name = editTextName.text.toString().trim()
-                val sport = (spinnerSport.selectedItem as Sport)
-
                 if (validateData()) {
+                    val gender = toggleGender.isChecked
+                    val birthday = LocalDateTime.of(
+                        spinnerYear.selectedItem?.toString()?.toInt() ?: 0,
+                        spinnerMonth.selectedItemPosition + 1,
+                        spinnerDay.selectedItem?.toString()?.toInt() ?: 1,
+                        1,
+                        1
+                    )
+
+                    val city = editTextCity.text.toString().trim()
+                    val country = editTextCountry.text.toString().trim()
+                    val name = editTextName.text.toString().trim()
+                    val sport = (spinnerSport.selectedItem as Sport)
+
                     if (viewModel.athlete.value == null)
                         viewModel.addAthlete(name, city, country, gender, sport.id, birthday)
                     else
@@ -114,7 +114,7 @@ class AthletesManageFragment : BaseFragment() {
         }
     }
 
-    private fun validateData(): Boolean{
+    private fun validateData(): Boolean {
         var pass = true
 
         with(binding) {
@@ -144,6 +144,11 @@ class AthletesManageFragment : BaseFragment() {
                 editTextName.error = getString(R.string.error_blank)
                 pass = false
             }
+
+            if (spinnerSport.selectedItem !is Sport) {
+                binding.textError.text = getString(R.string.error_no_sport)
+                pass = false
+            }
         }
         return pass
     }
@@ -153,8 +158,7 @@ class AthletesManageFragment : BaseFragment() {
             if (isChecked) {
                 binding.imagePerson.setImageResource(R.drawable.male)
                 viewModel.getSports(Gender.MALE)
-            }
-            else {
+            } else {
                 binding.imagePerson.setImageResource(R.drawable.female)
                 viewModel.getSports(Gender.FEMALE)
             }
@@ -227,8 +231,8 @@ class AthletesManageFragment : BaseFragment() {
         }
     }
 
-    private fun setupSportsSpinner(){
-        if(args.athleteId < 0)
+    private fun setupSportsSpinner() {
+        if (args.athleteId < 0)
             viewModel.getSports(Gender.FEMALE)
     }
 
@@ -324,7 +328,7 @@ class AthletesManageFragment : BaseFragment() {
     private fun setupEditTextCountry() {
         val countries = mutableListOf<String>()
         Locale.getAvailableLocales().forEach {
-            if(!countries.contains(it.displayCountry)){
+            if (!countries.contains(it.displayCountry)) {
                 countries.add(it.displayCountry)
             }
         }

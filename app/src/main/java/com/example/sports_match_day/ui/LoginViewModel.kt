@@ -14,6 +14,8 @@ class LoginViewModel(private var coreController: CoreController) : ScopedViewMod
     fun loadData(){
         launchWithLoad({
             samplesDataLoaded.value = coreController.loadSamples()
-        }) {}
+        }) {
+            print("ok")
+        }
     }
 }

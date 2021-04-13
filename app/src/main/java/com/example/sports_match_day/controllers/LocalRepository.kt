@@ -45,6 +45,8 @@ class LocalRepositoryImpl(
 
     override suspend fun getSport(id: Int): Sport? {
         val roomSport = sportsDatabase.sportsDao().getSport(id)
+        print("ok")
+        if(roomSport == null) return null
         return decoupleAdapter.toSport(roomSport)
     }
 
@@ -86,6 +88,16 @@ class LocalRepositoryImpl(
         return true
     }
 
+    override suspend fun removeSquadBySport(sport: Sport): Boolean {
+        sportsDatabase.squadsDao().deleteSquadBySport(sport.id)
+        return true
+    }
+
+    override suspend fun removeAthleteBySport(sport: Sport): Boolean {
+        sportsDatabase.athletesDao().deleteAthleteBySport(sport.id)
+        return true
+    }
+
     override suspend fun getAllAthletes(sportId: Int): MutableList<Athlete> {
         val count = sportsDatabase.athletesDao().getCount()
         if (memoryRepository.athletes.size < count) {
@@ -93,7 +105,7 @@ class LocalRepositoryImpl(
                 sportsDatabase.athletesDao().getAthletes(sportId)
             ).toMutableList()
         }
-        return memoryRepository.athletes.filter { it.sport.id == sportId }.toMutableList()
+        return memoryRepository.athletes.filter { it.sport?.id == sportId }.toMutableList()
     }
 
     override suspend fun getAllAthletes(): MutableList<Athlete> {
@@ -178,7 +190,8 @@ class LocalRepositoryImpl(
             country,
             sportId,
             birthday,
-            gender
+            gender,
+            mutableListOf()
         )
         sportsDatabase.athletesDao().insertAthlete(athlete)
         return true
@@ -200,7 +213,8 @@ class LocalRepositoryImpl(
             country,
             sportId,
             birthday,
-            gender
+            gender,
+            mutableListOf()
         )
         sportsDatabase.squadsDao().insertSquad(squad)
         return true
@@ -233,6 +247,10 @@ class LocalRepositoryImpl(
         sportsDatabase.sportsDao().updateSport(sport)
     }
 
+    override suspend fun updateSquad(id: Int, matchIds: MutableList<Int>) {
+        sportsDatabase.squadsDao().updateSquadMatches(id,matchIds)
+    }
+
     override suspend fun updateSquad(
         id: Int,
         name: String,
@@ -240,19 +258,26 @@ class LocalRepositoryImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long, gender: Boolean
+        birthday: Long,
+        gender: Boolean,
+        matchIds: MutableList<Int>
     ) {
         val squad = com.example.sports_match_day.room.entities.Squad(
             id,
             name,
+            stadium,
             city,
             country,
-            stadium,
             sportId,
             birthday,
-            gender
+            gender,
+            matchIds
         )
         sportsDatabase.squadsDao().updateSquad(squad)
+    }
+
+    override suspend fun updateAthlete(id: Int, matches: MutableList<Int>) {
+        sportsDatabase.athletesDao().updateAthleteMatches(id,matches)
     }
 
     override suspend fun updateAthlete(
@@ -262,7 +287,8 @@ class LocalRepositoryImpl(
         countryCode: String,
         gender: Boolean,
         sportId: Int,
-        birthday: Long
+        birthday: Long,
+        matchIds: MutableList<Int>
     ) {
         val athlete = com.example.sports_match_day.room.entities.Athlete(
             id,
@@ -271,7 +297,8 @@ class LocalRepositoryImpl(
             countryCode,
             sportId,
             birthday,
-            gender
+            gender,
+            matchIds
         )
         sportsDatabase.athletesDao().updateAthlete(athlete)
     }
@@ -296,6 +323,9 @@ interface LocalRepository {
     suspend fun removeAthlete(athlete: Athlete): Boolean
     suspend fun removeSquad(squad: Squad): Boolean
     suspend fun removeSport(sport: Sport): Boolean
+
+    suspend fun removeSquadBySport(sport: Sport): Boolean
+    suspend fun removeAthleteBySport(sport: Sport): Boolean
 
     suspend fun getAllAthletes(): MutableList<Athlete>
     suspend fun getAllSquads(): MutableList<Squad>
@@ -326,6 +356,12 @@ interface LocalRepository {
     ): Boolean
 
     suspend fun updateSport(id: Int, name: String, type: Boolean, gender: Boolean, count: Int)
+
+    suspend fun updateSquad(
+        id: Int,
+        matchIds: MutableList<Int>
+    )
+
     suspend fun updateSquad(
         id: Int,
         name: String,
@@ -333,7 +369,13 @@ interface LocalRepository {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long, gender: Boolean
+        birthday: Long,
+        gender: Boolean,
+        matchIds: MutableList<Int>
+    )
+    suspend fun updateAthlete(
+        id: Int,
+        matches: MutableList<Int>
     )
 
     suspend fun updateAthlete(
@@ -343,6 +385,7 @@ interface LocalRepository {
         countryCode: String,
         gender: Boolean,
         sportId: Int,
-        birthday: Long
+        birthday: Long,
+        matchIds: MutableList<Int>
     )
 }

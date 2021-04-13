@@ -7,7 +7,10 @@
     "country": "es",
     "sportId": 1,
     "birthday": -2140383600,
-    "gender": true
+    "gender": true,
+    "matches": [
+      1,14
+    ]
   },
   {
     "id": 2,
@@ -17,7 +20,10 @@
     "country": "es",
     "sportId": 1,
     "birthday": -1602889200,
-    "gender": true
+    "gender": true,
+    "matches": [
+      1,15
+    ]
   },
   {
     "id": 3,
@@ -27,7 +33,10 @@
     "country": "gb",
     "sportId": 4,
     "birthday": -2627118000,
-    "gender": false
+    "gender": false,
+    "matches": [
+      4
+    ]
   },
   {
     "id": 4,
@@ -37,6 +46,207 @@
     "country": "gb",
     "sportId": 4,
     "birthday": -2755594800,
-    "gender": false
+    "gender": false,
+    "matches": [
+      4
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Barcelona",
+    "stadium": "Camp Nou",
+    "city": "Catalonia",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -2211922739,
+    "gender": true,
+    "matches": [5,15,18]
+  },
+  {
+    "id": 6,
+    "name": "Villarreal",
+    "stadium": "Estadio de la Cerámica",
+    "city": "Villarreal",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1477349939,
+    "gender": true,
+    "matches": [5,16]
+  },
+  {
+    "id": 7,
+    "name": "Atletico Madrid",
+    "stadium": "Wanda Metropolitano",
+    "city": "Madrid",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -2104441139,
+    "gender": true,
+    "matches": [6,17]
+  },
+  {
+    "id": 9,
+    "name": "Seville",
+    "stadium": "Ramón Sánchez Pizjuán",
+    "city": "Seville",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -2522444339,
+    "gender": true,
+    "matches": [6,7,19]
+  },
+  {
+    "id": 10,
+    "name": "Real Sociedad",
+    "stadium": "Anoeta",
+    "city": " San Sebastian",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1900882739,
+    "gender": true,
+    "matches": [7,20]
+  },
+  {
+    "id": 11,
+    "name": "Granada",
+    "stadium": "Nuevo Estadio de Los Cármenes",
+    "city": "Granada",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1221865139,
+    "gender": true,
+    "matches": [8,21]
+  },
+  {
+    "id": 12,
+    "name": "Athletic Club",
+    "stadium": "San Mames",
+    "city": "Bilbao",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -2272057139,
+    "gender": true,
+    "matches": [8,22]
+  },
+  {
+    "id": 13,
+    "name": "Levante",
+    "stadium": "Estadi Ciutat de València",
+    "city": "Valencia",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1924988339,
+    "gender": true,
+    "matches": [9,23]
+  },
+  {
+    "id": 14,
+    "name": "Cadiz",
+    "stadium": "Nuevo Estadio Ramon de Carranza",
+    "city": "Cadiz",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1893452339,
+    "gender": true,
+    "matches": [9,23]
+  },
+  {
+    "id": 15,
+    "name": "Real Valladolid",
+    "stadium": "José Zorrilla",
+    "city": "Valladolid",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1310684339,
+    "gender": true,
+    "matches": [10,22]
+  },
+  {
+    "id": 16,
+    "name": "Elche CF",
+    "stadium": "Manuel Martínez Valero",
+    "city": "Elche",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1483225139,
+    "gender": true,
+    "matches": [10,21]
+  },
+  {
+    "id": 17,
+    "name": "SD Huesca",
+    "stadium": "Estadio El Alcoraz",
+    "city": "Huesca",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -308012339,
+    "gender": true,
+    "matches": [11,20]
+  },
+  {
+    "id": 18,
+    "name": "SD Eibar",
+    "stadium": "Ipurua Municipal",
+    "city": "Eibar",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -946767539,
+    "gender": true,
+    "matches": [11,19]
+  },
+  {
+    "id": 19,
+    "name": "Deportivo Alaves",
+    "stadium": "Mendizorrotza",
+    "city": "Vitoria-Gasteiz",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1544396339,
+    "gender": true,
+    "matches": [12,18]
+  },
+  {
+    "id": 20,
+    "name": "Real Betis",
+    "stadium": "Benito Villamarín",
+    "city": "Seville",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1966201139,
+    "gender": true,
+    "matches": [12,17]
+  },
+  {
+    "id": 21,
+    "name": "Celta Vigo",
+    "stadium": "Estadio de Balaídos",
+    "city": "Vigo",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1178924339,
+    "gender": true,
+    "matches": [13,16]
+  },
+  {
+    "id": 22,
+    "name": "CA Osasuna",
+    "stadium": "El Sadar",
+    "city": "Pamplona",
+    "country": "es",
+    "sportId": 1,
+    "birthday": -1552258739,
+    "gender": true,
+    "matches": [13]
+  },
+  {
+    "id": 23,
+    "name": "Getafe CF",
+    "stadium": "Coliseum Alfonso Pérez",
+    "city": "Getafe",
+    "country": "es",
+    "sportId": 1,
+    "birthday": 426474061,
+    "gender": true,
+    "matches": [14]
   }
 ]

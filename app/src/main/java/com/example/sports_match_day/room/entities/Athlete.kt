@@ -9,6 +9,11 @@ import androidx.room.PrimaryKey
  */
 
 @Entity(tableName = "athletes")
+/*@Entity(tableName = "athletes", foreignKeys = [ForeignKey(entity = Sport::class,
+    parentColumns = arrayOf("id"),
+    childColumns = arrayOf("sportId"),
+    onDelete = ForeignKey.CASCADE)]
+)*/
 data class Athlete (
     @PrimaryKey(autoGenerate = true)
     var id: Int,
@@ -23,5 +28,7 @@ data class Athlete (
     @ColumnInfo
     var birthday: Long,
     @ColumnInfo
-    var gender: Boolean
+    var gender: Boolean,
+    @ColumnInfo
+    var matches: MutableList<Int>?
 )

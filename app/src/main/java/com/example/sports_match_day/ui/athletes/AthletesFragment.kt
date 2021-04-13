@@ -18,6 +18,7 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.databinding.FragmentAthletesBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
+import com.example.sports_match_day.utils.PopupManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.flow.collectLatest
@@ -117,16 +118,17 @@ class AthletesFragment : BaseFragment() {
         }
     }
 
-    private fun editAthlete(athleteId: Int){
+    private fun editAthlete(athleteId: Int) {
         val navController = findNavController(requireActivity(), R.id.nav_host_fragment)
         val action = AthletesFragmentDirections.actionNavAthletesToNavAthletesAdd(athleteId)
         navController.navigate(action)
     }
+
     private fun searchCity(city: String) {
-        viewModel.getCity(requireContext(),city){
-            val gmmIntentUri = if(it != null) {
+        viewModel.getCity(requireContext(), city) {
+            val gmmIntentUri = if (it != null) {
                 Uri.parse("geo:${it.latitude},${it.longitude}")
-            }else{
+            } else {
                 Uri.parse("geo:0,0?q=$city")
             }
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -141,7 +143,7 @@ class AthletesFragment : BaseFragment() {
 
             adapter = AthletesAdapter({
                 editAthlete(it.id)
-            }){
+            }) {
                 searchCity(it)
             }
 
@@ -175,7 +177,17 @@ class AthletesFragment : BaseFragment() {
 
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, swipeDir: Int) {
                     val position = viewHolder.absoluteAdapterPosition
-                    viewModel.removeAthlete(adapter.getAthlete(position))
+                    val message = getString(R.string.warning_delete_athletes)
+                    val yes = {
+                        viewModel.removeAthleteAndMatches(adapter.getAthlete(position))
+                    }
+                    val no = {
+                        viewModel.removeAthlete(adapter.getAthlete(position))
+                    }
+
+                    PopupManager.deletePopupMessage(requireContext(), message, yes, no){
+                        binding.recyclerAthletes.adapter?.notifyItemChanged(position)
+                    }
                 }
             }
             val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
