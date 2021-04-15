@@ -1,7 +1,6 @@
 package com.example.sports_match_day.controllers
 
 import android.content.Context
-import androidx.lifecycle.MutableLiveData
 import androidx.paging.Pager
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.utils.RawManager
@@ -21,17 +20,6 @@ class CoreControllerImpl(
     private var decoupleAdapter: DecoupleAdapter,
     private var localRepository: LocalRepository,
 ) : CoreController {
-
-    override suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean {
-        val netMatches: List<com.example.sports_match_day.model.network.Match> =
-            RawManager.getMatchesRaw(context)
-
-        val mMatches = decoupleAdapter.toMatches(netMatches)
-        memoryRepository.matches = mMatches
-        matches.value = mMatches
-
-        return true
-    }
 
     override suspend fun loadSamples(): Boolean {
         if (Prefs.getBoolean(PreferencesKeys.SETUP_SAMPLE_DATA, false)) {
@@ -445,7 +433,6 @@ class CoreControllerImpl(
 }
 
 interface CoreController {
-    suspend fun loadMatches(matches: MutableLiveData<List<Match>>): Boolean
     suspend fun loadSamples(): Boolean
     fun getMatchEvents(): List<LocalDateTime>
 

@@ -89,6 +89,10 @@ class RemoteRepositoryImpl(
     override suspend fun removeMatchBySquad(matchIds: List<Int>): List<Match> {
         return decoupleAdapter.toMatches(firebaseRepository.removeMatchBySquad(matchIds))
     }
+
+    override suspend fun signUp(data: HashMap<String, com.example.sports_match_day.model.network.Match>) {
+        firebaseRepository.signUp(data)
+    }
 }
 
 interface RemoteRepository {
@@ -121,4 +125,5 @@ interface RemoteRepository {
 
     suspend fun removeMatchByAthlete(matchIds: List<Int>): List<Match>
     suspend fun removeMatchBySquad(matchIds: List<Int>): List<Match>
+    suspend fun signUp(data: HashMap<String, com.example.sports_match_day.model.network.Match>)
 }

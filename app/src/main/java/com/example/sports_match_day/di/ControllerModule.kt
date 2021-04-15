@@ -20,6 +20,7 @@ val controllerModule = module {
     single<RemoteRepository> { RemoteRepositoryImpl(get(), get()) }
     single<LocalRepository> { LocalRepositoryImpl(get(), get(), get()) }
     single<AnalyticsController> { AnalyticsControllerImpl(get()) }
+    single<LoginController> { LoginControllerImpl(get(), get()) }
 
     factory { AthletesDataSource(get(), get(), get()) }
     factory { SquadsDataSource(get(), get(), get()) }

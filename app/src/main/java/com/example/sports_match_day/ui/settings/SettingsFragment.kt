@@ -10,6 +10,7 @@ import com.example.sports_match_day.ui.MainActivity
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.utils.LocaleManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.firebase.ui.auth.AuthUI
 import com.pixplicity.easyprefs.library.Prefs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,7 +42,20 @@ class SettingsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupLanguage()
         setupDebug()
+        setupLogoutButton()
         changeLanguageOpacity()
+    }
+
+    private fun setupLogoutButton() {
+        binding.buttonLogout.setOnClickListener {
+
+            AuthUI.getInstance()
+                .signOut(requireContext())
+                .addOnCompleteListener {
+                    requireActivity().finish()
+                }
+            binding.progressBar.visibility = View.VISIBLE
+        }
     }
 
     private fun setupLanguage() {

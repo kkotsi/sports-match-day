@@ -72,5 +72,6 @@
     <string name="menu_dashboard">Dashboard</string>
     <string name="analytics_squad_wins">Squads with the most wins.</string>
     <string name="analytics_popular_sports">The most popular sports.</string>
+    <string name="log_out">Log out</string>
 
 </resources>

@@ -15,10 +15,10 @@ import java.io.*
  */
 class RawManager {
     companion object{
-        fun getMatchesRaw(context: Context): List<Match>{
+        fun getMatchesRaw(context: Context): HashMap<String, Match>{
             val json = readFile(context, R.raw.matches)
 
-            val myType = object : TypeToken<List<Match>>() {}.type
+            val myType = object : TypeToken<HashMap<String, Match>>() {}.type
             return Gson().fromJson(json, myType)
         }
 

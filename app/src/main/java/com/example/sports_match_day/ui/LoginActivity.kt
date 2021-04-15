@@ -31,7 +31,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setUpObservers() {
-
         viewModel.isDataLoading.observe(this, {
             if (it) {
                 loader.visibility = View.VISIBLE
@@ -53,19 +52,31 @@ class LoginActivity : AppCompatActivity() {
                     .build(), SIGN_IN
             )
         })
+
+        viewModel.signUp.observe(this, {
+            if(it) {
+                // Successfully signed up
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                this@LoginActivity.finish()
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data);
-
+            val response = IdpResponse.fromResultIntent(data)
             if (resultCode == RESULT_OK) {
-                // Successfully signed in
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-                this@LoginActivity.finish()
+                if(response?.isNewUser == true){
+                    viewModel.signUpUser()
+                }else {
+                    // Successfully signed in
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                    this@LoginActivity.finish()
+                }
             } else {
                 PopupManager.simplePopupMessage(this, "Couldn't login... \n ${response?.error?.message}")
             }

@@ -18,7 +18,7 @@ import org.koin.dsl.module
  * Created by Kristo on 07-Mar-21
  */
 val viewModelModule = module {
-    viewModel { LoginViewModel(get()) }
+    viewModel { LoginViewModel(get(), get()) }
     viewModel { MainActivityViewModel() }
 
     viewModel { HomeViewModel(get()) }
