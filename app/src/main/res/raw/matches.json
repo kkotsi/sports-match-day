@@ -27,7 +27,7 @@
     "participants": {
       "participant2": {
         "participantId": 1,
-        "score": 0.0
+        "score": 1.0
       },
       "participant1": {
         "participantId": 2,
@@ -255,7 +255,7 @@
       },
       "participant1": {
         "participantId": 1,
-        "score": 0
+        "score": 3
       }
     }
   },
@@ -269,7 +269,7 @@
     "participants": {
       "participant2": {
         "participantId": 2,
-        "score": 5.0
+        "score": 1.0
       },
       "participant1": {
         "participantId": 5,
@@ -305,7 +305,7 @@
     "participants": {
       "participant2": {
         "participantId": 20,
-        "score": 2.0
+        "score": 1.0
       },
       "participant1": {
         "participantId": 7,
@@ -323,7 +323,7 @@
     "participants": {
       "participant2": {
         "participantId": 19,
-        "score": 1.0
+        "score": 0.0
       },
       "participant1": {
         "participantId": 5,
@@ -444,6 +444,42 @@
       "participant1": {
         "participantId": 9,
         "score": 14.0
+      }
+    }
+  },
+  "match25": {
+    "id": 25,
+    "date": 1610222943,
+    "city": "Catalonia",
+    "country": "ES",
+    "sportId": 1,
+    "stadium": "Camp Nou",
+    "participants": {
+      "participant2": {
+        "participantId": 5,
+        "score": 6.0
+      },
+      "participant1": {
+        "participantId": 11,
+        "score": 2.0
+      }
+    }
+  },
+  "match26": {
+    "id": 26,
+    "date": 1615192003,
+    "city": "Catalonia",
+    "country": "ES",
+    "sportId": 1,
+    "stadium": "Camp Nou",
+    "participants": {
+      "participant2": {
+        "participantId": 5,
+        "score": 2.0
+      },
+      "participant1": {
+        "participantId": 1,
+        "score": 3.0
       }
     }
   }

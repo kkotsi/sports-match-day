@@ -117,6 +117,13 @@
     </fragment>
 
     <fragment
+        android:id="@+id/nav_dashboard"
+        android:name="com.example.sports_match_day.ui.dashboard.Dashboard"
+        android:label="@string/menu_dashboard"
+        tools:layout="@layout/fragment_dashboard">
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.sports_match_day.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"

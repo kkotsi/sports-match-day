@@ -40,6 +40,14 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         return getMatches(dataSnapshot)
     }
 
+    override suspend fun getMatches(): List<Match> {
+        val dataSnapshot = FirebaseDatabase.getInstance().reference
+            .child("matches")
+            .awaitQueryValue()
+
+        return getMatches(dataSnapshot)
+    }
+
     override suspend fun getMatch(matchId: Int): Match? {
         val dataSnapshot = FirebaseDatabase.getInstance().reference
             .child("matches")
@@ -109,7 +117,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         return matchId
     }
 
-    private fun getMatches(dataSnapshot: DataSnapshot): List<Match>?{
+    private fun getMatches(dataSnapshot: DataSnapshot): List<Match>{
         /**
          * Firebase returns a list of items if the count is > 1
          * if the count is 1, firebase returns a HashMap with key the position of the item
@@ -139,10 +147,10 @@ class FirebaseRepositoryImpl : FirebaseRepository {
             }
             return list
         }
-        return null
+        return mutableListOf()
     }
 
-    override suspend fun removeMatchesBySport(sportId: Int): List<Match>? {
+    override suspend fun removeMatchesBySport(sportId: Int): List<Match> {
         val dataSnapshot = FirebaseDatabase.getInstance().reference
             .child("matches")
             .orderByChild("sportId")
@@ -230,6 +238,7 @@ interface FirebaseRepository {
      * @param offsetId The last match id.
      */
     suspend fun getMatches(count: Int, offsetId: Int?): List<Match>?
+    suspend fun getMatches(): List<Match>
     suspend fun getMatch(matchId: Int): Match?
     suspend fun removeMatch(matchId: Int)
     suspend fun removeMatchByAthlete(matchIds: List<Int>): List<Match>

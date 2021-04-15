@@ -110,4 +110,7 @@ dependencies {
 
     // Jetpack Compose Integration
     implementation "androidx.paging:paging-compose:1.0.0-alpha08"
+
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
 }

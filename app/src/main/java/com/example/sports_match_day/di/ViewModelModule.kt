@@ -4,6 +4,7 @@ import com.example.sports_match_day.ui.LoginViewModel
 import com.example.sports_match_day.ui.MainActivityViewModel
 import com.example.sports_match_day.ui.athletes.AthletesViewModel
 import com.example.sports_match_day.ui.athletes.manage.AthletesManageViewModel
+import com.example.sports_match_day.ui.dashboard.DashboardViewModel
 import com.example.sports_match_day.ui.home.HomeViewModel
 import com.example.sports_match_day.ui.home.manage.MatchesManageViewModel
 import com.example.sports_match_day.ui.sports.SportsViewModel
@@ -31,4 +32,6 @@ val viewModelModule = module {
 
     viewModel { SportsViewModel(get()) }
     viewModel { SportsManageViewModel(get()) }
+
+    viewModel { DashboardViewModel(get()) }
 }

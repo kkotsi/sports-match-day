@@ -57,6 +57,10 @@ class RemoteRepositoryImpl(
         return decoupleAdapter.toMatch(firebaseRepository.getMatch(matchId))
     }
 
+    override suspend fun getAllMatches(): List<Match> {
+        return decoupleAdapter.toMatches(firebaseRepository.getMatches())
+    }
+
     override suspend fun updateMatch(
         id: Int,
         city: String,
@@ -103,6 +107,7 @@ interface RemoteRepository {
     ): Int
 
     suspend fun getMatch(matchId: Int): Match?
+    suspend fun getAllMatches(): List<Match>
 
     suspend fun updateMatch(
         id: Int,

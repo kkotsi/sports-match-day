@@ -19,6 +19,7 @@ val controllerModule = module {
     single { DecoupleAdapter(get()) }
     single<RemoteRepository> { RemoteRepositoryImpl(get(), get()) }
     single<LocalRepository> { LocalRepositoryImpl(get(), get(), get()) }
+    single<AnalyticsController> { AnalyticsControllerImpl(get()) }
 
     factory { AthletesDataSource(get(), get(), get()) }
     factory { SquadsDataSource(get(), get(), get()) }

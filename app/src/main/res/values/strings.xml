@@ -10,7 +10,7 @@
     <string name="total_squads">Currently showing %1$s squads</string>
     <string name="total_sports">Currently showing %1$s sports</string>
 
-    <string name="menu_home">DashBoard</string>
+    <string name="menu_home">Home</string>
     <string name="menu_athletes">Athletes</string>
     <string name="menu_squads">Squads</string>
     <string name="menu_sports">Sports</string>
@@ -69,5 +69,8 @@
     <string name="warning_delete_squads">Do you want to also delete the matches that this squad has participated?</string>
     <string name="warning_delete_sports">Do you want to also delete the matches with this sport?</string>
     <string name="warning_delete_athletes_squads"><![CDATA[Delete Athletes & Squads]]></string>
+    <string name="menu_dashboard">Dashboard</string>
+    <string name="analytics_squad_wins">Squads with the most wins.</string>
+    <string name="analytics_popular_sports">The most popular sports.</string>
 
 </resources>
