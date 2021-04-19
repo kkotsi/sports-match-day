@@ -132,11 +132,21 @@ class MatchAdapter(
 fun diff(): DiffUtil.ItemCallback<Match> {
     return object : DiffUtil.ItemCallback<Match>() {
         override fun areItemsTheSame(oldItem: Match, newItem: Match): Boolean {
-            return true
+            return oldItem.id == newItem.id
         }
 
         override fun areContentsTheSame(oldItem: Match, newItem: Match): Boolean {
-            return oldItem.id == newItem.id
+            if( oldItem.stadium == newItem.stadium &&
+                    oldItem.sport == newItem.sport &&
+                    oldItem.participants.size == newItem.participants.size){
+                oldItem.participants.onEachIndexed { index, participant ->
+                    if(participant.contestant?.id != newItem.participants[index].contestant?.id){
+                        return false
+                    }
+                }
+                return true
+            }
+            return false
         }
     }
 }

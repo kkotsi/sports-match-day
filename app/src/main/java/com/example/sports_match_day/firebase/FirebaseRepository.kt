@@ -97,8 +97,9 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         FirebaseDatabase.getInstance().reference
             .child(id)
             .child("matches")
-            .child("$matchId")
+            .child("match$matchId")
             .removeValue()
+            .await()
     }
 
     private suspend fun removeByNames(matchIds: List<String>) {
