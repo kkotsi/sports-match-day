@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -60,6 +61,15 @@ class HomeFragment : BaseFragment() {
         setupAddButton()
         setupRefreshLayout()
         setupObservers()
+        setupErrorButton()
+    }
+
+    private fun setupErrorButton(){
+        binding.buttonError.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
+        binding.buttonError.setOnClickListener {
+            Prefs.putBoolean(PreferencesKeys.TEST_ERROR, true)
+            Toast.makeText(requireContext(),"Scroll to test-crash", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setupAddButton() {

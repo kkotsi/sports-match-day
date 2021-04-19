@@ -4,10 +4,14 @@ package com.example.sports_match_day.firebase
 
 import com.example.sports_match_day.model.Participant
 import com.example.sports_match_day.model.network.Match
+import com.example.sports_match_day.ui.base.ErrorUserIdNotFound
+import com.example.sports_match_day.ui.base.SportsDebugError
+import com.example.sports_match_day.utils.constants.PreferencesKeys
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
+import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.tasks.await
 
 /**
@@ -16,7 +20,9 @@ import kotlinx.coroutines.tasks.await
 class FirebaseRepositoryImpl : FirebaseRepository {
 
     private suspend fun getLastId(): Int {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         val dataSnapshot = FirebaseDatabase.getInstance().reference
+            .child(userId)
             .child("max_id")
             .awaitQueryValue()
 
@@ -24,14 +30,16 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     private suspend fun updateLastId(id: Int) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         FirebaseDatabase.getInstance().reference
+            .child(userId)
             .child("max_id")
             .setValue(id)
             .await()
     }
 
     override suspend fun getMatches(count: Int, offsetId: Int?): List<Match> {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(id.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }
@@ -50,7 +58,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun getMatches(): List<Match> {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(id.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }
@@ -64,7 +72,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun getMatch(matchId: Int): Match? {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(id.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }
@@ -81,7 +89,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun removeMatch(matchId: Int) {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(id.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }
@@ -138,6 +146,12 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         date: Long,
         participants: List<Participant>
     ): Int {
+
+        if(Prefs.getBoolean(PreferencesKeys.TEST_ERROR, false)){
+            Prefs.putBoolean(PreferencesKeys.TEST_ERROR, false)
+            throw SportsDebugError("Couldn't save the match. This is a test crash")
+        }
+
         val matchId = getLastId() + 1
         setMatch(matchId, city, country, stadium, sportId, date, participants)
         updateLastId(matchId)
@@ -178,7 +192,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun removeMatchesBySport(sportId: Int): List<Match> {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(id.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }
@@ -207,10 +221,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
     }
 
     override suspend fun signUp(data: HashMap<String,Match>) {
-        val id = FirebaseAuth.getInstance().currentUser?.uid ?: ""
-        if(id.isBlank()){
-            throw NullPointerException("The user id cannot be null or black!")
-        }
+        val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
+
         val userData = hashMapOf<String, Any>()
         userData["matches"] = data
         userData["max_id"] = "100"
@@ -253,7 +265,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
 
         firebaseMatch["participants"] = mapParticipants
 
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: ""
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
         if(userId.isBlank()){
             throw NullPointerException("The user id cannot be null or black!")
         }

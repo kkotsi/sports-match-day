@@ -38,17 +38,27 @@
 
             <TextView
                 android:id="@+id/text_matches_total"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_marginEnd="5dp"
                 android:gravity="center"
                 android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/button_error"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Found 35 Matches." />
+
+            <ImageButton
+                android:id="@+id/button_error"
+                android:layout_width="48dp"
+                android:layout_height="0dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/colorTransparent"
+                android:src="@drawable/ic_error"
+                app:layout_constraintBottom_toBottomOf="@+id/text_matches_total"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_matches_total" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_matches"

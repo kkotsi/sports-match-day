@@ -9,6 +9,8 @@ import com.example.sports_match_day.R
  */
 
 class WrongValue(code: Int) : BaseApiException(code)
+class SportsDebugError(description: String = "") : Exception(description)
+class ErrorUserIdNotFound : Exception()
 
 abstract class BaseApiException(
     val code: Int
@@ -19,6 +21,8 @@ object ExceptionUtils {
     fun getApiErrorMessage(context: Context, exception: Throwable): String {
         var error = when (exception) {
             is WrongValue -> context.getString(R.string.wrong_value) + "(${exception.code}): "
+            is SportsDebugError -> context.getString(R.string.debug_crash)
+            is ErrorUserIdNotFound -> context.getString(R.string.error_user_not_logged_in)
             else -> {
                 context.getString(R.string.something_went_wrong)
             }

@@ -182,4 +182,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/button_error"
+        android:layout_width="48dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:background="@color/colorTransparent"
+        android:src="@drawable/ic_error"
+        app:layout_constraintBottom_toBottomOf="@+id/button_save"
+        app:layout_constraintStart_toEndOf="@+id/button_save"
+        app:layout_constraintTop_toTopOf="@+id/button_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>

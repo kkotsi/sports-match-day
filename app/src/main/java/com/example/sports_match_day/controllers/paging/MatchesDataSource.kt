@@ -6,6 +6,9 @@ import com.example.sports_match_day.controllers.DecoupleAdapter
 import com.example.sports_match_day.controllers.MemoryRepository
 import com.example.sports_match_day.firebase.FirebaseRepository
 import com.example.sports_match_day.model.Match
+import com.example.sports_match_day.ui.base.SportsDebugError
+import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.pixplicity.easyprefs.library.Prefs
 
 /**
  * Created by Kristo on 16-Mar-21
@@ -19,6 +22,11 @@ class MatchesDataSource constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Match> {
 
         try {
+            if(Prefs.getBoolean(PreferencesKeys.TEST_ERROR, false)){
+                Prefs.putBoolean(PreferencesKeys.TEST_ERROR, false)
+                throw SportsDebugError("Couldn't get more data. This is a test crash")
+            }
+
             val offset = params.key ?: 0
 
             val matches = mutableListOf<Match>()

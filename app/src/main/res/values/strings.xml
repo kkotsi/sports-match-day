@@ -73,5 +73,7 @@
     <string name="analytics_squad_wins">Squads with the most wins.</string>
     <string name="analytics_popular_sports">The most popular sports.</string>
     <string name="log_out">Log out</string>
+    <string name="debug_crash">This is a debug crash to demonstrate how the app handles it</string>
+    <string name="error_user_not_logged_in">You must be signed in to do this action.</string>
 
 </resources>

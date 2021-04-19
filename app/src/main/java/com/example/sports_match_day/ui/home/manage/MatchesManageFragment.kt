@@ -20,6 +20,8 @@ import com.example.sports_match_day.ui.base.SportsAdapter
 import com.example.sports_match_day.ui.base.observeOnce
 import com.example.sports_match_day.ui.home.HomeFragment
 import com.example.sports_match_day.utils.PopupManager
+import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.pixplicity.easyprefs.library.Prefs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.format.DateTimeFormatter
@@ -68,6 +70,15 @@ class MatchesManageFragment : BaseFragment() {
         setupSaveButton()
         setupObservers()
         setupTimePickerButton()
+        setupErrorButton()
+    }
+
+    private fun setupErrorButton(){
+        binding.buttonError.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
+        binding.buttonError.setOnClickListener {
+            Prefs.putBoolean(PreferencesKeys.TEST_ERROR, true)
+            Toast.makeText(requireContext(),"Click Save to crash", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun setUpForEdit() {
