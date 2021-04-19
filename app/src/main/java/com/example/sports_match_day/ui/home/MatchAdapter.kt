@@ -88,7 +88,7 @@ class MatchAdapter(
                     scoreSecond.text = "-"
             }
 
-            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yy\nhh:mm")
+            val formatter = DateTimeFormatter.ofPattern("dd/MMM/yy\nHH:mm")
             date.text = match.date.format(formatter)
 
             match.sport?.let {

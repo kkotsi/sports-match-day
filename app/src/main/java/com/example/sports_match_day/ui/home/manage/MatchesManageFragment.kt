@@ -88,10 +88,12 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun setupTimePickerButton() {
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+        binding.buttonTimePicker.text = matchDate.format(formatter)
+
         binding.buttonTimePicker.setOnClickListener {
             PopupManager.timePickerPopup(requireContext()) { hour, minute ->
                 matchDate = matchDate.withHour(hour).withMinute(minute)
-                val formatter = DateTimeFormatter.ofPattern("HH:mm")
                 binding.buttonTimePicker.text = matchDate.format(formatter)
             }
         }
