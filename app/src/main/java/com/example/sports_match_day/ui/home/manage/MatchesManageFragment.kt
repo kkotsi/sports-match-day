@@ -73,6 +73,9 @@ class MatchesManageFragment : BaseFragment() {
         setupErrorButton()
     }
 
+    /**
+     * Demonstration purposes only!
+     */
     private fun setupErrorButton(){
         binding.buttonError.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
         binding.buttonError.setOnClickListener {
