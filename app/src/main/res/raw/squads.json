@@ -3,6 +3,7 @@
     "id": 1,
     "name": "Real Madrid",
     "stadium": "Santiago Bernabeu",
+    "stadiumLocation" : "{\"latitude\" : 40.4529466,\"longitude\" : -3.6889652}",
     "city": "Madrid",
     "country": "es",
     "sportId": 1,

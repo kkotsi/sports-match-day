@@ -15,6 +15,7 @@ import com.example.sports_match_day.model.Gender
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.utils.FlagManager
+import com.google.android.gms.maps.model.LatLng
 import com.squareup.picasso.Picasso
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.DecimalFormat
@@ -25,7 +26,7 @@ import java.text.DecimalFormat
  */
 class MatchAdapter(
     private val selectMatch: (Match) -> Unit,
-    private val searchStadiumInMap: (String) -> Unit
+    private val searchStadiumInMap: (String, LatLng?) -> Unit
 ) : PagingDataAdapter<Match, MatchAdapter.MyViewHolder>(diff()) {
 
     private var lastSelected: MyViewHolder? = null
@@ -109,7 +110,7 @@ class MatchAdapter(
             val location = "${match.city}, ${match.stadium}"
             locationText.text = location
             locationText.setOnClickListener {
-                searchStadiumInMap(match.stadium)
+                searchStadiumInMap(match.stadium, match.stadiumLocation)
             }
         }
     }

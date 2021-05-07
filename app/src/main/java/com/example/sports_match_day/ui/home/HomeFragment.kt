@@ -21,6 +21,7 @@ import com.example.sports_match_day.databinding.FragmentHomeBinding
 import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,11 +68,11 @@ class HomeFragment : BaseFragment() {
     /**
      * Demonstration purposes only!
      */
-    private fun setupErrorButton(){
+    private fun setupErrorButton() {
         binding.buttonError.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
         binding.buttonError.setOnClickListener {
             Prefs.putBoolean(PreferencesKeys.TEST_ERROR, true)
-            Toast.makeText(requireContext(),"Scroll to test-crash", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Scroll to test-crash", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -169,8 +170,13 @@ class HomeFragment : BaseFragment() {
         navController.navigate(action)
     }
 
-    private fun searchCity(stadium: String) {
-        val uri = Uri.parse("geo:0,0?q=$stadium stadium")
+    private fun searchCity(stadium: String, stadiumLocation: LatLng?) {
+        val uri =
+            if (stadiumLocation == null)
+                Uri.parse("geo:0,0?q=$stadium stadium")
+            else
+                Uri.parse("geo:${stadiumLocation.latitude},${stadiumLocation.longitude}")
+
         val mapIntent = Intent(Intent.ACTION_VIEW, uri)
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
@@ -186,8 +192,8 @@ class HomeFragment : BaseFragment() {
                 selectDate(match.date)
             }
             selectedMatchId = match.id
-        }) {
-            searchCity(it)
+        }) { stadium, stadiumLocation ->
+            searchCity(stadium, stadiumLocation)
         }
 
         binding.recyclerMatches.adapter = adapter.withLoadStateHeaderAndFooter(

@@ -2,6 +2,9 @@ package com.example.sports_match_day.controllers
 
 import android.content.Context
 import com.example.sports_match_day.model.*
+import com.example.sports_match_day.model.network.StadiumLocation
+import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.threeten.bp.Instant
@@ -49,8 +52,12 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                     participants.add(participantsConverter(participant, athleteOrSquad))
                 }
             }
-
-            return Match(match.id, date, match.city, country, match.stadium, sport, participants)
+            var stadiumLocation: LatLng? = null
+            match.stadiumLocation?.let {
+                val location = StadiumLocation(it)
+                stadiumLocation = LatLng(location.latitude, location.longitude)
+            }
+            return Match(match.id, date, match.city, country, match.stadium, sport, participants, stadiumLocation)
         }
         return null
     }
@@ -127,6 +134,15 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
             val sport = coreController.getSport(squad.sportId)
 
             val gender = if (squad.gender) Gender.MALE else Gender.FEMALE
+
+            var stadiumLocation: LatLng? = null
+            squad.stadiumLocation?.let {
+
+                val gson = Gson()
+                val location = gson.fromJson(it, LatLng::class.java)
+                stadiumLocation = LatLng(location.latitude, location.longitude)
+            }
+
             return Squad(
                 squad.id,
                 squad.name,
@@ -136,6 +152,7 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
                 sport,
                 birthday,
                 gender,
+                stadiumLocation,
                 squad.matches!!
             )
         }

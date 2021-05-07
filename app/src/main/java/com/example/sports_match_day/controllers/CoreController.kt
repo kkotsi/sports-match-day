@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.utils.RawManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.pixplicity.easyprefs.library.Prefs
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -17,7 +18,6 @@ class CoreControllerImpl(
     private var context: Context,
     private var remoteRepository: RemoteRepository,
     private var memoryRepository: MemoryRepository,
-    private var decoupleAdapter: DecoupleAdapter,
     private var localRepository: LocalRepository,
 ) : CoreController {
 
@@ -194,7 +194,8 @@ class CoreControllerImpl(
         country: String,
         stadium: String,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean {
         participants.forEach {
             if (it.score < 0) it.score = Participant.UNSET_SCORE
@@ -205,7 +206,8 @@ class CoreControllerImpl(
             sport.id,
             stadium,
             date,
-            participants
+            participants,
+            stadiumLocation
         )
 
         if (sport.type == SportType.SOLO) {
@@ -307,11 +309,12 @@ class CoreControllerImpl(
         stadium: String,
         sport: Sport,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean {
-        remoteRepository.updateMatch(id, city, country, stadium, sport.id, date, participants)
+        remoteRepository.updateMatch(id, city, country, stadium, sport.id, date, participants, stadiumLocation)
         val countryLocale = Locale("", country)
-        memoryRepository.updateMatch(id, city, countryLocale, stadium, sport, date, participants)
+        memoryRepository.updateMatch(id, city, countryLocale, stadium, sport, date, participants, stadiumLocation)
         return true
     }
 
@@ -472,7 +475,8 @@ interface CoreController {
         country: String,
         stadium: String,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun addAthlete(
@@ -510,7 +514,8 @@ interface CoreController {
         stadium: String,
         sport: Sport,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun updateSquad(

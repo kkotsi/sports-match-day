@@ -20,6 +20,7 @@ import com.example.sports_match_day.firebase.ExampleLoadStateAdapter
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.utils.PopupManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.pixplicity.easyprefs.library.Prefs
 import kotlinx.coroutines.flow.collectLatest
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -126,10 +127,10 @@ class SquadsFragment : BaseFragment() {
     }
 
     private fun searchCity(city: String) {
-        viewModel.getCity(requireContext(),city){
-            val gmmIntentUri = if(it != null) {
-                 Uri.parse("geo:${it.latitude},${it.longitude}")
-            }else{
+        viewModel.getCity(requireContext(), city) {
+            val gmmIntentUri = if (it != null) {
+                Uri.parse("geo:${it.latitude},${it.longitude}")
+            } else {
                 Uri.parse("geo:0,0?q=$city")
             }
             val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
@@ -138,9 +139,14 @@ class SquadsFragment : BaseFragment() {
         }
     }
 
-    private fun searchStadium(stadium: String) {
-        val gmmIntentUri = Uri.parse("geo:0,0?q=$stadium stadium")
-        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+    private fun searchStadium(stadium: String, stadiumLocation: LatLng?) {
+        val uri =
+            if (stadiumLocation == null)
+                Uri.parse("geo:0,0?q=$stadium stadium")
+            else
+                Uri.parse("geo:${stadiumLocation.latitude},${stadiumLocation.longitude}")
+
+        val mapIntent = Intent(Intent.ACTION_VIEW, uri)
         mapIntent.setPackage("com.google.android.apps.maps")
         startActivity(mapIntent)
     }
@@ -151,7 +157,9 @@ class SquadsFragment : BaseFragment() {
 
             adapter = SquadsAdapter({ squad ->
                 editSquad(squad.id)
-            }, { searchStadium(it) }) {
+            }, { stadium, stadiumLocation ->
+                searchStadium(stadium, stadiumLocation)
+            }) {
                 searchCity(it)
             }
 
@@ -195,7 +203,7 @@ class SquadsFragment : BaseFragment() {
                         viewModel.removeSquad(adapter.getSquad(position))
                     }
 
-                    PopupManager.deletePopupMessage(requireContext(), message, yes, no){
+                    PopupManager.deletePopupMessage(requireContext(), message, yes, no) {
                         binding.recyclerSquads.adapter?.notifyItemChanged(position)
                     }
                 }

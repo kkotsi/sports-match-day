@@ -6,6 +6,10 @@
     "country": "ES",
     "sportId": 1,
     "stadium": "Santiago Bernabeu",
+    "stadiumLocation" : {
+      "latitude" : 40.4529466,
+      "longitude" : -3.6889652
+    },
     "participants": {
       "participant2": {
         "participantId": 1,

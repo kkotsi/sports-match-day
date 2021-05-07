@@ -30,6 +30,27 @@
             android:name="matchId"
             android:defaultValue="-1"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_nav_match_add_to_nav_match_pick_stadium"
+            app:destination="@id/nav_match_pick_stadium" >
+            <argument
+                android:name="stadiumLocation"
+                app:argType="com.google.android.gms.maps.model.LatLng"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_match_pick_stadium"
+        android:name="com.example.sports_match_day.ui.maps.MapsFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_maps">
+        <argument
+            android:name="stadiumLocation"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 
     <fragment

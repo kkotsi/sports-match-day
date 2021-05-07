@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ConcatAdapter
@@ -21,6 +22,7 @@ import com.example.sports_match_day.ui.base.observeOnce
 import com.example.sports_match_day.ui.home.HomeFragment
 import com.example.sports_match_day.utils.PopupManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.pixplicity.easyprefs.library.Prefs
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
@@ -39,6 +41,7 @@ class MatchesManageFragment : BaseFragment() {
     lateinit var footer: AddContestantAdapter
     private var previousSport: Sport? = null
     private var matchDate = LocalDateTime.now()
+    private var stadiumLocation: LatLng? = null
 
     private var _binding: FragmentAddMatchesBinding? = null
     private val binding get() = _binding!!
@@ -71,6 +74,16 @@ class MatchesManageFragment : BaseFragment() {
         setupObservers()
         setupTimePickerButton()
         setupErrorButton()
+        setupFindInMapsButton()
+    }
+
+    private fun setupFindInMapsButton() {
+        binding.buttonFindInMaps?.setOnClickListener {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            val action = MatchesManageFragmentDirections.actionNavMatchAddToNavMatchPickStadium(stadiumLocation)
+            navController.navigate(action)
+        }
     }
 
     /**
@@ -162,6 +175,7 @@ class MatchesManageFragment : BaseFragment() {
                 viewModel.sports.value?.indexOf(it.sport)?.let { position ->
                     spinnerSport.setSelection(position)
                 }
+                stadiumLocation = it.stadiumLocation
                 editTextStadium.setText(
                     it.stadium,
                     TextView.BufferType.EDITABLE
@@ -216,6 +230,21 @@ class MatchesManageFragment : BaseFragment() {
                 }
             })
         }
+
+        //If the activity has been created the NavController will not be found, thus an exception will be thrown.
+        if (requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+            // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+            navController.currentBackStackEntry?.savedStateHandle?.getLiveData<LatLng>(
+                ADD_MATCH_STADIUM_LOCATION
+            )?.observe(
+                viewLifecycleOwner
+            ) {
+                stadiumLocation = it
+            }
+        }
     }
 
     private fun setupSaveButton() {
@@ -237,7 +266,8 @@ class MatchesManageFragment : BaseFragment() {
                         country,
                         stadium,
                         sport,
-                        participants
+                        participants,
+                        stadiumLocation
                     )
                 } else
                     viewModel.addMatch(
@@ -246,7 +276,8 @@ class MatchesManageFragment : BaseFragment() {
                         country,
                         stadium,
                         matchDate,
-                        adapter.participants
+                        adapter.participants,
+                        stadiumLocation
                     )
             }
         }
@@ -254,49 +285,56 @@ class MatchesManageFragment : BaseFragment() {
 
     private fun setupParticipantsRecycler() {
 
+        if(binding.recyclesParticipants.adapter != null) return
         binding.recyclesParticipants.layoutManager = LinearLayoutManager(requireContext())
 
         val participants = mutableListOf<Participant>()
 
-        adapter = ContestantsAdapter(participants)
+        if (!this::adapter.isInitialized) {
+            adapter = ContestantsAdapter(participants)
+        }
         val header = AddContestantAdapter(false) {}
-        footer = AddContestantAdapter(true) {
-            binding.textError.text = ""
-            viewModel.contestants.observeOnce(viewLifecycleOwner, {
-                val contestants = mutableListOf<String>()
-                it.forEach { contestant ->
-                    contestants.add(contestant.name)
-                }
-                val hint =
-                    if (previousSport?.type == SportType.TEAM) getString(R.string.squad) else getString(
-                        R.string.solo
-                    )
 
-                PopupManager.contestantPickerPopup(
-                    requireContext(),
-                    hint,
-                    contestants
-                ) { contestantName ->
+        if (!this::footer.isInitialized) {
+            footer = AddContestantAdapter(true) {
+                binding.textError.text = ""
+                viewModel.contestants.observeOnce(viewLifecycleOwner, {
+                    val contestants = mutableListOf<String>()
+                    it.forEach { contestant ->
+                        contestants.add(contestant.name)
+                    }
+                    val hint =
+                        if (previousSport?.type == SportType.TEAM) getString(R.string.squad) else getString(
+                            R.string.solo
+                        )
 
-                    if (previousSport?.participantCount ?: 0 > adapter.participants.size) {
-                        val contestant = it.find { contestant -> contestant.name == contestantName }
-                        contestant?.let {
-                            adapter.participants.add(Participant(contestant, 0.0))
-                            adapter.notifyItemInserted(adapter.participants.size - 1)
+                    PopupManager.contestantPickerPopup(
+                        requireContext(),
+                        hint,
+                        contestants
+                    ) { contestantName ->
 
-                            footer.refresh(adapter.itemCount, previousSport)
+                        if (previousSport?.participantCount ?: 0 > adapter.participants.size) {
+                            val contestant =
+                                it.find { contestant -> contestant.name == contestantName }
+                            contestant?.let {
+                                adapter.participants.add(Participant(contestant, 0.0))
+                                adapter.notifyItemInserted(adapter.participants.size - 1)
 
-                            if (adapter.participants.size == 1) {
-                                refreshData()
+                                footer.refresh(adapter.itemCount, previousSport)
+
+                                if (adapter.participants.size == 1) {
+                                    refreshData()
+                                }
                             }
                         }
                     }
-                }
-            })
+                })
 
-            if (viewModel.contestants.value == null)
-                viewModel.getContestants(previousSport)
+                if (viewModel.contestants.value == null)
+                    viewModel.getContestants(previousSport)
 
+            }
         }
         binding.recyclesParticipants.adapter = ConcatAdapter(header, adapter, footer)
 
@@ -351,6 +389,7 @@ class MatchesManageFragment : BaseFragment() {
             if (previousSport?.type == SportType.TEAM) {
                 if(adapter.participants.isNotEmpty()) {
                     val firstSquad = adapter.participants.first().contestant as Squad
+                    stadiumLocation = firstSquad.stadiumLocation
                     if (editTextStadium.text.toString().isEmpty())
                         editTextStadium.setText(
                             firstSquad.stadium,
@@ -464,5 +503,9 @@ class MatchesManageFragment : BaseFragment() {
             }
         }
         binding.buttonDatePicker.text = LocalDateTime.now().toString().substring(0, 10)
+    }
+
+    companion object {
+        const val ADD_MATCH_STADIUM_LOCATION = "ADD_MATCH_STADIUM_LOCATION"
     }
 }

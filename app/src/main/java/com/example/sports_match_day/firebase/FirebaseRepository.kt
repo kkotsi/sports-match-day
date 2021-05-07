@@ -7,6 +7,7 @@ import com.example.sports_match_day.model.network.Match
 import com.example.sports_match_day.ui.base.ErrorUserIdNotFound
 import com.example.sports_match_day.ui.base.SportsDebugError
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.FirebaseDatabase
@@ -145,7 +146,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         sportId: Int,
         stadium: String,
         date: Long,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Int {
 
         if(Prefs.getBoolean(PreferencesKeys.TEST_ERROR, false)){
@@ -154,7 +156,7 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         }
 
         val matchId = getLastId() + 1
-        setMatch(matchId, city, country, stadium, sportId, date, participants)
+        setMatch(matchId, city, country, stadium, sportId, date, participants, stadiumLocation)
         updateLastId(matchId)
         return matchId
     }
@@ -216,9 +218,10 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         stadium: String,
         sportId: Int,
         date: Long,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ) {
-        setMatch(id, city, country, stadium, sportId, date, participants)
+        setMatch(id, city, country, stadium, sportId, date, participants, stadiumLocation)
     }
 
     override suspend fun signUp(data: HashMap<String,Match>) {
@@ -240,7 +243,8 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         stadium: String,
         sportId: Int,
         date: Long,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ) {
         val firebaseMatch = HashMap<String, Any>()
         firebaseMatch["city"] = city
@@ -249,6 +253,12 @@ class FirebaseRepositoryImpl : FirebaseRepository {
         firebaseMatch["stadium"] = stadium
         firebaseMatch["date"] = date
         firebaseMatch["id"] = id
+        stadiumLocation?.let{
+            val mapStadiumLocation = HashMap<String, Double>()
+            mapStadiumLocation["latitude"] = it.latitude
+            mapStadiumLocation["longitude"] = it.longitude
+            firebaseMatch["stadiumLocation"] = mapStadiumLocation
+        }
 
         val mapParticipants = HashMap<String, Any>()
 
@@ -315,7 +325,8 @@ interface FirebaseRepository {
         sportId: Int,
         stadium: String,
         date: Long,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Int
 
     suspend fun removeMatchesBySport(sportId: Int): List<Match>
@@ -326,7 +337,8 @@ interface FirebaseRepository {
         stadium: String,
         sportId: Int,
         date: Long,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     )
 
     suspend fun signUp(data: HashMap<String, Match>)

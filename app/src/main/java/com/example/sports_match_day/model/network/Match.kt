@@ -10,7 +10,8 @@ class Match(
     var country: String = "",
     var stadium: String = "",
     var sportId: Int = 0,
-    var participants: HashMap<String, HashMap<String, Any>> = hashMapOf()
+    var participants: HashMap<String, HashMap<String, Any>> = hashMapOf(),
+    var stadiumLocation: HashMap<String, Double>? = null
 )
 
 class Participant(
@@ -18,4 +19,11 @@ class Participant(
 ) {
     var id: Int = map["participantId"].toString().toInt()
     var score: Double = map["score"].toString().toDouble()
+}
+
+class StadiumLocation(
+    map: HashMap<String, Double>
+) {
+    var latitude: Double = map["latitude"] ?: 0.0
+    var longitude: Double = map["longitude"] ?: 0.0
 }

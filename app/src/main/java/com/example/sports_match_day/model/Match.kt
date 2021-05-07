@@ -1,5 +1,6 @@
 package com.example.sports_match_day.model
 
+import com.google.android.gms.maps.model.LatLng
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -13,7 +14,8 @@ class Match (
     var country: Locale,
     var stadium: String,
     var sport: Sport?,
-    var participants: MutableList<Participant>
+    var participants: MutableList<Participant>,
+    var stadiumLocation: LatLng?
     ){
 
     fun getCountryCode(): String{

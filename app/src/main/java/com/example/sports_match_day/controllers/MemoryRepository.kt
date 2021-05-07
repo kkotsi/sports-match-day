@@ -2,6 +2,7 @@ package com.example.sports_match_day.controllers
 
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.utils.doToAll
+import com.google.android.gms.maps.model.LatLng
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -22,7 +23,8 @@ class MemoryRepository() {
         stadium: String,
         sport: Sport,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ) {
         matches.find { it.id == id }?.let {
             it.city = city
@@ -32,6 +34,7 @@ class MemoryRepository() {
             it.date = date
             it.participants.clear()
             it.participants.addAll(participants)
+            it.stadiumLocation = stadiumLocation
         }
     }
 

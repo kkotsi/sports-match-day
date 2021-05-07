@@ -6,6 +6,7 @@ import com.example.sports_match_day.controllers.paging.MatchesDataSource
 import com.example.sports_match_day.firebase.FirebaseRepository
 import com.example.sports_match_day.model.Match
 import com.example.sports_match_day.model.Participant
+import com.google.android.gms.maps.model.LatLng
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import org.threeten.bp.LocalDateTime
@@ -41,7 +42,8 @@ class RemoteRepositoryImpl(
         sportId: Int,
         stadium: String,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Int {
         return firebaseRepository.addMatch(
             city,
@@ -49,7 +51,8 @@ class RemoteRepositoryImpl(
             sportId,
             stadium,
             date.atZone(ZoneId.systemDefault()).toEpochSecond(),
-            participants
+            participants,
+            stadiumLocation
         )
     }
 
@@ -68,7 +71,8 @@ class RemoteRepositoryImpl(
         stadium: String,
         sportId: Int,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean {
         firebaseRepository.updateMatch(
             id,
@@ -77,7 +81,8 @@ class RemoteRepositoryImpl(
             stadium,
             sportId,
             date.atZone(ZoneId.systemDefault()).toEpochSecond(),
-            participants
+            participants,
+            stadiumLocation
         )
         return true
     }
@@ -107,7 +112,8 @@ interface RemoteRepository {
         sportId: Int,
         stadium: String,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Int
 
     suspend fun getMatch(matchId: Int): Match?
@@ -120,7 +126,8 @@ interface RemoteRepository {
         stadium: String,
         sportId: Int,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun removeMatchByAthlete(matchIds: List<Int>): List<Match>

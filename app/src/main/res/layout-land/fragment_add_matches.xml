@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-   <!-- <ImageView
-        android:id="@+id/image_match"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/matches"
-        android:visibility="visible"
-        android:contentDescription="@string/description_simple_bgg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
+    <!-- <ImageView
+         android:id="@+id/image_match"
+         android:layout_width="300dp"
+         android:layout_height="300dp"
+         android:layout_marginTop="30dp"
+         android:src="@drawable/matches"
+         android:visibility="visible"
+         android:contentDescription="@string/description_simple_bgg"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toTopOf="parent" />-->
 
     <Button
         android:id="@+id/button_date_picker"
@@ -62,9 +62,9 @@
         android:background="@drawable/bg_border"
         android:hint="@string/city"
         android:imeOptions="actionNext"
-        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:visibility="visible"
@@ -77,8 +77,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:minHeight="45dp"
         android:background="@drawable/bg_border"
+        android:minHeight="45dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button_date_picker">
 
@@ -101,9 +101,9 @@
         android:background="@drawable/bg_border"
         android:hint="@string/country"
         android:imeOptions="actionDone"
-        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
         android:lines="1"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="@+id/container_spinner_sport"
@@ -119,12 +119,23 @@
         android:background="@drawable/bg_border"
         android:hint="@string/stadium"
         android:imeOptions="actionDone"
-        android:minHeight="45dp"
         android:inputType="textAutoComplete|textAutoCorrect"
+        android:minHeight="45dp"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintStart_toStartOf="@+id/editText_city"
         app:layout_constraintTop_toBottomOf="@+id/editText_city" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_find_in_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@color/colorTransparent"
+        android:text="@string/find_in_maps"
+        android:textAllCaps="false"
+        android:textColor="@color/colorLink"
+        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintTop_toBottomOf="@+id/editText_stadium" />
 
     <TextView
         android:id="@+id/text_participants"
@@ -185,14 +196,14 @@
         app:layout_constraintStart_toStartOf="@+id/editText_country"
         app:layout_constraintTop_toBottomOf="@+id/editText_stadium" />
 
- <ImageButton
-     android:id="@+id/button_error"
-     android:layout_width="48dp"
-     android:layout_height="0dp"
-     android:layout_marginStart="15dp"
-     android:background="@color/colorTransparent"
-     android:src="@drawable/ic_error"
-     app:layout_constraintBottom_toBottomOf="@+id/button_save"
-     app:layout_constraintStart_toEndOf="@+id/button_save"
-     app:layout_constraintTop_toTopOf="@+id/button_save" />
+    <ImageButton
+        android:id="@+id/button_error"
+        android:layout_width="48dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="15dp"
+        android:background="@color/colorTransparent"
+        android:src="@drawable/ic_error"
+        app:layout_constraintBottom_toBottomOf="@+id/button_save"
+        app:layout_constraintStart_toEndOf="@+id/button_save"
+        app:layout_constraintTop_toTopOf="@+id/button_save" />
 </androidx.constraintlayout.widget.ConstraintLayout>

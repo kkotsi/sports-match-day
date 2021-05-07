@@ -32,5 +32,7 @@ data class Squad(
     @ColumnInfo
     var gender: Boolean,
     @ColumnInfo
-    val matches: MutableList<Int>?
+    val matches: MutableList<Int>?,
+    @ColumnInfo
+    var stadiumLocation: String? = null
 )

@@ -13,7 +13,7 @@ import org.koin.dsl.module
  * Created by Kristo on 07-Mar-21
  */
 val controllerModule = module {
-    single<CoreController> { CoreControllerImpl(get(), get(), get(), get(), get()) }
+    single<CoreController> { CoreControllerImpl(get(), get(), get(), get()) }
     single<FirebaseRepository> { FirebaseRepositoryImpl() }
     single { MemoryRepository() }
     single { DecoupleAdapter(get()) }

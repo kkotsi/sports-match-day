@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.sports_match_day.controllers.CoreController
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.ui.base.ScopedViewModel
+import com.google.android.gms.maps.model.LatLng
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -52,14 +53,15 @@ class MatchesManageViewModel(private val coreController: CoreController) : Scope
         country: String,
         stadium: String,
         date: LocalDateTime,
-        participants: List<Participant>
+        participants: List<Participant>,
+        stadiumLocation: LatLng?
     ) {
         launchWithLoad({
             val countryCode =
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addMatch(sport, city, countryCode, stadium, date, participants)
+                coreController.addMatch(sport, city, countryCode, stadium, date, participants, stadiumLocation)
         }) {}
     }
 
@@ -85,14 +87,15 @@ class MatchesManageViewModel(private val coreController: CoreController) : Scope
         country: String,
         stadium: String,
         sport: Sport,
-        participants: MutableList<Participant>
+        participants: MutableList<Participant>,
+        stadiumLocation: LatLng?
     ) {
         launchWithLoad({
             val countryCode =
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.updateMatch(matchId, city, countryCode, stadium, sport, matchDate, participants)
+                coreController.updateMatch(matchId, city, countryCode, stadium, sport, matchDate, participants, stadiumLocation)
         }) {}
     }
 }

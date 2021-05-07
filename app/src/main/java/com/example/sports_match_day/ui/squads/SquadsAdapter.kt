@@ -13,6 +13,7 @@ import com.example.sports_match_day.R
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.utils.FlagManager
 import com.example.sports_match_day.utils.constants.PreferencesKeys
+import com.google.android.gms.maps.model.LatLng
 import com.pixplicity.easyprefs.library.Prefs
 import com.squareup.picasso.Picasso
 
@@ -21,7 +22,7 @@ import com.squareup.picasso.Picasso
  */
 class SquadsAdapter(
     private val onSelect: (Squad) -> Unit,
-    private val searchStadiumInMap: (String) -> Unit,
+    private val searchStadiumInMap: (String, LatLng?) -> Unit,
     private val searchCityInMap: (String) -> Unit
 ) :
     PagingDataAdapter<Squad, SquadsAdapter.MyViewHolder>(diff()) {
@@ -55,7 +56,7 @@ class SquadsAdapter(
             }
             textStadium.text = item.stadium
             textStadium.setOnClickListener {
-                searchStadiumInMap(item.stadium)
+                searchStadiumInMap(item.stadium, item.stadiumLocation)
             }
             textSport.text = item.sport?.name ?: ""
             textBirthday.text = item.birthday.year.toString()
