@@ -8,6 +8,7 @@ import com.example.sports_match_day.model.Squad
 /**
  * Created by Kristo on 15-Apr-21
  */
+@Suppress("UNCHECKED_CAST")
 class AnalyticsControllerImpl
     (private val remoteRepository: RemoteRepository) : AnalyticsController {
 
@@ -31,18 +32,17 @@ class AnalyticsControllerImpl
                         winner?.contestant?.let { contestant ->
                             val squad = contestant as Squad
                             if (squad.id == 1)
-                                print("ok")
-                            if (teamsWins.containsKey(squad)) {
-                                teamsWins[squad] = teamsWins[squad]!!.plus(1)
-                            } else {
-                                teamsWins[squad] = 1
-                            }
+                                if (teamsWins.containsKey(squad)) {
+                                    teamsWins[squad] = teamsWins[squad]!!.plus(1)
+                                } else {
+                                    teamsWins[squad] = 1
+                                }
                         }
                     }
                 }
             }
         }
-        return getBest4(teamsWins) as MutableMap<Squad,Int>
+        return getBest4(teamsWins) as MutableMap<Squad, Int>
     }
 
     private fun getBest4(anyMap: MutableMap<*, Int>): Map<*, Int> {
@@ -77,7 +77,7 @@ class AnalyticsControllerImpl
                 }
             }
         }
-        return getBest4(matchesPerSport)  as MutableMap<Sport,Int>
+        return getBest4(matchesPerSport) as MutableMap<Sport, Int>
     }
 }
 

@@ -10,6 +10,7 @@ import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.model.SportType
 import com.example.sports_match_day.model.Squad
 import com.example.sports_match_day.ui.base.ScopedViewModel
+import com.google.android.gms.maps.model.LatLng
 import org.threeten.bp.LocalDateTime
 import java.util.*
 
@@ -58,14 +59,15 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
         stadium: String,
         sportId: Int,
         birthday: LocalDateTime,
-        gender: Boolean
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ) {
         launchWithLoad({
             val countryCode =
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.addSquad(name, city, countryCode, stadium, sportId, birthday, gender)
+                coreController.addSquad(name, city, countryCode, stadium, sportId, birthday, gender, stadiumLocation)
         }) {
             print(it)
         }
@@ -85,7 +87,8 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
         stadium: String,
         sport: Sport,
         birthday: LocalDateTime,
-        gender: Boolean
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ) {
         launchWithLoad({
 
@@ -93,7 +96,7 @@ class SquadsManageViewModel(private val coreController: CoreController) : Scoped
                 Locale.getISOCountries().find { Locale("", it).displayCountry == country }
                     ?: throw NullPointerException("")
             saveSuccessful.value =
-                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday, gender, squad.value?.matches ?: mutableListOf())
+                coreController.updateSquad(id,name, city, countryCode, stadium, sport, birthday, gender, squad.value?.matches ?: mutableListOf(), stadiumLocation)
         }) {}
     }
 }

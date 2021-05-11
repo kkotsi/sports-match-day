@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.navArgs
 import com.example.sports_match_day.R
@@ -18,7 +19,9 @@ import com.example.sports_match_day.model.Sport
 import com.example.sports_match_day.ui.base.BaseFragment
 import com.example.sports_match_day.ui.base.DateAdapter
 import com.example.sports_match_day.ui.base.SportsAdapter
+import com.example.sports_match_day.ui.home.manage.MatchesManageFragment
 import com.example.sports_match_day.ui.squads.SquadsFragment
+import com.google.android.gms.maps.model.LatLng
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.threeten.bp.LocalDateTime
 import java.util.*
@@ -32,6 +35,7 @@ class SquadsManageFragment : BaseFragment() {
 
     private var _binding: FragmentAddSquadBinding? = null
     private val binding get() = _binding!!
+    private var stadiumLocation: LatLng? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,8 +55,8 @@ class SquadsManageFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setupForEdit()
-        setupObservers()
         setupBirthday()
+        setupObservers()
         setupEditTextCountry()
         setupEditTextCity()
         setupSaveButton()
@@ -60,6 +64,16 @@ class SquadsManageFragment : BaseFragment() {
         setupStadiumEditText()
         setupSportsSpinner()
         setupGender()
+        setupFindInMapsButton()
+    }
+
+    private fun setupFindInMapsButton() {
+        binding.buttonFindInMaps.setOnClickListener {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+            val action = SquadsManageFragmentDirections.actionNavSquadsAddToNavMatchPickStadium(stadiumLocation)
+            navController.navigate(action)
+        }
     }
 
     private fun setupGender(){
@@ -129,7 +143,7 @@ class SquadsManageFragment : BaseFragment() {
                     val gender = binding.toggleGender.isChecked
 
                     if (viewModel.squad.value == null)
-                        viewModel.addSquad(name, city, country, stadium, sport.id, birthday, gender)
+                        viewModel.addSquad(name, city, country, stadium, sport.id, birthday, gender, stadiumLocation)
                     else
                         viewModel.updateSquad(
                             args.squadId,
@@ -139,7 +153,8 @@ class SquadsManageFragment : BaseFragment() {
                             stadium,
                             sport,
                             birthday,
-                            gender
+                            gender,
+                            stadiumLocation
                         )
                 }
             }
@@ -258,6 +273,8 @@ class SquadsManageFragment : BaseFragment() {
                 viewModel.getSports(it.gender)
 
                 binding.toggleGender.isChecked = it.gender == Gender.MALE
+                if(stadiumLocation == null)
+                    stadiumLocation = it.stadiumLocation
 
                 viewModel.sports.value?.indexOf(it.sport)?.let { position ->
                     spinnerSport.setSelection(position)
@@ -283,7 +300,7 @@ class SquadsManageFragment : BaseFragment() {
                     "${it.birthday.year}"
                 )
                 val day =
-                    (spinnerDay.adapter as DateAdapter).getItemPosition("${it.birthday.dayOfMonth}")
+                    (spinnerDay.adapter as? DateAdapter)?.getItemPosition("${it.birthday.dayOfMonth}") ?: 1
 
                 spinnerYear.setSelection(year)
                 spinnerMonth.setSelection(it.birthday.monthValue - 1)
@@ -317,6 +334,21 @@ class SquadsManageFragment : BaseFragment() {
                     spinnerSport.setSelection(it.indexOf(squad.sport))
                 }
             })
+        }
+
+        //If the activity has been created the NavController will not be found, thus an exception will be thrown.
+        if (requireActivity().lifecycle.currentState.isAtLeast(Lifecycle.State.CREATED)) {
+            val navController =
+                Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
+
+            // A simple way to get data from another fragment with NavController https://developer.android.com/guide/navigation/navigation-programmatic#returning_a_result
+            navController.currentBackStackEntry?.savedStateHandle?.getLiveData<LatLng>(
+                MatchesManageFragment.ADD_MATCH_STADIUM_LOCATION
+            )?.observe(
+                viewLifecycleOwner
+            ) {
+                stadiumLocation = it
+            }
         }
     }
 

@@ -7,8 +7,9 @@ import androidx.core.animation.doOnEnd
 
 /**
  * Created by Kristo on 29-Mar-21
+ * todo: Create help for the apps controls.
  */
-
+@Suppress("UNUSED", "UNUSED_PARAMETER")
 object HelpManager {
     fun helpSwipeDelete(helpView: View, helpText: TextView) {
         ObjectAnimator.ofFloat(helpView, "translationX", 0f, 200f).apply {

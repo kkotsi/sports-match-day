@@ -147,7 +147,8 @@ class CoreControllerImpl(
                                 sport!!,
                                 birthday,
                                 gender == Gender.MALE,
-                                matches
+                                matches,
+                                stadiumLocation
                             )
                         }
                     }
@@ -239,7 +240,8 @@ class CoreControllerImpl(
                     squad.sport!!,
                     squad.birthday,
                     squad.gender == Gender.MALE,
-                    squad.matches
+                    squad.matches,
+                    stadiumLocation
                 )
             }
         }
@@ -270,7 +272,9 @@ class CoreControllerImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: LocalDateTime, gender: Boolean
+        birthday: LocalDateTime,
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ): Boolean {
         return localRepository.addSquad(
             name,
@@ -279,7 +283,8 @@ class CoreControllerImpl(
             stadium,
             sportId,
             birthday.atZone(ZoneId.systemDefault()).toEpochSecond(),
-            gender
+            gender,
+            stadiumLocation
         )
     }
 
@@ -327,7 +332,8 @@ class CoreControllerImpl(
         sport: Sport,
         birthday: LocalDateTime,
         gender: Boolean,
-        matchIds: MutableList<Int>
+        matchIds: MutableList<Int>,
+        stadiumLocation: LatLng?
     ): Boolean {
         localRepository.updateSquad(
             id,
@@ -338,7 +344,8 @@ class CoreControllerImpl(
             sport.id,
             birthday.atZone(ZoneId.systemDefault()).toEpochSecond(),
             gender,
-            matchIds
+            matchIds,
+            stadiumLocation
         )
         val countryLocale = Locale("", country)
         memoryRepository.updateSquad(
@@ -350,7 +357,8 @@ class CoreControllerImpl(
             sport,
             birthday,
             gender,
-            matchIds
+            matchIds,
+            stadiumLocation
         )
         return true
     }
@@ -494,7 +502,9 @@ interface CoreController {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: LocalDateTime, gender: Boolean
+        birthday: LocalDateTime,
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun addSport(
@@ -527,7 +537,8 @@ interface CoreController {
         sport: Sport,
         birthday: LocalDateTime,
         gender: Boolean,
-        matchIds: MutableList<Int>
+        matchIds: MutableList<Int>,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun updateAthlete(

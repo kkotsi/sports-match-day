@@ -74,6 +74,17 @@
         app:layout_constraintStart_toStartOf="@+id/editText_country"
         app:layout_constraintTop_toBottomOf="@+id/editText_country" />
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_find_in_maps"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:background="@color/colorTransparent"
+        android:text="@string/find_in_maps"
+        android:textAllCaps="false"
+        android:textColor="@color/colorLink"
+        app:layout_constraintStart_toStartOf="@+id/editText_stadium"
+        app:layout_constraintTop_toBottomOf="@+id/editText_stadium" />
+
     <ToggleButton
         android:id="@+id/toggle_gender"
         android:layout_width="101dp"

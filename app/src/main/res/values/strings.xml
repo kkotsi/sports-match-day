@@ -7,6 +7,7 @@
     <string translatable="false" name="nav_header_desc">Navigation header</string>
 
     <string name="total_athletes">Currently showing %1$s athletes</string>
+    <string name="total_matches">Currently showing %1$s matches</string>
     <string name="total_squads">Currently showing %1$s squads</string>
     <string name="total_sports">Currently showing %1$s sports</string>
 

@@ -8,6 +8,8 @@ import com.example.sports_match_day.controllers.paging.SquadsDataSource
 import com.example.sports_match_day.model.*
 import com.example.sports_match_day.room.SportsDatabase
 import com.example.sports_match_day.utils.findAll
+import com.google.android.gms.maps.model.LatLng
+import com.google.gson.Gson
 import org.koin.core.KoinComponent
 import org.koin.core.get
 
@@ -44,9 +46,7 @@ class LocalRepositoryImpl(
     }
 
     override suspend fun getSport(id: Int): Sport? {
-        val roomSport = sportsDatabase.sportsDao().getSport(id)
-        print("ok")
-        if(roomSport == null) return null
+        val roomSport = sportsDatabase.sportsDao().getSport(id) ?: return null
         return decoupleAdapter.toSport(roomSport)
     }
 
@@ -203,8 +203,11 @@ class LocalRepositoryImpl(
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long, gender: Boolean
+        birthday: Long,
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ): Boolean {
+        val stadiumLocationString = Gson().toJson(stadiumLocation)
         val squad = com.example.sports_match_day.room.entities.Squad(
             0,
             name,
@@ -214,7 +217,8 @@ class LocalRepositoryImpl(
             sportId,
             birthday,
             gender,
-            mutableListOf()
+            mutableListOf(),
+            stadiumLocationString
         )
         sportsDatabase.squadsDao().insertSquad(squad)
         return true
@@ -260,8 +264,10 @@ class LocalRepositoryImpl(
         sportId: Int,
         birthday: Long,
         gender: Boolean,
-        matchIds: MutableList<Int>
+        matchIds: MutableList<Int>,
+        stadiumLocation: LatLng?
     ) {
+        val stadiumLocationString = Gson().toJson(stadiumLocation)
         val squad = com.example.sports_match_day.room.entities.Squad(
             id,
             name,
@@ -271,7 +277,8 @@ class LocalRepositoryImpl(
             sportId,
             birthday,
             gender,
-            matchIds
+            matchIds,
+            stadiumLocationString
         )
         sportsDatabase.squadsDao().updateSquad(squad)
     }
@@ -347,7 +354,9 @@ interface LocalRepository {
         country: String,
         stadium: String,
         sportId: Int,
-        birthday: Long, gender: Boolean
+        birthday: Long,
+        gender: Boolean,
+        stadiumLocation: LatLng?
     ): Boolean
 
     suspend fun addSport(
@@ -371,7 +380,8 @@ interface LocalRepository {
         sportId: Int,
         birthday: Long,
         gender: Boolean,
-        matchIds: MutableList<Int>
+        matchIds: MutableList<Int>,
+        stadiumLocation: LatLng?
     )
     suspend fun updateAthlete(
         id: Int,

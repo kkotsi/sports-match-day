@@ -91,7 +91,6 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupObservers() {
-
         lifecycleScope.launchWhenCreated {
             adapter.loadStateFlow.collectLatest { loadStates ->
                 refreshCount()
@@ -253,7 +252,7 @@ class HomeFragment : BaseFragment() {
         binding.textMatchesTotal.isVisible = Prefs.getBoolean(PreferencesKeys.DEBUG_ON, false)
         val total = adapter.itemCount
         binding.textMatchesTotal.text =
-            String.format(requireContext().resources.getString(R.string.total_squads), "$total")
+            String.format(requireContext().resources.getString(R.string.total_matches), "$total")
     }
 
     companion object {

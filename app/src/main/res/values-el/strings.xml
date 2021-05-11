@@ -32,6 +32,7 @@
     <string name="solo">Άτομο</string>
 
     <string name="total_athletes">Εφμάνιση %1$s αθλητών</string>
+    <string name="total_matches">Εφμάνιση %1$s αγώνων</string>
     <string name="total_squads">Εφμάνιση %1$s ομάδων</string>
     <string name="total_sports">Εφμάνιση %1$s αθλημάτων</string>
 

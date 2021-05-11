@@ -78,7 +78,7 @@ class MatchesManageFragment : BaseFragment() {
     }
 
     private fun setupFindInMapsButton() {
-        binding.buttonFindInMaps?.setOnClickListener {
+        binding.buttonFindInMaps.setOnClickListener {
             val navController =
                 Navigation.findNavController(requireActivity(), R.id.nav_host_fragment)
             val action = MatchesManageFragmentDirections.actionNavMatchAddToNavMatchPickStadium(stadiumLocation)
@@ -175,7 +175,8 @@ class MatchesManageFragment : BaseFragment() {
                 viewModel.sports.value?.indexOf(it.sport)?.let { position ->
                     spinnerSport.setSelection(position)
                 }
-                stadiumLocation = it.stadiumLocation
+                if(stadiumLocation == null)
+                    stadiumLocation = it.stadiumLocation
                 editTextStadium.setText(
                     it.stadium,
                     TextView.BufferType.EDITABLE

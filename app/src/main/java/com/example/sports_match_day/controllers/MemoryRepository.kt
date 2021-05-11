@@ -77,7 +77,8 @@ class MemoryRepository() {
         sport: Sport,
         birthday: LocalDateTime,
         gender: Boolean,
-        matchIds: MutableList<Int>
+        matchIds: MutableList<Int>,
+        stadiumLocation: LatLng?
     ) {
         val mGender = if(gender) Gender.MALE else Gender.FEMALE
         squads.find { it.id == id }?.let {
@@ -89,6 +90,7 @@ class MemoryRepository() {
             it.birthday = birthday
             it.gender = mGender
             it.matches = matchIds
+            it.stadiumLocation = stadiumLocation
         }
     }
 

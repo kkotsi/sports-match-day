@@ -32,12 +32,12 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_nav_match_add_to_nav_match_pick_stadium"
-            app:destination="@id/nav_match_pick_stadium" >
+            app:destination="@id/nav_match_pick_stadium">
             <argument
                 android:name="stadiumLocation"
+                android:defaultValue="@null"
                 app:argType="com.google.android.gms.maps.model.LatLng"
-                app:nullable="true"
-                android:defaultValue="@null" />
+                app:nullable="true" />
         </action>
     </fragment>
 
@@ -48,9 +48,9 @@
         tools:layout="@layout/fragment_maps">
         <argument
             android:name="stadiumLocation"
+            android:defaultValue="@null"
             app:argType="com.google.android.gms.maps.model.LatLng"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:nullable="true" />
     </fragment>
 
     <fragment
@@ -107,6 +107,16 @@
             android:name="squadId"
             android:defaultValue="-1"
             app:argType="integer" />
+
+        <action
+            android:id="@+id/action_nav_squads_add_to_nav_match_pick_stadium"
+            app:destination="@id/nav_match_pick_stadium">
+            <argument
+                android:name="stadiumLocation"
+                android:defaultValue="@null"
+                app:argType="com.google.android.gms.maps.model.LatLng"
+                app:nullable="true" />
+        </action>
     </fragment>
 
     <fragment
@@ -141,13 +151,11 @@
         android:id="@+id/nav_dashboard"
         android:name="com.example.sports_match_day.ui.dashboard.Dashboard"
         android:label="@string/menu_dashboard"
-        tools:layout="@layout/fragment_dashboard">
-    </fragment>
+        tools:layout="@layout/fragment_dashboard"></fragment>
 
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.example.sports_match_day.ui.settings.SettingsFragment"
         android:label="@string/menu_settings"
-        tools:layout="@layout/fragment_settings">
-    </fragment>
+        tools:layout="@layout/fragment_settings"></fragment>
 </navigation>
