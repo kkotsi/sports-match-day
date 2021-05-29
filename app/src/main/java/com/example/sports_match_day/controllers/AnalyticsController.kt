@@ -31,12 +31,11 @@ class AnalyticsControllerImpl
                         }
                         winner?.contestant?.let { contestant ->
                             val squad = contestant as Squad
-                            if (squad.id == 1)
-                                if (teamsWins.containsKey(squad)) {
-                                    teamsWins[squad] = teamsWins[squad]!!.plus(1)
-                                } else {
-                                    teamsWins[squad] = 1
-                                }
+                            if (teamsWins.containsKey(squad)) {
+                                teamsWins[squad] = teamsWins[squad]!!.plus(1)
+                            } else {
+                                teamsWins[squad] = 1
+                            }
                         }
                     }
                 }

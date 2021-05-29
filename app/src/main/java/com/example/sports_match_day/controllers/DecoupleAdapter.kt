@@ -140,7 +140,9 @@ class DecoupleAdapter(var context: Context) : KoinComponent {
 
                 val gson = Gson()
                 val location = gson.fromJson(it, LatLng::class.java)
-                stadiumLocation = LatLng(location.latitude, location.longitude)
+                location?.let {
+                    stadiumLocation = LatLng(location.latitude, location.longitude)
+                }
             }
 
             return Squad(

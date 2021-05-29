@@ -44,7 +44,7 @@ PagingDataAdapter<Athlete, AthletesAdapter.MyViewHolder>(diff()) {
                 imageGender.setImageResource(R.drawable.ic_male)
                 imagePerson.setImageResource(R.drawable.male)
             }else{
-                imageGender.setImageResource(R.drawable.ic_male)
+                imageGender.setImageResource(R.drawable.ic_female)
                 imagePerson.setImageResource(R.drawable.female)
             }
 

@@ -7,7 +7,7 @@
     "sportId": 2,
     "birthday": 636978811,
     "gender": true,
-    "matches": []
+    "matches": [2]
   },
   {
     "id" : 2,
@@ -17,7 +17,7 @@
     "sportId": 2,
     "birthday": 636978811,
     "gender": true,
-    "matches": []
+    "matches": [2]
   },
   {
     "id" : 3,

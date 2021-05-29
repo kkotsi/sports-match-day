@@ -125,7 +125,14 @@ class FirebaseRepositoryImpl : FirebaseRepository {
                matches.add(it)
            }
        }
+
+       val id = FirebaseAuth.getInstance().currentUser?.uid ?: throw ErrorUserIdNotFound()
+       if(id.isBlank()){
+           throw NullPointerException("The user id cannot be null or black!")
+       }
+
        FirebaseDatabase.getInstance().reference
+           .child(id)
            .updateChildren(removeMatches)
            .await()
 

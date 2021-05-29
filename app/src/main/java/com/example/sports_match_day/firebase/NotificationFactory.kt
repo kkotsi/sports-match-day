@@ -50,7 +50,7 @@ class NotificationFactory(private var mContext: Context) {
         intent.action = Intent.ACTION_MAIN
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
 
-        return PendingIntent.getActivity(mContext,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getActivity(mContext,0,intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     @TargetApi(26)

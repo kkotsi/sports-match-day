@@ -61,6 +61,8 @@ class ContestantsAdapter(var participants: MutableList<Participant>) :
                 override fun afterTextChanged(s: Editable?) {
                     if (s?.isNotBlank() == true)
                         participant.score = s.toString().toDouble()
+                    else
+                        participant.score = -1.0
                 }
             })
 
